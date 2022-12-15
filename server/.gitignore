@@ -14,12 +14,16 @@ lerna-debug.log*
 # OS
 .DS_Store
 
+# Env - sensitive
+.env.local
+
 # Tests
 /coverage
 /.nyc_output
 
 # IDEs and editors
 /.idea
+.vscode
 .project
 .classpath
 .c9/
