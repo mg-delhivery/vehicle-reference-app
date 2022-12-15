@@ -19,7 +19,7 @@ const defaultValues: VehicleDisplay = {
   updatedBy: '',
 };
 
-function EditVehicle() {
+function ViewVehicle() {
   const navigate = useNavigate();
   const { id } = useParams();
   const [vehicle, setVehicle] = useState<VehicleDisplay>(defaultValues);
@@ -33,8 +33,8 @@ function EditVehicle() {
   } = useForm<VehicleParticipantForm>({
     defaultValues: useMemo(() => vehicle, [vehicle]),
   });
-  const onSubmit = (data: VehicleParticipantForm) =>
-    console.log('Implement put endpoint');
+  const onSubmit = (data: VehicleParticipantForm) => console.log(data);
+  console.log(errors);
 
   useEffect(() => {
     const executeFetchVehicle = async () => {
@@ -53,20 +53,15 @@ function EditVehicle() {
     return <div>Vehicle not found.</div>;
   }
   return (
-    <div id="EditVehicle">
-      <Title>Edit Vehicle</Title>
+    <div id="ViewVehicle">
+      <Title>{vehicle?.name}</Title>
       {isLoading && (
         <div className="text-center">
           <Spinner size="xl" aria-label="Loading vehicles" />
         </div>
       )}
-
       {!isLoading && (
-        <form
-          onSubmitCapture={handleSubmit(onSubmit)}
-          className="flex flex-col gap-4"
-          onSubmit={handleSubmit(onSubmit)}
-        >
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
           <div>
             <div className="mb-2 block">
               <Label htmlFor="id" value="ID" />
@@ -74,7 +69,7 @@ function EditVehicle() {
             <TextInput
               id="id"
               type="text"
-              disabled={false}
+              disabled={true}
               placeholder={vehicle?.id}
               required={true}
               {...register('id', {})}
@@ -88,7 +83,7 @@ function EditVehicle() {
             <TextInput
               id={'name'}
               type="text"
-              disabled={false}
+              disabled={true}
               placeholder={vehicle?.name}
               required={true}
               {...register('name', {})}
@@ -103,7 +98,7 @@ function EditVehicle() {
               <TextInput
                 id={'state'}
                 type="text"
-                disabled={false}
+                disabled={true}
                 placeholder={vehicle?.state}
                 required={true}
                 {...register('state', {})}
@@ -111,11 +106,73 @@ function EditVehicle() {
             </div>
           </div>
 
-          <Button type="submit">Save</Button>
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="grow">
+              <div className="mb-2 block">
+                <Label htmlFor="createdAt" value="Created" />
+              </div>
+              <TextInput
+                id={'createdAt'}
+                type="text"
+                disabled={true}
+                placeholder={vehicle?.createdAt}
+                required={true}
+                {...register('createdAt', {})}
+              />
+            </div>
+
+            <div className="grow">
+              <div className="mb-2 block">
+                <Label htmlFor="createdBy" value="Created By" />
+              </div>
+              <TextInput
+                id={'createdBy'}
+                type="text"
+                disabled={true}
+                placeholder={vehicle?.createdBy}
+                required={true}
+                {...register('createdBy', {})}
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="grow">
+              <div className="mb-2 block">
+                <Label htmlFor="updatedAt" value="Last Updated" />
+              </div>
+              <TextInput
+                id={'updatedAt'}
+                type="text"
+                disabled={true}
+                placeholder={vehicle?.updatedAt}
+                required={true}
+                {...register('updatedAt', {})}
+              />
+            </div>
+
+            <div className="grow">
+              <div className="mb-2 block">
+                <Label htmlFor="updatedBy" value="Updated By" />
+              </div>
+              <TextInput
+                id={'updatedBy'}
+                type="text"
+                disabled={true}
+                placeholder={vehicle?.updatedBy}
+                required={true}
+                {...register('updatedBy', {})}
+              />
+            </div>
+          </div>
+
+          <Button type="button" onClick={() => navigate('edit')}>
+            Edit
+          </Button>
         </form>
       )}
     </div>
   );
 }
 
-export default EditVehicle;
+export default ViewVehicle;

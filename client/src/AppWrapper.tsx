@@ -7,6 +7,7 @@ import CreateVehicle from './pages/CreateVehicle';
 import EditVehicle from './pages/EditVehicle';
 import ErrorPage from './pages/ErrorPage';
 import VehiclesList from './pages/VehiclesList';
+import ViewVehicle from './pages/ViewVehicle';
 import reportWebVitals from './reportWebVitals';
 import Root from './routes/root';
 
@@ -17,15 +18,30 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        path: 'vehicles',
+        index: true,
+        element: <VehiclesList />,
+      },
+    ],
+  },
+  {
+    path: '/vehicles',
+    element: <Root />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: '',
         element: <VehiclesList />,
       },
       {
-        path: 'vehicles/create',
+        path: 'create',
         element: <CreateVehicle />,
       },
       {
-        path: 'vehicles/:id/edit',
+        path: ':id',
+        element: <ViewVehicle />,
+      },
+      {
+        path: ':id/edit',
         element: <EditVehicle />,
       },
     ],

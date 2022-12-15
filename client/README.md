@@ -15,7 +15,11 @@ If using a \*nix shell:
     TENANT_NAME=<Add your tenant name here>
     TENANT_URL=<Add your tenant url here>
 
-    sudo echo "127.0.0.1 ${TENANT_NAME}-cdev.${TENANT_URL}" >> /etc/hosts
+    # Most Linux distros
+    echo "127.0.0.1 ${TENANT_NAME}-cdev.${TENANT_URL}" >> /etc/hosts
+
+    # Macs
+    echo "127.0.0.1 ${TENANT_NAME}-cdev.${TENANT_URL}" | sudo tee -a /etc/hosts
 
 ### Running locally
 
