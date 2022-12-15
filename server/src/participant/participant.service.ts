@@ -57,7 +57,10 @@ export class ParticipantService {
       })
       .catch((error) => {
         this.logger.error(error);
-        throw new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR);
+        throw new HttpException(
+          error.message,
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
       });
   }
 }

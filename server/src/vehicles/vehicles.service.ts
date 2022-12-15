@@ -2,7 +2,7 @@ import { HttpService } from '@nestjs/axios';
 import { HttpException, Inject, Injectable, Logger } from '@nestjs/common';
 import { AxiosResponse } from 'axios';
 import { VehicleDTO } from '../common/dto/vehicle/vehicle.dto';
-import { AddVehicleRequestDTO } from '../common/dto/vehicle/vehicle.request.dto';
+import { AddVehicleRequestDTO, UpdateVehiclePropertiesRequestDTO } from '../common/dto/vehicle/vehicle.request.dto';
 import { handleErrorResponse } from '../common/error/axios.error';
 import { ParticipantService } from '../participant/participant.service';
 
@@ -71,6 +71,28 @@ export class VehiclesService {
         this.logger.error(errorData);
         throw new HttpException(
           `Failed to create Vehicle ${vehicle.name}: ${errorData.description}`,
+          errorData.status,
+        );
+      });
+  }
+
+  async updateVehicle(
+    vehicleId: string,
+    vehicle: UpdateVehiclePropertiesRequestDTO,
+  ): Promise<void> {
+    return await this.httpService.axiosRef
+      .put(this.getVehiclesUrl() + `/${vehicleId}`, vehicle, {
+        headers: await this.participantService.buildHeaders(),
+      })
+      .then(() => {
+        this.logger.log(`Vehicle ${vehicleId} successfully updated`);
+      })
+      .catch((error) => {
+        this.logger.error(error);
+        const errorData = handleErrorResponse(error);
+        this.logger.error(errorData);
+        throw new HttpException(
+          `Failed to update Vehicle ${vehicleId}: ${errorData.description}`,
           errorData.status,
         );
       });

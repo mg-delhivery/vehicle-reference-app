@@ -2,17 +2,23 @@ import {
   Controller,
   Get,
   Post,
-  Put,
-  Headers,
   Inject,
   Logger,
   Param,
   Body,
+  UsePipes,
+  Put,
 } from '@nestjs/common';
 import { VehicleDTO } from '../common/dto/vehicle/vehicle.dto';
 import { VehiclesService } from './vehicles.service';
-import { ApiQuery, ApiTags } from '@nestjs/swagger';
-import { AddVehicleRequestDTO } from '../common/dto/vehicle/vehicle.request.dto';
+import { ApiTags } from '@nestjs/swagger';
+import {
+  AddVehicleRequestDTO,
+  UpdateVehiclePropertiesRequestDTO,
+} from '../common/dto/vehicle/vehicle.request.dto';
+import { AddVehicleSchema } from './validation/add-vehicle.schema.validation';
+import { SchemaValidationPipe } from '../common/validation/validation.pipe';
+import { UpdateVehicleSchema } from './validation/update-vehicle.schema.validation';
 
 @ApiTags('Vehicle')
 @Controller('vehicles')
@@ -35,17 +41,27 @@ export class VehiclesController {
   }
 
   @Post('/')
+  @UsePipes(new SchemaValidationPipe(AddVehicleSchema))
   private createVehicle(@Body() request: AddVehicleRequestDTO): Promise<void> {
     return this.vehicleService.addVehicle(request);
   }
 
-  /*
-
-  @Put('/:vehicleId/activate')
-  private activateVehicle(@Headers() headers): Promise<void> {
-    return;
+  @Put('/:vehicleId')
+  @UsePipes(new SchemaValidationPipe(UpdateVehicleSchema))
+  private updateVehicle(
+    @Param('vehicleId') vehicleId: string,
+    @Body() request: UpdateVehiclePropertiesRequestDTO,
+  ): Promise<void> {
+    return this.vehicleService.updateVehicle(vehicleId, request);
   }
 
+  /*
+  @Put('/:vehicleId/activate')
+  private activateVehicle(@Headers() headers): Promise<void> {
+    return this.vehicleService.
+  }
+
+  
   @Put('/:vehicleId/deactivate')
   private deactivateVehicle(@Headers() headers): Promise<void> {
     return;

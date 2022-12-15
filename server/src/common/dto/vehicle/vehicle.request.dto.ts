@@ -8,3 +8,7 @@ export class AddVehicleRequestDTO {
   subCategory?: string;
   properties?: VehicleProperties;
 }
+
+export class UpdateVehiclePropertiesRequestDTO {
+  properties: VehicleProperties;
+}
