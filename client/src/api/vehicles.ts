@@ -25,12 +25,25 @@ export const fetchVehicle = async (id: string): Promise<VehicleDisplay> => {
   return getDisplayFromParticipant(data);
 };
 
+export const createVehicle = async (
+  data: VehicleParticipantForm
+): Promise<void> => {
+  const dto = getDtoFromDisplay(data);
+
+  await axios.post(`/api/vehicles`, dto, { ...getHeaders });
+
+  return;
+};
+
 const getDisplayFromParticipant = (
   participant: VehicleParticipant
 ): VehicleDisplay => {
   return {
     id: participant.id,
     state: participant.state,
+    uniqueCode: participant.uniqueCode,
+    owner: participant.owner,
+    category: participant.category || '',
     name: participant.name,
     properties: participant.properties,
     createdAt: getUxDateDisplay(participant.createdAt),
@@ -38,4 +51,34 @@ const getDisplayFromParticipant = (
     updatedAt: getUxDateDisplay(participant.updatedAt),
     updatedBy: participant.updatedBy.name,
   };
+};
+
+const getDtoFromDisplay = (data: VehicleDisplay): AddVehicleRequestDTO => {
+  const dto: AddVehicleRequestDTO = {
+    uniqueCode: data.uniqueCode,
+    name: data.name,
+    owner: data.owner,
+    category: data.category,
+    properties: getParticipantProperties(data.properties),
+  };
+
+  if (dto.properties && typeof dto.properties?.registrationYear === 'string') {
+    dto.properties.registrationYear = parseInt(dto.properties.registrationYear);
+  }
+
+  return dto;
+};
+
+const getParticipantProperties = (
+  initial: VehicleParticipantProperties
+): VehicleParticipantProperties => {
+  const props: VehicleParticipantProperties = {};
+
+  for (const [key, val] of Object.entries(initial)) {
+    if (val) {
+      props[key] = val;
+    }
+  }
+
+  return props;
 };

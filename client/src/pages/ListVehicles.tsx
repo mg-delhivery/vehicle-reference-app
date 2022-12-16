@@ -1,6 +1,12 @@
-import { Button, Spinner, Table } from 'flowbite-react';
+import { Button, Spinner, Table, Toast } from 'flowbite-react';
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from 'react-router-dom';
 
 import { getVehicles } from '../api/vehicles';
 import { RelativeDate } from '../components/RelativeDate';
@@ -8,20 +14,47 @@ import { VehicleState } from '../components/VehicleState';
 import Title from '../layout/Title';
 
 function VehiclesList() {
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const [vehicles, setVehicles] = useState<VehicleParticipant[]>([]);
   const navigate = useNavigate();
-  // const { isLoading, data: vehicles } = useGetVehicles();
+  const [toastMsg, setToastMsg] = useState<string>();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const getAllVehicles = async () => {
       const { data } = await getVehicles();
       setVehicles(data);
+      setIsLoading(false);
     };
     getAllVehicles();
   }, []);
 
+  useEffect(() => {
+    if (
+      searchParams.has('success') &&
+      searchParams.get('message') === 'created'
+    ) {
+      setToastMsg('Vehicle created');
+
+      setTimeout(() => {
+        setToastMsg(undefined);
+        searchParams.delete('success');
+        searchParams.delete('message');
+        setSearchParams(searchParams);
+      }, 3000);
+    }
+  }, []);
+
   return (
     <div id="VehiclesList" className="flex flex-col items-center gap-6">
+      {toastMsg && (
+        <Toast className="fixed top-6 bg-green-500 text-slate-200">
+          <div className="ml-3 text-sm font-normal">{toastMsg}</div>
+          <Toast.Toggle />
+        </Toast>
+      )}
+
       <Title>Vehicles</Title>
 
       <Table className="w-full">
@@ -64,7 +97,7 @@ function VehiclesList() {
           ))}
         </Table.Body>
       </Table>
-      {vehicles.length === 0 && <Spinner aria-label="Loading vehicles" />}
+      {isLoading && <Spinner aria-label="Loading vehicles" />}
     </div>
   );
 }

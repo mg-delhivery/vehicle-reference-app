@@ -2,7 +2,7 @@ import { act, render, screen } from '@testing-library/react';
 import React from 'react';
 import * as router from 'react-router-dom';
 
-import VehiclesList from './VehiclesList';
+import VehiclesList from './ListVehicles';
 
 describe(VehiclesList.name, () => {
   const navigate = jest.fn();

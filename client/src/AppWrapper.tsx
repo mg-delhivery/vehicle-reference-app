@@ -6,7 +6,7 @@ import './index.css';
 import CreateVehicle from './pages/CreateVehicle';
 import EditVehicle from './pages/EditVehicle';
 import ErrorPage from './pages/ErrorPage';
-import VehiclesList from './pages/VehiclesList';
+import VehiclesList from './pages/ListVehicles';
 import ViewVehicle from './pages/ViewVehicle';
 import reportWebVitals from './reportWebVitals';
 import Root from './routes/root';

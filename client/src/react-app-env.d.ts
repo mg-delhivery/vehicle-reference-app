@@ -7,6 +7,7 @@ interface ParticipantActor {
 }
 
 interface VehicleParticipantProperties {
+  [key: string]: any;
   mode?: string;
   fuelType?: string;
   operatorId?: string;
@@ -24,6 +25,7 @@ interface VehicleParticipant {
   participantType: string;
   properties: VehicleParticipantProperties;
   state: string;
+  category: string?;
   createdAt: number;
   updatedAt: number;
   createdBy: ParticipantActor;
@@ -34,9 +36,23 @@ interface VehicleDisplay {
   id: string;
   state: string;
   name: string;
+  uniqueCode: string;
+  owner: string;
+  category: string;
   properties: VehicleParticipantProperties;
   createdAt: string;
   createdBy: string;
   updatedAt: string;
   updatedBy: string;
+}
+
+interface VehicleParticipantForm extends VehicleDisplay {}
+
+interface AddVehicleRequestDTO {
+  uniqueCode?: string;
+  name?: string;
+  owner?: string;
+  category?: string;
+  subCategory?: string;
+  properties?: VehicleParticipantProperties;
 }
