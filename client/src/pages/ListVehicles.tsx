@@ -1,7 +1,8 @@
-import { Button, Spinner, Table, Toast } from 'flowbite-react';
+import { Button, Pagination, Spinner, Table, Toast } from 'flowbite-react';
 import React, { useEffect, useState } from 'react';
 import {
   Link,
+  createSearchParams,
   useLocation,
   useNavigate,
   useParams,
@@ -13,6 +14,8 @@ import { RelativeDate } from '../components/RelativeDate';
 import { VehicleState } from '../components/VehicleState';
 import Title from '../layout/Title';
 
+const ITEMS_PER_PAGE = 10;
+
 function VehiclesList() {
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -20,6 +23,16 @@ function VehiclesList() {
   const navigate = useNavigate();
   const [toastMsg, setToastMsg] = useState<string>();
   const [isLoading, setIsLoading] = useState(true);
+  const [paginationPage, setPaginationPage] = useState(1);
+
+  useEffect(() => {
+    if (searchParams.has('page')) {
+      const qPage = parseInt(searchParams.get('page') || '');
+      if (!isNaN(qPage)) {
+        setPaginationPage(qPage);
+      }
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     const getAllVehicles = async () => {
@@ -49,6 +62,15 @@ function VehiclesList() {
     }
   }, []);
 
+  const newPaginationState = (page: number) => {
+    navigate({
+      pathname: '.',
+      search: `?${createSearchParams({
+        page: `${page}`,
+      })}`,
+    });
+  };
+
   return (
     <div id="VehiclesList" className="flex flex-col items-center gap-6">
       {toastMsg && (
@@ -69,37 +91,53 @@ function VehiclesList() {
           <Table.HeadCell>Edit</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
-          {vehicles.map((vehicle, i) => (
-            <Table.Row
-              key={vehicle.id}
-              className="bg-white dark:border-gray-700 dark:bg-gray-800"
-            >
-              <Table.Cell>{vehicle.uniqueCode}</Table.Cell>
-              <Table.Cell>
-                <Link
-                  className="text-blue-700 underline"
-                  to={`/vehicles/${vehicle.id}`}
-                >
-                  {vehicle.name}
-                </Link>
-              </Table.Cell>
-              <Table.Cell>
-                <VehicleState rawState={vehicle.state} />
-              </Table.Cell>
-              <Table.Cell>
-                <RelativeDate dateMs={vehicle.updatedAt} />
-              </Table.Cell>
-              <Table.Cell>
-                <Button
-                  onClick={() => navigate(`/vehicles/${vehicle.id}/edit`)}
-                >
-                  Edit
-                </Button>
-              </Table.Cell>
-            </Table.Row>
-          ))}
+          {vehicles
+            .filter(
+              (vehicle, i) => Math.ceil(i / ITEMS_PER_PAGE) == paginationPage
+            )
+            .map((vehicle, i) => (
+              <Table.Row
+                key={vehicle.id}
+                className="bg-white dark:border-gray-700 dark:bg-gray-800"
+              >
+                <Table.Cell>{vehicle.uniqueCode}</Table.Cell>
+                <Table.Cell>
+                  <Link
+                    className="text-blue-700 underline"
+                    to={`/vehicles/${vehicle.id}`}
+                  >
+                    {vehicle.name}
+                  </Link>
+                </Table.Cell>
+                <Table.Cell>
+                  <VehicleState rawState={vehicle.state} />
+                </Table.Cell>
+                <Table.Cell>
+                  <RelativeDate dateMs={vehicle.updatedAt} />
+                </Table.Cell>
+                <Table.Cell>
+                  <Button
+                    size="xs"
+                    onClick={() => navigate(`/vehicles/${vehicle.id}/edit`)}
+                  >
+                    Edit
+                  </Button>
+                </Table.Cell>
+              </Table.Row>
+            ))}
         </Table.Body>
       </Table>
+      <div className="flex items-center justify-center text-center">
+        <Pagination
+          currentPage={paginationPage}
+          layout="pagination"
+          onPageChange={newPaginationState}
+          showIcons={true}
+          totalPages={Math.ceil(vehicles.length / ITEMS_PER_PAGE)}
+          previousLabel="Go back"
+          nextLabel="Go forward"
+        />
+      </div>
       {isLoading && <Spinner aria-label="Loading vehicles" />}
     </div>
   );
