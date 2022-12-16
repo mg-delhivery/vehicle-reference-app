@@ -244,7 +244,7 @@ function CreateVehicle() {
             {!isSubmitting && <span>Create</span>}
             {isSubmitting && (
               <div className="text-center">
-                <Spinner size="xl" aria-label="Loading vehicles" />
+                <Spinner size="xl" aria-label="Saving new vehicle" />
               </div>
             )}
           </Button>

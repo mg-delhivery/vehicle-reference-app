@@ -31,11 +31,14 @@ function VehiclesList() {
   }, []);
 
   useEffect(() => {
-    if (
-      searchParams.has('success') &&
-      searchParams.get('message') === 'created'
-    ) {
-      setToastMsg('Vehicle created');
+    if (searchParams.has('success')) {
+      const message = searchParams.get('message');
+
+      if (message === 'created') {
+        setToastMsg('Vehicle created');
+      } else if (message === 'edited') {
+        setToastMsg('Vehicle edited');
+      }
 
       setTimeout(() => {
         setToastMsg(undefined);
