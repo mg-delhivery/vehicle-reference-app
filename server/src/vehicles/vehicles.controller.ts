@@ -9,7 +9,7 @@ import {
   UsePipes,
   Put,
 } from '@nestjs/common';
-import { VehicleDTO } from '../common/dto/vehicle/vehicle.dto';
+import { VehicleDTO, VehicleStateDTO } from '../common/dto/vehicle/vehicle.dto';
 import { VehiclesService } from './vehicles.service';
 import { ApiTags } from '@nestjs/swagger';
 import {
@@ -38,6 +38,13 @@ export class VehiclesController {
     @Param('vehicleId') vehicleId: string,
   ): Promise<VehicleDTO> {
     return await this.vehicleService.getVehicle(vehicleId);
+  }
+
+  @Get('/:vehicleId/state')
+  private async getVehicleState(
+    @Param('vehicleId') vehicleId: string,
+  ): Promise<VehicleStateDTO> {
+    return await this.vehicleService.getStateAndTransitions(vehicleId);
   }
 
   @Post('/')

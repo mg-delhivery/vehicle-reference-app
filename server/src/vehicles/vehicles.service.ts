@@ -9,7 +9,7 @@ import {
 import { AxiosResponse } from 'axios';
 import { LifecycleConstants } from '../common/constants/lifecycle.constants';
 import { ServiceConstants } from '../common/constants/service.constants';
-import { VehicleDTO } from '../common/dto/vehicle/vehicle.dto';
+import { VehicleDTO, VehicleStateDTO } from '../common/dto/vehicle/vehicle.dto';
 import {
   AddVehicleRequestDTO,
   UpdateVehiclePropertiesRequestDTO,
@@ -66,6 +66,48 @@ export class VehiclesService {
           errorData.status,
         );
       });
+  }
+
+  async getStateAndTransitions(vehicleId: string): Promise<VehicleStateDTO> {
+    let vehicleState: VehicleStateDTO;
+    await this.getVehicle(vehicleId)
+      .then((response) => {
+        vehicleState.currentState = response.state;
+        switch (response.state) {
+          case 'onboarding:onboarding': {
+            vehicleState.possibleStates = ['active:active'];
+            break;
+          }
+          case 'active:active': {
+            vehicleState.possibleStates = ['inactive:inactive'];
+            break;
+          }
+          case 'inactive:inactive': {
+            vehicleState.possibleStates = ['inactive:dead'];
+            break;
+          }
+          case 'inactive:dead': {
+            vehicleState.possibleStates = [];
+            break;
+          }
+          default: {
+            throw new HttpException(
+              `Failed to read a valid state of Vehicle ${vehicleId}`,
+              HttpStatus.INTERNAL_SERVER_ERROR,
+            );
+          }
+        }
+      })
+      .catch((error) => {
+        this.logger.error(error);
+        const errorData = handleErrorResponse(error);
+        this.logger.error(errorData);
+        throw new HttpException(
+          `Failed to get Vehicle ${vehicleId}: ${errorData.description}`,
+          errorData.status,
+        );
+      });
+    return vehicleState;
   }
 
   async addVehicle(vehicle: AddVehicleRequestDTO): Promise<void> {

@@ -20,3 +20,8 @@ export interface VehicleProperties {
 export interface GetAllVehiclesResponse {
   data: VehicleDTO[];
 }
+
+export interface VehicleStateDTO {
+  currentState: string;
+  possibleStates: string[];
+}
