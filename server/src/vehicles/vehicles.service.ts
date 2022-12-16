@@ -1,8 +1,19 @@
 import { HttpService } from '@nestjs/axios';
-import { HttpException, Inject, Injectable, Logger } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { AxiosResponse } from 'axios';
+import { LifecycleConstants } from '../common/constants/lifecycle.constants';
+import { ServiceConstants } from '../common/constants/service.constants';
 import { VehicleDTO } from '../common/dto/vehicle/vehicle.dto';
-import { AddVehicleRequestDTO, UpdateVehiclePropertiesRequestDTO } from '../common/dto/vehicle/vehicle.request.dto';
+import {
+  AddVehicleRequestDTO,
+  UpdateVehiclePropertiesRequestDTO,
+} from '../common/dto/vehicle/vehicle.request.dto';
 import { handleErrorResponse } from '../common/error/axios.error';
 import { ParticipantService } from '../participant/participant.service';
 
@@ -80,7 +91,7 @@ export class VehiclesService {
     vehicleId: string,
     vehicle: UpdateVehiclePropertiesRequestDTO,
   ): Promise<void> {
-    return await this.httpService.axiosRef
+    await this.httpService.axiosRef
       .put(this.getVehiclesUrl() + `/${vehicleId}`, vehicle, {
         headers: await this.participantService.buildHeaders(),
       })
@@ -96,5 +107,133 @@ export class VehiclesService {
           errorData.status,
         );
       });
+  }
+
+  async activateVehicle(vehicleId: string): Promise<void> {
+    // verify vehicle exists and is in proper state
+    await this.getVehicle(vehicleId)
+      .then(async (vehicle) => {
+        if (vehicle.state !== 'onboarding:onboarding') {
+          throw new HttpException(
+            `Error: Vehicle, ${vehicle.name}, not in proper state for transition`,
+            HttpStatus.BAD_REQUEST,
+          );
+        }
+
+        await this.lifeCycleEvent(
+          vehicleId,
+          LifecycleConstants.onboarding_active.eventCode,
+          LifecycleConstants.onboarding_active.reasonCode,
+        )
+          .then(() => {
+            this.logger.log(`Vehicle ${vehicleId} successfully activated`);
+          })
+          .catch((error) => {
+            this.logger.error(error);
+            const errorData = handleErrorResponse(error);
+            this.logger.error(errorData);
+            throw new HttpException(
+              `Failed to transition Vehicle ${vehicleId}: ${errorData.description}`,
+              errorData.status,
+            );
+          });
+      })
+      .catch((error) => {
+        this.logger.error(error);
+        throw error;
+      });
+  }
+
+  async deactivateVehicle(vehicleId: string): Promise<void> {
+    // verify vehicle exists and is in proper state
+    await this.getVehicle(vehicleId)
+      .then(async (vehicle) => {
+        if (vehicle.state !== 'active:active') {
+          throw new HttpException(
+            `Error: Vehicle, ${vehicle.name}, not in proper state for transition`,
+            HttpStatus.BAD_REQUEST,
+          );
+        }
+
+        await this.lifeCycleEvent(
+          vehicleId,
+          LifecycleConstants.active_inactive.eventCode,
+          LifecycleConstants.active_inactive.reasonCode,
+        )
+          .then(() => {
+            this.logger.log(`Vehicle ${vehicleId} successfully deactivated`);
+          })
+          .catch((error) => {
+            this.logger.error(error);
+            const errorData = handleErrorResponse(error);
+            this.logger.error(errorData);
+            throw new HttpException(
+              `Failed to transition Vehicle ${vehicleId}: ${errorData.description}`,
+              errorData.status,
+            );
+          });
+      })
+      .catch((error) => {
+        this.logger.error(error);
+        throw error;
+      });
+  }
+
+  async destroyVehicle(vehicleId: string): Promise<void> {
+    // verify vehicle exists and is in proper state
+    await this.getVehicle(vehicleId)
+      .then(async (vehicle) => {
+        if (vehicle.state !== 'inactive:inactive') {
+          throw new HttpException(
+            `Error: Vehicle, ${vehicle.name}, not in proper state for transition`,
+            HttpStatus.BAD_REQUEST,
+          );
+        }
+
+        await this.lifeCycleEvent(
+          vehicleId,
+          LifecycleConstants.inactive_dead.eventCode,
+          LifecycleConstants.inactive_dead.reasonCode,
+        )
+          .then(() => {
+            this.logger.log(`Vehicle ${vehicleId} successfully destroyed`);
+          })
+          .catch((error) => {
+            this.logger.error(error);
+            const errorData = handleErrorResponse(error);
+            this.logger.error(errorData);
+            throw new HttpException(
+              `Failed to transition Vehicle ${vehicleId}: ${errorData.description}`,
+              errorData.status,
+            );
+          });
+      })
+      .catch((error) => {
+        this.logger.error(error);
+        throw error;
+      });
+  }
+
+  private async lifeCycleEvent(
+    vehicleId: string,
+    eventCode: string,
+    reasonCode: string,
+  ) {
+    await this.httpService.axiosRef.put(
+      this.getVehiclesUrl() + `/${vehicleId}/state/event`,
+      {
+        eventCode: eventCode,
+        reasonCode: reasonCode,
+        timestamp: Date.now(),
+        data: {},
+        source: {
+          appId: ServiceConstants.vehicle_app,
+          userId: process.env.CLIENT_ID,
+        },
+      },
+      {
+        headers: await this.participantService.buildHeaders(),
+      },
+    );
   }
 }

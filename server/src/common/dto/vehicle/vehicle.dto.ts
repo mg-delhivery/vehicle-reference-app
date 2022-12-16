@@ -1,6 +1,7 @@
 export interface VehicleDTO {
   name: string;
   code: string;
+  state: string;
   category: string;
   subcategory: string;
   properties: VehicleProperties;

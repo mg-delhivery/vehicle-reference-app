@@ -55,21 +55,22 @@ export class VehiclesController {
     return this.vehicleService.updateVehicle(vehicleId, request);
   }
 
-  /*
   @Put('/:vehicleId/activate')
-  private activateVehicle(@Headers() headers): Promise<void> {
-    return this.vehicleService.
+  private async activateVehicle(
+    @Param('vehicleId') vehicleId: string,
+  ): Promise<void> {
+    return this.vehicleService.activateVehicle(vehicleId);
   }
 
-  
   @Put('/:vehicleId/deactivate')
-  private deactivateVehicle(@Headers() headers): Promise<void> {
-    return;
+  private deactivateVehicle(
+    @Param('vehicleId') vehicleId: string,
+  ): Promise<void> {
+    return this.vehicleService.deactivateVehicle(vehicleId);
   }
 
-  @Put('/:vehicleId/kill')
-  private killVehicle(@Headers() headers): Promise<void> {
-    return;
+  @Put('/:vehicleId/destroy')
+  private killVehicle(@Param('vehicleId') vehicleId: string): Promise<void> {
+    return this.vehicleService.destroyVehicle(vehicleId);
   }
-*/
 }
