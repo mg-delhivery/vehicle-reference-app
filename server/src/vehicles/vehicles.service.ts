@@ -15,7 +15,9 @@ import {
   UpdateVehiclePropertiesRequestDTO,
 } from '../common/dto/vehicle/vehicle.request.dto';
 import { handleErrorResponse } from '../common/error/axios.error';
+import { State } from '../common/models/state.model';
 import { ParticipantService } from '../participant/participant.service';
+import { VehicleStateMachine } from './vehicle.state-machine';
 
 @Injectable()
 export class VehiclesService {
@@ -26,6 +28,9 @@ export class VehiclesService {
 
   @Inject(ParticipantService)
   private readonly participantService: ParticipantService;
+
+  @Inject(VehicleStateMachine)
+  private readonly vehicleStateMachines: VehicleStateMachine;
 
   private getVehiclesUrl(): string {
     return `https://${process.env.TENANT_DNS}/core/api/v2/participantservice/dgvehicles`;
@@ -68,35 +73,10 @@ export class VehiclesService {
       });
   }
 
-  async getStateAndTransitions(vehicleId: string): Promise<VehicleStateDTO> {
-    let vehicleState: VehicleStateDTO;
-    await this.getVehicle(vehicleId)
+  async getStateAndTransitions(vehicleId: string): Promise<State> {
+    return await this.getVehicle(vehicleId)
       .then((response) => {
-        vehicleState.currentState = response.state;
-        switch (response.state) {
-          case 'onboarding:onboarding': {
-            vehicleState.possibleStates = ['active:active'];
-            break;
-          }
-          case 'active:active': {
-            vehicleState.possibleStates = ['inactive:inactive'];
-            break;
-          }
-          case 'inactive:inactive': {
-            vehicleState.possibleStates = ['inactive:dead'];
-            break;
-          }
-          case 'inactive:dead': {
-            vehicleState.possibleStates = [];
-            break;
-          }
-          default: {
-            throw new HttpException(
-              `Failed to read a valid state of Vehicle ${vehicleId}`,
-              HttpStatus.INTERNAL_SERVER_ERROR,
-            );
-          }
-        }
+        return this.vehicleStateMachines.getState(response.state);
       })
       .catch((error) => {
         this.logger.error(error);
@@ -107,7 +87,6 @@ export class VehiclesService {
           errorData.status,
         );
       });
-    return vehicleState;
   }
 
   async addVehicle(vehicle: AddVehicleRequestDTO): Promise<void> {

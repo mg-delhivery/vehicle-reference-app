@@ -22,6 +22,6 @@ export interface GetAllVehiclesResponse {
 }
 
 export interface VehicleStateDTO {
-  currentState: string;
-  possibleStates: string[];
+  name: string;
+  transitions: string[];
 }
