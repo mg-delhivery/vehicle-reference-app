@@ -40,14 +40,7 @@ export class VehiclesController {
   ): Promise<VehicleDTO> {
     return await this.vehicleService.getVehicle(vehicleId);
   }
-  /*
-  @Get('/:vehicleId/state')
-  private async getVehicleState(
-    @Param('vehicleId') vehicleId: string,
-  ): Promise<VehicleStateDTO> {
-    return await this.vehicleService.getStateAndTransitions(vehicleId);
-  }
-*/
+
   @Post('/')
   @UsePipes(new SchemaValidationPipe(AddVehicleSchema))
   private createVehicle(@Body() request: AddVehicleRequestDTO): Promise<void> {

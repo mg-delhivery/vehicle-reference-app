@@ -6,17 +6,14 @@ import {
   Injectable,
   Logger,
 } from '@nestjs/common';
-import { AxiosResponse } from 'axios';
-import { LifecycleConstants } from '../common/constants/lifecycle.constants';
 import { ServiceConstants } from '../common/constants/service.constants';
-import { VehicleDTO, VehicleStateDTO } from '../common/dto/vehicle/vehicle.dto';
+import { VehicleDTO } from '../common/dto/vehicle/vehicle.dto';
 import {
   AddVehicleRequestDTO,
   TransitionVehicleStateRequestDTO,
   UpdateVehiclePropertiesRequestDTO,
 } from '../common/dto/vehicle/vehicle.request.dto';
 import { handleErrorResponse } from '../common/error/axios.error';
-import { State } from '../common/models/state.model';
 import { ParticipantService } from '../participant/participant.service';
 import { VehicleStateMachine } from './vehicle.state-machine';
 
@@ -127,15 +124,19 @@ export class VehiclesService {
   ): Promise<void> {
     await this.getVehicle(vehicleId).then(async (vehicle) => {
       //get possible transitions for current state
-      /*
-      if (valid) {
+      if (vehicle.state.transitions.includes(request.state)) {
+        const transitionCodes = this.vehicleStateMachines.getTransitionCodes(
+          vehicle.state.current,
+        );
         await this.lifeCycleEvent(
           vehicleId,
-          LifecycleConstants.onboarding_active.eventCode,
-          LifecycleConstants.onboarding_active.reasonCode,
+          transitionCodes.eventCode,
+          transitionCodes.reasonCode,
         )
           .then(() => {
-            this.logger.log(`Vehicle ${vehicleId} successfully activated`);
+            this.logger.log(
+              `Vehicle ${vehicleId} transitioned from ${vehicle.state.current} to ${request.state}`,
+            );
           })
           .catch((error) => {
             this.logger.error(error);
@@ -146,7 +147,7 @@ export class VehiclesService {
               errorData.status,
             );
           });
-      }*/
+      }
     });
   }
 
