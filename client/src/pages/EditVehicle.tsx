@@ -4,7 +4,8 @@ import { useForm } from 'react-hook-form';
 import { createSearchParams, useNavigate, useParams } from 'react-router-dom';
 
 import { editVehicle, fetchVehicle } from '../api/vehicles';
-import { VehicleState } from '../components/VehicleState';
+import { VehicleStateDisplay } from '../components/VehicleState';
+import { VehicleStateTransitioner } from '../components/VehicleStrateTransitioner';
 import Title from '../layout/Title';
 
 interface VehicleParticipantForm extends VehicleDisplay {}
@@ -94,7 +95,9 @@ function EditVehicle() {
       <div className="w-full">
         <div className="flex flex-row items-center gap-4 md:gap-6">
           <Title>Edit Vehicle</Title>
-          {!isLoading && <VehicleState rawState={vehicle.state} />}
+          {/* {!isLoading && (
+            <VehicleStateTransitioner size="lg" rawState={vehicle.state} />
+          )} */}
         </div>
 
         {isLoading && (
@@ -138,6 +141,7 @@ function EditVehicle() {
             </div>
 
             <hr className="my-4" />
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="grow">
                 <div className="mb-2 block">
@@ -156,7 +160,7 @@ function EditVehicle() {
               </div>
               <div className="grow">
                 <div className="mb-2 block">
-                  <Label htmlFor="properties.fuelType" value="Fuel Type" />
+                  <Label htmlFor="properties.fuelType" value="Fuel Type *" />
                 </div>
                 <TextInput
                   id={'properties.fuelType'}
@@ -169,7 +173,7 @@ function EditVehicle() {
               </div>
               <div className="grow">
                 <div className="mb-2 block">
-                  <Label htmlFor="properties.mode" value="Mode" />
+                  <Label htmlFor="properties.mode" value="Mode *" />
                 </div>
                 <TextInput
                   id={'properties.mode'}
@@ -182,7 +186,10 @@ function EditVehicle() {
               </div>
               <div className="grow">
                 <div className="mb-2 block">
-                  <Label htmlFor="properties.operatorId" value="Operator ID" />
+                  <Label
+                    htmlFor="properties.operatorId"
+                    value="Operator ID *"
+                  />
                 </div>
                 <TextInput
                   id={'properties.operatorId'}
@@ -234,13 +241,16 @@ function EditVehicle() {
                 </div>
                 <TextInput
                   id={'properties.registrationYear'}
-                  type="text"
+                  type="number"
                   disabled={false}
                   placeholder={vehicle?.properties.registrationYear?.toString()}
                   required={false}
                   {...register('properties.registrationYear', {})}
                 />
               </div>
+            </div>
+            <div className="mt-4">
+              <span>Required fields denoted by *</span>
             </div>
 
             <Button type="submit" className="mt-6">

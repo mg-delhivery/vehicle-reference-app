@@ -11,7 +11,7 @@ import {
 
 import { getVehicles } from '../api/vehicles';
 import { RelativeDate } from '../components/RelativeDate';
-import { VehicleState } from '../components/VehicleState';
+import { VehicleStateDisplay } from '../components/VehicleState';
 import Title from '../layout/Title';
 
 const ITEMS_PER_PAGE = 10;
@@ -92,6 +92,9 @@ function VehiclesList() {
         </Table.Head>
         <Table.Body className="divide-y">
           {vehicles
+            .sort((a, b) => {
+              return a.updatedAt > b.updatedAt ? -1 : 1;
+            })
             .filter(
               (vehicle, i) => Math.ceil(i / ITEMS_PER_PAGE) == paginationPage
             )
@@ -110,7 +113,7 @@ function VehiclesList() {
                   </Link>
                 </Table.Cell>
                 <Table.Cell>
-                  <VehicleState rawState={vehicle.state} />
+                  <VehicleStateDisplay rawState={vehicle.state} />
                 </Table.Cell>
                 <Table.Cell>
                   <RelativeDate dateMs={vehicle.updatedAt} />

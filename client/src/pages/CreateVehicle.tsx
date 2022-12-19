@@ -152,7 +152,7 @@ function CreateVehicle() {
             </div>
             <div className="grow">
               <div className="mb-2 block">
-                <Label htmlFor="properties.fuelType" value="Fuel Type" />
+                <Label htmlFor="properties.fuelType" value="Fuel Type *" />
               </div>
               <TextInput
                 id={'properties.fuelType'}
@@ -165,7 +165,7 @@ function CreateVehicle() {
             </div>
             <div className="grow">
               <div className="mb-2 block">
-                <Label htmlFor="properties.mode" value="Mode" />
+                <Label htmlFor="properties.mode" value="Mode *" />
               </div>
               <TextInput
                 id={'properties.mode'}
@@ -178,7 +178,7 @@ function CreateVehicle() {
             </div>
             <div className="grow">
               <div className="mb-2 block">
-                <Label htmlFor="properties.operatorId" value="Operator ID" />
+                <Label htmlFor="properties.operatorId" value="Operator ID *" />
               </div>
               <TextInput
                 id={'properties.operatorId'}
@@ -238,9 +238,11 @@ function CreateVehicle() {
               />
             </div>
           </div>
-          <hr className="my-4" />
+          <div className="mt-4">
+            <span>Required fields denoted by *</span>
+          </div>
 
-          <Button type="submit" disabled={isSubmitting}>
+          <Button type="submit" className="mt-6" disabled={isSubmitting}>
             {!isSubmitting && <span>Create</span>}
             {isSubmitting && (
               <div className="text-center">

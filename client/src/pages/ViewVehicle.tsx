@@ -10,7 +10,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { fetchVehicle } from '../api/vehicles';
-import { VehicleState } from '../components/VehicleState';
+import { VehicleStateDisplay } from '../components/VehicleState';
 import Title from '../layout/Title';
 
 interface VehicleParticipantForm extends VehicleDisplay {}
@@ -44,7 +44,6 @@ function ViewVehicle() {
     defaultValues: useMemo(() => vehicle, [vehicle]),
   });
   const onSubmit = (data: VehicleParticipantForm) => console.log(data);
-  console.log(errors);
 
   useEffect(() => {
     const executeFetchVehicle = async () => {
@@ -66,7 +65,9 @@ function ViewVehicle() {
     <div id="ViewVehicle">
       <div className="flex flex-row items-center gap-4 md:gap-6">
         <Title>{vehicle?.name}</Title>
-        {!isLoading && <VehicleState rawState={vehicle.state} />}
+        {!isLoading && (
+          <VehicleStateDisplay size="lg" rawState={vehicle.state} />
+        )}
       </div>
       {isLoading && (
         <div className="text-center">
