@@ -1,4 +1,11 @@
-import { Button, Label, Spinner, TextInput, Toast } from 'flowbite-react';
+import {
+  Button,
+  Label,
+  Select,
+  Spinner,
+  TextInput,
+  Toast,
+} from 'flowbite-react';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { createSearchParams, useNavigate, useParams } from 'react-router-dom';
@@ -154,14 +161,16 @@ function CreateVehicle() {
               <div className="mb-2 block">
                 <Label htmlFor="properties.fuelType" value="Fuel Type *" />
               </div>
-              <TextInput
+              <Select
                 id={'properties.fuelType'}
-                type="text"
-                disabled={false}
-                placeholder=""
                 required={true}
                 {...register('properties.fuelType', {})}
-              />
+              >
+                <option>CNG</option>
+                <option>Electric</option>
+                <option>Gasoline</option>
+                <option>Diesel</option>
+              </Select>
             </div>
             <div className="grow">
               <div className="mb-2 block">
