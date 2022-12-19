@@ -1,6 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import {
+  Link,
+  Outlet,
+  RouterProvider,
+  createBrowserRouter,
+} from 'react-router-dom';
 
 import './index.css';
 import CreateVehicle from './pages/CreateVehicle';
@@ -27,9 +32,14 @@ const router = createBrowserRouter([
     path: '/vehicles',
     element: <Root />,
     errorElement: <ErrorPage />,
+    handle: {
+      crumb: {
+        title: 'Vehicles',
+      },
+    },
     children: [
       {
-        path: '',
+        index: true,
         element: <VehiclesList />,
       },
       {
@@ -38,11 +48,27 @@ const router = createBrowserRouter([
       },
       {
         path: ':id',
-        element: <ViewVehicle />,
-      },
-      {
-        path: ':id/edit',
-        element: <EditVehicle />,
+        element: <Outlet />,
+        handle: {
+          crumb: {
+            title: 'View',
+          },
+        },
+        children: [
+          {
+            path: '',
+            element: <ViewVehicle />,
+          },
+          {
+            path: 'edit',
+            element: <EditVehicle />,
+            handle: {
+              crumb: {
+                title: 'Edit Vehicle',
+              },
+            },
+          },
+        ],
       },
     ],
   },

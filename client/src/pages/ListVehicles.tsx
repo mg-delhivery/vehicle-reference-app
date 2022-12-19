@@ -1,4 +1,4 @@
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   Button,
@@ -47,6 +47,9 @@ function VehiclesList() {
       const qPage = parseInt(searchParams.get('page') || '');
       if (!isNaN(qPage)) {
         setPaginationPage(qPage);
+
+        setFilterSearch('');
+        reset();
       }
     }
   }, [searchParams]);
@@ -90,12 +93,14 @@ function VehiclesList() {
 
   const {
     register,
+    reset,
     formState: { errors },
   } = useForm<VehicleSearchForm>();
 
   const handleSearch = (query: string) => {
-    console.log(query);
     setFilterSearch(query);
+    searchParams.delete('page');
+    setSearchParams(searchParams);
   };
 
   return (
@@ -106,8 +111,17 @@ function VehiclesList() {
           <Toast.Toggle />
         </Toast>
       )}
-
-      <Title>Vehicles</Title>
+      <div className="w-full flex flex-row gap-4">
+        <div className="grow">
+          <Title>Vehicles</Title>
+        </div>
+        <div className="flex-none">
+          <Button onClick={() => navigate('/vehicles/create')}>
+            <FontAwesomeIcon icon={faPlus} />
+            <span className="ml-2">Create Vehicle</span>
+          </Button>
+        </div>
+      </div>
       <div className="w-full">
         <form
           className="flex flex-col gap-4"
@@ -141,7 +155,13 @@ function VehiclesList() {
                 if (filterSearch === '') {
                   return vehicle;
                 }
-
+                // console.log(
+                //   `v: ${vehicle.name.toLowerCase()}; r: ${vehicle.name
+                //     .toLowerCase()
+                //     .includes(
+                //       filterSearch.toLowerCase()
+                //     )}; q: '${filterSearch.toLocaleLowerCase()}'`
+                // );
                 if (
                   vehicle.name
                     .toLowerCase()
@@ -154,7 +174,8 @@ function VehiclesList() {
                 return a.updatedAt > b.updatedAt ? -1 : 1;
               })
               .filter(
-                (vehicle, i) => Math.ceil(i / ITEMS_PER_PAGE) == paginationPage
+                (vehicle, i) =>
+                  Math.ceil((i + 1) / ITEMS_PER_PAGE) == paginationPage
               )
               .map((vehicle, i) => (
                 <Table.Row

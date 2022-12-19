@@ -61,7 +61,7 @@ function EditVehicle() {
       await editVehicle(id, data.properties);
 
       navigate({
-        pathname: '..',
+        pathname: '../..',
         search: `?${createSearchParams({
           success: 'true',
           message: 'edited',

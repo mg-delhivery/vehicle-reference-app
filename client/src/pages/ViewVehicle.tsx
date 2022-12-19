@@ -7,7 +7,7 @@ import {
 } from 'flowbite-react';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Outlet, useNavigate, useParams } from 'react-router-dom';
 
 import { fetchVehicle } from '../api/vehicles';
 import { VehicleStateDisplay } from '../components/VehicleState';
@@ -63,6 +63,7 @@ function ViewVehicle() {
   }
   return (
     <div id="ViewVehicle">
+      <Outlet />
       <div className="flex flex-row items-center gap-4 md:gap-6">
         <Title>{vehicle?.name}</Title>
         {!isLoading && (

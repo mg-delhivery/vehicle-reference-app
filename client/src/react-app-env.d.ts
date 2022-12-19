@@ -1,5 +1,10 @@
 /// <reference types="react-scripts" />
 
+declare module "header/initialize" {
+  function initialize(): void;
+  export = initialize;
+}
+
 interface ParticipantActor {
   id: string;
   name: string;

@@ -1,12 +1,21 @@
 import React from 'react';
 
-interface TitleProps {}
+interface TitleProps {
+  size?: string;
+}
 
-function Title({ children }: React.PropsWithChildren<TitleProps>) {
+function Title({
+  children,
+  size = 'text-2xl md:text-3xl lg:text-4xl',
+}: React.PropsWithChildren<TitleProps>) {
   return (
-    <h1 className="mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
-      {children}
-    </h1>
+    <div className="w-full">
+      <h1
+        className={`mb-4 ${size} font-extrabold tracking-tight leading-none text-gray-900 dark:text-white`}
+      >
+        {children}
+      </h1>
+    </div>
   );
 }
 
