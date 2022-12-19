@@ -19,7 +19,7 @@ interface BreadcrumbHandler {
 
 const crumbLink = (crumb: Breadcrumb, i: number): ReactNode => {
   return (
-    <Link to={crumb.path}>
+    <Link to={crumb.path} className="text-blue-600 underline">
       {i > 0 && <FontAwesomeIcon icon={faChevronRight} className="mr-4" />}
       <span>{crumb.title}</span>
     </Link>

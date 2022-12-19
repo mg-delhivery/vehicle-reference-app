@@ -45,6 +45,11 @@ const router = createBrowserRouter([
       {
         path: 'create',
         element: <CreateVehicle />,
+        handle: {
+          crumb: {
+            title: 'Create',
+          },
+        },
       },
       {
         path: ':id',
@@ -64,7 +69,7 @@ const router = createBrowserRouter([
             element: <EditVehicle />,
             handle: {
               crumb: {
-                title: 'Edit Vehicle',
+                title: 'Edit',
               },
             },
           },

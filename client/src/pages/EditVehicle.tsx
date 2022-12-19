@@ -19,15 +19,24 @@ interface VehicleParticipantForm extends VehicleDisplay {}
 
 const defaultValues: VehicleDisplay = {
   id: '',
-  state: '',
+  state: {
+    current: '',
+    transitions: [],
+  },
   name: '',
   uniqueCode: '',
   category: '',
   owner: '',
   properties: {},
   createdBy: '',
-  createdAt: '',
-  updatedAt: '',
+  createdAt: {
+    epoch: 0,
+    display: '',
+  },
+  updatedAt: {
+    epoch: 0,
+    display: '',
+  },
   updatedBy: '',
 };
 

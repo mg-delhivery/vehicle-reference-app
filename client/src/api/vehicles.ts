@@ -9,12 +9,15 @@ const getHeaders = () => ({
   'X-COREOS-TID': 'alpha', //sharedAccessBundle.value.tenantId,
 });
 
-export const getVehicles = async () => {
+export const getVehicles = async (): Promise<VehicleDisplay[]> => {
   const vehiclesResponse = await axios.get<VehicleParticipant[]>(
     `/api/vehicles`,
     { ...getHeaders }
   );
-  return vehiclesResponse;
+
+  const { data } = vehiclesResponse;
+
+  return data.map((vehicle) => getDisplayFromParticipant(vehicle));
 };
 
 export const fetchVehicle = async (id: string): Promise<VehicleDisplay> => {
@@ -61,10 +64,17 @@ const getDisplayFromParticipant = (
     category: participant.category || '',
     name: participant.name,
     properties: participant.properties,
-    createdAt: getUxDateDisplay(participant.createdAt),
+    createdAt: getDateStructure(participant.createdAt),
     createdBy: participant.createdBy.name,
-    updatedAt: getUxDateDisplay(participant.updatedAt),
+    updatedAt: getDateStructure(participant.updatedAt),
     updatedBy: participant.updatedBy.name,
+  };
+};
+
+const getDateStructure = (epoch: number): DateInfo => {
+  return {
+    epoch,
+    display: getUxDateDisplay(epoch),
   };
 };
 

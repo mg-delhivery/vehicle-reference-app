@@ -17,15 +17,24 @@ interface VehicleParticipantForm extends VehicleDisplay {}
 
 const defaultValues: VehicleDisplay = {
   id: '',
-  state: '',
+  state: {
+    current: '',
+    transitions: [],
+  },
   name: '',
   uniqueCode: '',
   category: '',
   owner: '',
   properties: {},
   createdBy: '',
-  createdAt: '',
-  updatedAt: '',
+  createdAt: {
+    epoch: 0,
+    display: '',
+  },
+  updatedAt: {
+    epoch: 0,
+    display: '',
+  },
   updatedBy: '',
 };
 
@@ -67,7 +76,7 @@ function ViewVehicle() {
       <div className="flex flex-row items-center gap-4 md:gap-6">
         <Title>{vehicle?.name}</Title>
         {!isLoading && (
-          <VehicleStateDisplay size="lg" rawState={vehicle.state} />
+          <VehicleStateDisplay size="lg" rawState={vehicle.state.current} />
         )}
       </div>
       {isLoading && (
@@ -215,7 +224,7 @@ function ViewVehicle() {
                 id={'createdAt'}
                 type="text"
                 disabled={true}
-                placeholder={vehicle?.createdAt}
+                placeholder={vehicle?.createdAt.display}
                 required={true}
                 {...register('createdAt', {})}
               />
@@ -245,7 +254,7 @@ function ViewVehicle() {
                 id={'updatedAt'}
                 type="text"
                 disabled={true}
-                placeholder={vehicle?.updatedAt}
+                placeholder={vehicle?.updatedAt.display}
                 required={true}
                 {...register('updatedAt', {})}
               />

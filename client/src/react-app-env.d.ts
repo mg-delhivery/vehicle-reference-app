@@ -5,6 +5,11 @@ declare module "header/initialize" {
   export = initialize;
 }
 
+interface VehicleState {
+  current: string;
+  transitions: string[];
+}
+
 interface ParticipantActor {
   id: string;
   name: string;
@@ -29,7 +34,7 @@ interface VehicleParticipant {
   owner: string;
   participantType: string;
   properties: VehicleParticipantProperties;
-  state: string;
+  state: VehicleState;
   category: string?;
   createdAt: number;
   updatedAt: number;
@@ -37,17 +42,22 @@ interface VehicleParticipant {
   updatedBy: ParticipantActor;
 }
 
+interface DateInfo {
+  epoch: number;
+  display: string;
+}
+
 interface VehicleDisplay {
   id: string;
-  state: string;
+  state: VehicleState;
   name: string;
   uniqueCode: string;
   owner: string;
   category: string;
   properties: VehicleParticipantProperties;
-  createdAt: string;
+  createdAt: DateInfo;
   createdBy: string;
-  updatedAt: string;
+  updatedAt: DateInfo;
   updatedBy: string;
 }
 

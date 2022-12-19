@@ -34,7 +34,7 @@ const ITEMS_PER_PAGE = 10;
 function VehiclesList() {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [vehicles, setVehicles] = useState<VehicleParticipant[]>([]);
+  const [vehicles, setVehicles] = useState<VehicleDisplay[]>([]);
   const navigate = useNavigate();
   const [toastMsg, setToastMsg] = useState<string>();
   const [isLoading, setIsLoading] = useState(true);
@@ -56,8 +56,8 @@ function VehiclesList() {
 
   useEffect(() => {
     const getAllVehicles = async () => {
-      const { data } = await getVehicles();
-      setVehicles(data);
+      const vehicles = await getVehicles();
+      setVehicles(vehicles);
       setIsLoading(false);
     };
     getAllVehicles();
@@ -155,13 +155,7 @@ function VehiclesList() {
                 if (filterSearch === '') {
                   return vehicle;
                 }
-                // console.log(
-                //   `v: ${vehicle.name.toLowerCase()}; r: ${vehicle.name
-                //     .toLowerCase()
-                //     .includes(
-                //       filterSearch.toLowerCase()
-                //     )}; q: '${filterSearch.toLocaleLowerCase()}'`
-                // );
+
                 if (
                   vehicle.name
                     .toLowerCase()
@@ -171,7 +165,7 @@ function VehiclesList() {
                 }
               })
               .sort((a, b) => {
-                return a.updatedAt > b.updatedAt ? -1 : 1;
+                return a.updatedAt.epoch > b.updatedAt.epoch ? -1 : 1;
               })
               .filter(
                 (vehicle, i) =>
@@ -192,11 +186,9 @@ function VehiclesList() {
                     </Link>
                   </Table.Cell>
                   <Table.Cell>
-                    <VehicleStateDisplay rawState={vehicle.state} />
+                    <VehicleStateDisplay rawState={vehicle.state.current} />
                   </Table.Cell>
-                  <Table.Cell>
-                    <RelativeDate dateMs={vehicle.updatedAt} />
-                  </Table.Cell>
+                  <Table.Cell>{vehicle.updatedAt.display}</Table.Cell>
                   <Table.Cell>
                     <Button
                       size="xs"
@@ -210,17 +202,19 @@ function VehiclesList() {
           </Table.Body>
         </Table>
       </div>
-      <div className="flex items-center justify-center text-center">
-        <Pagination
-          currentPage={paginationPage}
-          layout="pagination"
-          onPageChange={newPaginationState}
-          showIcons={true}
-          totalPages={Math.ceil(vehicles.length / ITEMS_PER_PAGE)}
-          previousLabel="Go back"
-          nextLabel="Go forward"
-        />
-      </div>
+      {!isLoading && (
+        <div className="flex items-center justify-center text-center">
+          <Pagination
+            currentPage={paginationPage}
+            layout="pagination"
+            onPageChange={newPaginationState}
+            showIcons={true}
+            totalPages={Math.ceil(vehicles.length / ITEMS_PER_PAGE)}
+            previousLabel="Go back"
+            nextLabel="Go forward"
+          />
+        </div>
+      )}
       {isLoading && <Spinner aria-label="Loading vehicles" />}
     </div>
   );
