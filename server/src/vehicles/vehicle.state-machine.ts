@@ -5,25 +5,25 @@ import { State } from '../common/models/state.model';
 export class VehicleStateMachine {
   private states: State[] = [
     {
-      name: 'onboarding:onboarding',
+      current: 'onboarding:onboarding',
       transitions: ['active:active'],
     },
     {
-      name: 'active:active',
+      current: 'active:active',
       transitions: ['inactive:inactive'],
     },
     {
-      name: 'inactive:inactive',
+      current: 'inactive:inactive',
       transitions: ['inactive:dead'],
     },
     {
-      name: 'inactive:dead',
+      current: 'inactive:dead',
       transitions: [],
     },
   ];
 
   public getState(stateName: string): State {
-    const state = this.states.find(({ name }) => {
+    const state = this.states.find(({ current: name }) => {
       return name === stateName;
     });
 

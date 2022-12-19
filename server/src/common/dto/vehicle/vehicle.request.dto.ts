@@ -1,4 +1,4 @@
-import { VehicleProperties } from './vehicle.dto';
+import { VehicleProperties, VehicleStateDTO } from './vehicle.dto';
 
 export class AddVehicleRequestDTO {
   uniqueCode?: string;
@@ -11,4 +11,8 @@ export class AddVehicleRequestDTO {
 
 export class UpdateVehiclePropertiesRequestDTO {
   properties: VehicleProperties;
+}
+
+export class TransitionVehicleStateRequestDTO {
+  state: string;
 }

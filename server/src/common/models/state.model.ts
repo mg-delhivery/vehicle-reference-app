@@ -1,4 +1,4 @@
 export interface State {
-  name: string;
+  current: string;
   transitions: string[];
 }

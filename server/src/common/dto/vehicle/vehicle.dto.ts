@@ -1,7 +1,7 @@
 export interface VehicleDTO {
   name: string;
   code: string;
-  state: string;
+  state: VehicleStateDTO;
   category: string;
   subcategory: string;
   properties: VehicleProperties;
@@ -22,6 +22,6 @@ export interface GetAllVehiclesResponse {
 }
 
 export interface VehicleStateDTO {
-  name: string;
+  current: string;
   transitions: string[];
 }
