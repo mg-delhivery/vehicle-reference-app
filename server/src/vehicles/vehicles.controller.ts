@@ -14,6 +14,7 @@ import { VehiclesService } from './vehicles.service';
 import { ApiTags } from '@nestjs/swagger';
 import {
   AddVehicleRequestDTO,
+  TransitionVehicleStateRequestDTO,
   UpdateVehiclePropertiesRequestDTO,
 } from '../common/dto/vehicle/vehicle.request.dto';
 import { AddVehicleSchema } from './validation/add-vehicle.schema.validation';
@@ -40,13 +41,6 @@ export class VehiclesController {
     return await this.vehicleService.getVehicle(vehicleId);
   }
 
-  @Get('/:vehicleId/state')
-  private async getVehicleState(
-    @Param('vehicleId') vehicleId: string,
-  ): Promise<VehicleStateDTO> {
-    return await this.vehicleService.getStateAndTransitions(vehicleId);
-  }
-
   @Post('/')
   @UsePipes(new SchemaValidationPipe(AddVehicleSchema))
   private createVehicle(@Body() request: AddVehicleRequestDTO): Promise<void> {
@@ -62,22 +56,11 @@ export class VehiclesController {
     return this.vehicleService.updateVehicle(vehicleId, request);
   }
 
-  @Put('/:vehicleId/activate')
-  private async activateVehicle(
+  @Put('/:vehicleId/transition')
+  private async transitionVehicle(
     @Param('vehicleId') vehicleId: string,
+    @Body() request: TransitionVehicleStateRequestDTO,
   ): Promise<void> {
-    return this.vehicleService.activateVehicle(vehicleId);
-  }
-
-  @Put('/:vehicleId/deactivate')
-  private deactivateVehicle(
-    @Param('vehicleId') vehicleId: string,
-  ): Promise<void> {
-    return this.vehicleService.deactivateVehicle(vehicleId);
-  }
-
-  @Put('/:vehicleId/destroy')
-  private killVehicle(@Param('vehicleId') vehicleId: string): Promise<void> {
-    return this.vehicleService.destroyVehicle(vehicleId);
+    return this.vehicleService.transitionVehicle(vehicleId, request);
   }
 }

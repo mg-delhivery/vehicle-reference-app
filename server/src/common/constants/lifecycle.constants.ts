@@ -7,8 +7,4 @@ export const LifecycleConstants = {
     eventCode: 'E-023',
     reasonCode: 'R-0001',
   },
-  inactive_dead: {
-    eventCode: 'E-024',
-    reasonCode: 'R-0001',
-  },
 };

@@ -4,10 +4,11 @@ import { VehiclesController } from './vehicles.controller';
 import { HttpModule } from '@nestjs/axios';
 import { ParticipantService } from '../participant/participant.service';
 import { ParticipantModule } from '../participant/participant.module';
+import { VehicleStateMachine } from './vehicle.state-machine';
 
 @Module({
   imports: [HttpModule, ParticipantModule],
-  providers: [VehiclesService, ParticipantService],
+  providers: [VehiclesService, ParticipantService, VehicleStateMachine],
   controllers: [VehiclesController],
 })
 export class VehiclesModule {}
