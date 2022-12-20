@@ -1,12 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import {
+  Link,
+  Outlet,
+  RouterProvider,
+  createBrowserRouter,
+} from 'react-router-dom';
 
 import './index.css';
 import CreateVehicle from './pages/CreateVehicle';
 import EditVehicle from './pages/EditVehicle';
 import ErrorPage from './pages/ErrorPage';
-import VehiclesList from './pages/VehiclesList';
+import VehiclesList from './pages/ListVehicles';
 import ViewVehicle from './pages/ViewVehicle';
 import reportWebVitals from './reportWebVitals';
 import Root from './routes/root';
@@ -27,22 +32,48 @@ const router = createBrowserRouter([
     path: '/vehicles',
     element: <Root />,
     errorElement: <ErrorPage />,
+    handle: {
+      crumb: {
+        title: 'Vehicles',
+      },
+    },
     children: [
       {
-        path: '',
+        index: true,
         element: <VehiclesList />,
       },
       {
         path: 'create',
         element: <CreateVehicle />,
+        handle: {
+          crumb: {
+            title: 'Create',
+          },
+        },
       },
       {
         path: ':id',
-        element: <ViewVehicle />,
-      },
-      {
-        path: ':id/edit',
-        element: <EditVehicle />,
+        element: <Outlet />,
+        handle: {
+          crumb: {
+            title: 'View',
+          },
+        },
+        children: [
+          {
+            path: '',
+            element: <ViewVehicle />,
+          },
+          {
+            path: 'edit',
+            element: <EditVehicle />,
+            handle: {
+              crumb: {
+                title: 'Edit',
+              },
+            },
+          },
+        ],
       },
     ],
   },

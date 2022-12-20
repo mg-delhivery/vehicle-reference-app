@@ -1,5 +1,15 @@
 /// <reference types="react-scripts" />
 
+declare module "header/initialize" {
+  function initialize(): void;
+  export = initialize;
+}
+
+interface VehicleState {
+  current: string;
+  transitions: string[];
+}
+
 interface ParticipantActor {
   id: string;
   name: string;
@@ -7,6 +17,7 @@ interface ParticipantActor {
 }
 
 interface VehicleParticipantProperties {
+  [key: string]: any;
   mode?: string;
   fuelType?: string;
   operatorId?: string;
@@ -23,20 +34,40 @@ interface VehicleParticipant {
   owner: string;
   participantType: string;
   properties: VehicleParticipantProperties;
-  state: string;
+  state: VehicleState;
+  category: string?;
   createdAt: number;
   updatedAt: number;
   createdBy: ParticipantActor;
   updatedBy: ParticipantActor;
 }
 
+interface DateInfo {
+  epoch: number;
+  display: string;
+}
+
 interface VehicleDisplay {
   id: string;
-  state: string;
+  state: VehicleState;
   name: string;
+  uniqueCode: string;
+  owner: string;
+  category: string;
   properties: VehicleParticipantProperties;
-  createdAt: string;
+  createdAt: DateInfo;
   createdBy: string;
-  updatedAt: string;
+  updatedAt: DateInfo;
   updatedBy: string;
+}
+
+interface VehicleParticipantForm extends VehicleDisplay {}
+
+interface AddVehicleRequestDTO {
+  uniqueCode?: string;
+  name?: string;
+  owner?: string;
+  category?: string;
+  subCategory?: string;
+  properties?: VehicleParticipantProperties;
 }

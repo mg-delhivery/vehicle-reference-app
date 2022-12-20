@@ -1,6 +1,6 @@
 import { Button, Sidebar } from 'flowbite-react';
 import React from 'react';
-import { Link, useLinkClickHandler, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function SidebarContainer() {
   const navigate = useNavigate();
@@ -18,11 +18,6 @@ function SidebarContainer() {
             Create Vehicle
           </Button>
         </Sidebar.CTA>
-        <Sidebar.Items>
-          <Sidebar.ItemGroup>
-            <Sidebar.Item href="/vehicles">Home</Sidebar.Item>
-          </Sidebar.ItemGroup>
-        </Sidebar.Items>
       </Sidebar>
     </div>
   );
