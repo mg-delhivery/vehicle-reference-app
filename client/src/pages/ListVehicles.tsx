@@ -21,7 +21,7 @@ import {
   useSearchParams,
 } from 'react-router-dom';
 
-import { getVehicles } from '../api/vehicles';
+import { getVehicles, transitionStates } from '../api/vehicles';
 import { RelativeDate } from '../components/RelativeDate';
 import { VehicleStateDisplay } from '../components/VehicleState';
 import Title from '../layout/Title';
@@ -36,16 +36,20 @@ function VehiclesList() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const [reloadSeed, setReloadSeed] = useState(0);
   const [vehicles, setVehicles] = useState<VehicleDisplay[]>([]);
   const [transitionPaths, setTransitionPaths] = useState<{
     [key: string]: string[];
   }>({});
   const [toastMsg, setToastMsg] = useState<string>();
   const [isLoading, setIsLoading] = useState(true);
+  const [isTransitioningState, setIsTransitioningState] = useState(false);
   const [paginationPage, setPaginationPage] = useState(1);
   const [filterSearch, setFilterSearch] = useState('');
   const [selectedState, setSelectedState] = useState('');
-  const [selectedVehicles, setSelectedVehicles] = useState<boolean[]>([]);
+  const [selectedVehicles, setSelectedVehicles] = useState<{
+    [key: string]: boolean;
+  }>({});
 
   useEffect(() => {
     if (searchParams.has('page')) {
@@ -64,11 +68,13 @@ function VehiclesList() {
       const vehicles = await getVehicles();
       setVehicles(vehicles);
       setIsLoading(false);
-      setSelectedVehicles(new Array(vehicles.length).fill(false));
+
+      const emptyVehicleSelections = getEmptyVehicleSelections(vehicles);
+      setSelectedVehicles(emptyVehicleSelections);
       constructStateTransitionPaths(vehicles);
     };
     getAllVehicles();
-  }, []);
+  }, [reloadSeed]);
 
   useEffect(() => {
     if (searchParams.has('success')) {
@@ -89,6 +95,19 @@ function VehiclesList() {
     }
   }, []);
 
+  const triggerStateTransitions = async (newState: string) => {
+    const forUpdate = Object.keys(selectedVehicles).filter(
+      (id) => selectedVehicles[id]
+    );
+
+    setIsTransitioningState(true);
+    await transitionStates(newState, forUpdate);
+    clearStateSelections();
+    // setReloadSeed(Math.random());
+    setIsTransitioningState(false);
+    window.location.reload(); // for now, later fix the reload seed behavior to only reload the component.
+  };
+
   const constructStateTransitionPaths = (vehicles: VehicleDisplay[]) => {
     const paths: { [key: string]: string[] } = {};
 
@@ -100,6 +119,13 @@ function VehiclesList() {
 
     setTransitionPaths(paths);
   };
+
+  const getEmptyVehicleSelections = (vehicles: VehicleDisplay[]) =>
+    vehicles.reduce((accumulator, v) => {
+      const updated = { ...accumulator };
+      updated[v.id] = false;
+      return updated;
+    }, {} as { [key: string]: boolean });
 
   const newPaginationState = (page: number) => {
     navigate({
@@ -122,31 +148,27 @@ function VehiclesList() {
     setSearchParams(searchParams);
   };
 
-  const handleCheckboxChange = (state: string, position: number) => {
-    const selectionsClone = [...selectedVehicles];
+  const handleCheckboxChange = (state: string, vehicleId: string) => {
+    const selectionsClone = { ...selectedVehicles };
 
-    if (!selectedVehicles[position]) {
+    if (!selectedVehicles[vehicleId]) {
       setSelectedState(state);
-      selectionsClone[position] = true;
+      selectionsClone[vehicleId] = true;
       setSelectedVehicles(selectionsClone);
     } else {
-      selectionsClone[position] = false;
+      selectionsClone[vehicleId] = false;
       setSelectedVehicles(selectionsClone);
 
-      if (selectionsClone.every((v) => !v)) {
+      if (Object.values(selectionsClone).every((v) => !v)) {
         setSelectedState('');
       }
     }
   };
 
-  const handleSelectedStateClear = () => {
+  const clearStateSelections = () => {
     setSelectedState('');
-    const newSelections = selectedVehicles.map((v) => (v = false));
+    const newSelections = getEmptyVehicleSelections(vehicles);
     setSelectedVehicles(newSelections);
-  };
-
-  const decideIfCheckmarkChecked = (position: number): boolean => {
-    return selectedVehicles[position];
   };
 
   return (
@@ -172,11 +194,16 @@ function VehiclesList() {
         {selectedState ? (
           <div className="flex flex-row gap-6">
             {transitionPaths[selectedState].map((path, i) => (
-              <Button key={i} size="xs">
-                Transition to {path}
+              <Button
+                key={i}
+                size="xs"
+                onClick={() => triggerStateTransitions(path)}
+                disabled={isTransitioningState}
+              >
+                {!isTransitioningState ? `Transition to ${path}` : <Spinner />}
               </Button>
             ))}
-            <Button color="light" size="xs" onClick={handleSelectedStateClear}>
+            <Button color="light" size="xs" onClick={clearStateSelections}>
               Cancel
             </Button>
           </div>
@@ -242,9 +269,12 @@ function VehiclesList() {
                       <Checkbox
                         value={vehicle.state.current}
                         onChange={(e) =>
-                          handleCheckboxChange(vehicle.state.current, i)
+                          handleCheckboxChange(
+                            vehicle.state.current,
+                            vehicle.id
+                          )
                         }
-                        checked={selectedVehicles[i]}
+                        checked={selectedVehicles[vehicle.id]}
                       />
                     ) : (
                       <span></span>

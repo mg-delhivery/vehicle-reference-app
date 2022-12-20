@@ -53,6 +53,23 @@ export const editVehicle = async (
   return;
 };
 
+export const transitionStates = async (
+  newState: string,
+  vehicleIds: string[]
+) => {
+  const calls = vehicleIds.map((id) => {
+    return axios.put(
+      `/api/vehicles/${id}/transition`,
+      { state: newState },
+      { ...getHeaders }
+    );
+  });
+
+  await Promise.all(calls);
+
+  return;
+};
+
 const getDisplayFromParticipant = (
   participant: VehicleParticipant
 ): VehicleDisplay => {
