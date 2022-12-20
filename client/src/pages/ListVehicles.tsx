@@ -2,6 +2,7 @@ import { faPlus, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   Button,
+  Checkbox,
   Label,
   Pagination,
   Spinner,
@@ -39,8 +40,9 @@ function VehiclesList() {
   const [toastMsg, setToastMsg] = useState<string>();
   const [isLoading, setIsLoading] = useState(true);
   const [paginationPage, setPaginationPage] = useState(1);
-
   const [filterSearch, setFilterSearch] = useState('');
+  const [selectedState, setSelectedState] = useState('');
+  const [selectedVehicles, setSelectedVehicles] = useState<boolean[]>([]);
 
   useEffect(() => {
     if (searchParams.has('page')) {
@@ -59,6 +61,7 @@ function VehiclesList() {
       const vehicles = await getVehicles();
       setVehicles(vehicles);
       setIsLoading(false);
+      setSelectedVehicles(new Array(vehicles.length).fill(false));
     };
     getAllVehicles();
   }, []);
@@ -103,6 +106,34 @@ function VehiclesList() {
     setSearchParams(searchParams);
   };
 
+  const handleCheckboxChange = (state: string, position: number) => {
+    const selectionsClone = [...selectedVehicles];
+
+    if (!selectedVehicles[position]) {
+      setSelectedState(state);
+      selectionsClone[position] = true;
+      setSelectedVehicles(selectionsClone);
+    } else {
+      selectionsClone[position] = false;
+      setSelectedVehicles(selectionsClone);
+
+      if (selectionsClone.every((v) => !v)) {
+        setSelectedState('');
+      }
+    }
+  };
+
+  const handleSelectedStateClear = () => {
+    setSelectedState('');
+    const newSelections = selectedVehicles.map((v) => (v = false));
+    setSelectedVehicles(newSelections);
+    console.log(selectedVehicles);
+  };
+
+  const decideIfCheckmarkChecked = (position: number): boolean => {
+    return selectedVehicles[position];
+  };
+
   return (
     <div id="VehiclesList" className="flex flex-col items-center gap-6">
       {toastMsg && (
@@ -123,26 +154,36 @@ function VehiclesList() {
         </div>
       </div>
       <div className="w-full">
-        <form
-          className="flex flex-col gap-4"
-          onSubmit={(e) => e.preventDefault()}
-        >
-          <TextInput
-            id="search"
-            placeholder="Search by vehicle name"
-            required={false}
-            addon={<FontAwesomeIcon icon={faSearch} />}
-            {...register('search', {
-              onChange: (e) => {
-                handleSearch(e.target.value);
-              },
-            })}
-          />
-        </form>
+        {selectedState ? (
+          <div className="flex flex-row gap-6">
+            Transition from {selectedState}
+            <Button color="light" size="xs" onClick={handleSelectedStateClear}>
+              Cancel
+            </Button>
+          </div>
+        ) : (
+          <form
+            className="flex flex-col gap-4"
+            onSubmit={(e) => e.preventDefault()}
+          >
+            <TextInput
+              id="search"
+              placeholder="Search by vehicle name"
+              required={false}
+              addon={<FontAwesomeIcon icon={faSearch} />}
+              {...register('search', {
+                onChange: (e) => {
+                  handleSearch(e.target.value);
+                },
+              })}
+            />
+          </form>
+        )}
       </div>
       <div className="w-full">
         <Table className="w-full">
           <Table.Head>
+            <Table.HeadCell className="!p-4"></Table.HeadCell>
             <Table.HeadCell>Code</Table.HeadCell>
             <Table.HeadCell>Name</Table.HeadCell>
             <Table.HeadCell>State</Table.HeadCell>
@@ -176,6 +217,20 @@ function VehiclesList() {
                   key={vehicle.id}
                   className="bg-white dark:border-gray-700 dark:bg-gray-800"
                 >
+                  <Table.Cell className="!p-4">
+                    {!selectedState ||
+                    selectedState === vehicle.state.current ? (
+                      <Checkbox
+                        value={vehicle.state.current}
+                        onChange={(e) =>
+                          handleCheckboxChange(vehicle.state.current, i)
+                        }
+                        checked={selectedVehicles[i]}
+                      />
+                    ) : (
+                      <span></span>
+                    )}
+                  </Table.Cell>
                   <Table.Cell>{vehicle.uniqueCode}</Table.Cell>
                   <Table.Cell>
                     <Link
