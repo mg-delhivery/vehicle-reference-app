@@ -33,10 +33,13 @@ interface VehicleSearchForm {
 const ITEMS_PER_PAGE = 10;
 
 function VehiclesList() {
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [vehicles, setVehicles] = useState<VehicleDisplay[]>([]);
-  const navigate = useNavigate();
+  const [transitionPaths, setTransitionPaths] = useState<{
+    [key: string]: string[];
+  }>({});
   const [toastMsg, setToastMsg] = useState<string>();
   const [isLoading, setIsLoading] = useState(true);
   const [paginationPage, setPaginationPage] = useState(1);
@@ -62,6 +65,7 @@ function VehiclesList() {
       setVehicles(vehicles);
       setIsLoading(false);
       setSelectedVehicles(new Array(vehicles.length).fill(false));
+      constructStateTransitionPaths(vehicles);
     };
     getAllVehicles();
   }, []);
@@ -84,6 +88,18 @@ function VehiclesList() {
       }, 3000);
     }
   }, []);
+
+  const constructStateTransitionPaths = (vehicles: VehicleDisplay[]) => {
+    const paths: { [key: string]: string[] } = {};
+
+    vehicles.forEach((v) => {
+      if (!(v.state.current in paths)) {
+        paths[v.state.current] = v.state.transitions;
+      }
+    });
+
+    setTransitionPaths(paths);
+  };
 
   const newPaginationState = (page: number) => {
     navigate({
@@ -127,7 +143,6 @@ function VehiclesList() {
     setSelectedState('');
     const newSelections = selectedVehicles.map((v) => (v = false));
     setSelectedVehicles(newSelections);
-    console.log(selectedVehicles);
   };
 
   const decideIfCheckmarkChecked = (position: number): boolean => {
@@ -156,7 +171,11 @@ function VehiclesList() {
       <div className="w-full">
         {selectedState ? (
           <div className="flex flex-row gap-6">
-            Transition from {selectedState}
+            {transitionPaths[selectedState].map((path, i) => (
+              <Button key={i} size="xs">
+                Transition to {path}
+              </Button>
+            ))}
             <Button color="light" size="xs" onClick={handleSelectedStateClear}>
               Cancel
             </Button>
