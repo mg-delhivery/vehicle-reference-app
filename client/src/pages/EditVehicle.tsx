@@ -1,4 +1,3 @@
-import { ErrorMessage } from '@hookform/error-message';
 import { Button, Label, Select, Spinner, TextInput } from 'flowbite-react';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -6,8 +5,6 @@ import { createSearchParams, useNavigate, useParams } from 'react-router-dom';
 
 import { editVehicle, fetchVehicle } from '../api/vehicles';
 import { Toast } from '../components/Toast';
-import { VehicleStateDisplay } from '../components/VehicleState';
-import { VehicleStateTransitioner } from '../components/VehicleStrateTransitioner';
 import Title from '../layout/Title';
 
 interface VehicleParticipantForm extends VehicleDisplay {}
@@ -85,11 +82,11 @@ function EditVehicle() {
       setIsLoading(false);
     };
     executeFetchVehicle();
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     reset(vehicle);
-  }, [vehicle]);
+  }, [reset, vehicle]);
 
   if (!id) {
     return <div>Vehicle not found.</div>;

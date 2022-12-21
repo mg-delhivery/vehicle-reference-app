@@ -1,17 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import {
-  Link,
-  Outlet,
-  RouterProvider,
-  createBrowserRouter,
-} from 'react-router-dom';
+import { Outlet, RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import './index.css';
 import CreateVehicle from './pages/CreateVehicle';
 import EditVehicle from './pages/EditVehicle';
 import ErrorPage from './pages/ErrorPage';
-import VehiclesList from './pages/ListVehicles';
+import ListVehicles from './pages/ListVehicles';
 import ViewVehicle from './pages/ViewVehicle';
 import reportWebVitals from './reportWebVitals';
 import Root from './routes/root';
@@ -24,7 +19,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <VehiclesList />,
+        element: <ListVehicles />,
       },
     ],
   },
@@ -40,7 +35,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <VehiclesList />,
+        element: <ListVehicles />,
       },
       {
         path: 'create',

@@ -1,6 +1,5 @@
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Badge, Breadcrumb } from 'flowbite-react';
 import React, { ReactNode } from 'react';
 import { Link, useMatches } from 'react-router-dom';
 

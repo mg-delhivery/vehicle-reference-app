@@ -8,7 +8,7 @@ import {
 } from 'flowbite-react';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { createSearchParams, useNavigate, useParams } from 'react-router-dom';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 
 import { createVehicle } from '../api/vehicles';
 import Title from '../layout/Title';
@@ -38,14 +38,12 @@ const defaultValues: VehicleDisplay = {
 
 function CreateVehicle() {
   const navigate = useNavigate();
-  const { id } = useParams();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionError, setSubmissionError] = useState<string>();
 
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm<VehicleParticipantForm>({
     defaultValues,

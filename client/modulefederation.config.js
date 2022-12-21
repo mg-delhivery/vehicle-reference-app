@@ -16,5 +16,9 @@ module.exports = {
       singleton: true,
       requiredVersion: deps['react-dom'],
     },
+    luxon: {
+      singleton: true,
+      requiredVersion: deps['luxon'],
+    },
   },
 };

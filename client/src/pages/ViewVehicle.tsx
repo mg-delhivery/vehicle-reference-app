@@ -1,10 +1,4 @@
-import {
-  Button,
-  Label,
-  Spinner,
-  TextInput,
-  ToggleSwitch,
-} from 'flowbite-react';
+import { Button, Label, Spinner, TextInput } from 'flowbite-react';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
@@ -44,12 +38,7 @@ function ViewVehicle() {
   const [vehicle, setVehicle] = useState<VehicleDisplay>(defaultValues);
   const [isLoading, setIsLoading] = useState(true);
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<VehicleParticipantForm>({
+  const { register, handleSubmit, reset } = useForm<VehicleParticipantForm>({
     defaultValues: useMemo(() => vehicle, [vehicle]),
   });
   const onSubmit = (data: VehicleParticipantForm) => console.log(data);
@@ -61,11 +50,11 @@ function ViewVehicle() {
       setIsLoading(false);
     };
     executeFetchVehicle();
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     reset(vehicle);
-  }, [vehicle]);
+  }, [reset, vehicle]);
 
   if (!id) {
     return <div>Vehicle not found.</div>;
