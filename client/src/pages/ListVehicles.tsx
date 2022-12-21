@@ -1,14 +1,13 @@
-import { faPlus, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faPlus, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   Button,
   Checkbox,
-  Label,
+  Dropdown,
   Pagination,
   Spinner,
   Table,
   TextInput,
-  Toast,
 } from 'flowbite-react';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -23,8 +22,11 @@ import {
 
 import { getVehicles, transitionStates } from '../api/vehicles';
 import { RelativeDate } from '../components/RelativeDate';
+import { Toast } from '../components/Toast';
 import { VehicleStateDisplay } from '../components/VehicleState';
 import Title from '../layout/Title';
+import { getFilterableStates } from '../utils/filterableStates';
+import { getStateDisplay } from '../utils/stateDisplay';
 
 interface VehicleSearchForm {
   search: string;
@@ -46,6 +48,8 @@ function VehiclesList() {
   const [isTransitioningState, setIsTransitioningState] = useState(false);
   const [paginationPage, setPaginationPage] = useState(1);
   const [filterSearch, setFilterSearch] = useState('');
+  const [filterableStates, setFilterableStates] = useState<string[]>([]);
+  const [stateFilter, setStateFilter] = useState<string>('');
   const [selectedState, setSelectedState] = useState('');
   const [selectedVehicles, setSelectedVehicles] = useState<{
     [key: string]: boolean;
@@ -69,6 +73,7 @@ function VehiclesList() {
       setVehicles(vehicles);
       setIsLoading(false);
 
+      setFilterableStates(getFilterableStates(vehicles));
       const emptyVehicleSelections = getEmptyVehicleSelections(vehicles);
       setSelectedVehicles(emptyVehicleSelections);
       constructStateTransitionPaths(vehicles);
@@ -174,9 +179,8 @@ function VehiclesList() {
   return (
     <div id="VehiclesList" className="flex flex-col items-center gap-6">
       {toastMsg && (
-        <Toast className="fixed top-6 bg-green-500 text-slate-200">
-          <div className="ml-3 text-sm font-normal">{toastMsg}</div>
-          <Toast.Toggle />
+        <Toast kind="success" onClose={() => setToastMsg('')}>
+          {toastMsg}
         </Toast>
       )}
       <div className="w-full flex flex-row gap-4">
@@ -208,7 +212,7 @@ function VehiclesList() {
             </Button>
           </div>
         ) : (
-          <div className="w-96 flex flex-row gap-4">
+          <div className="flex flex-row gap-4">
             <form
               className="w-full flex flex-col gap-4"
               onSubmit={(e) => e.preventDefault()}
@@ -225,6 +229,35 @@ function VehiclesList() {
                 })}
               />
             </form>
+            <Dropdown label="Status" color="light">
+              {filterableStates.map((state) => (
+                <Dropdown.Item
+                  key={state}
+                  onClick={() => {
+                    if (state === stateFilter) {
+                      setStateFilter('');
+                    } else {
+                      setStateFilter(state);
+                    }
+                  }}
+                >
+                  {stateFilter === state && <FontAwesomeIcon icon={faCheck} />}
+                  <span className="ml-2">{getStateDisplay(state)}</span>
+                </Dropdown.Item>
+              ))}
+              {stateFilter && <Dropdown.Divider />}
+              {stateFilter && (
+                <Dropdown.Item>
+                  <Button
+                    color="light"
+                    size="xs"
+                    onClick={() => setStateFilter('')}
+                  >
+                    Clear Selection
+                  </Button>
+                </Dropdown.Item>
+              )}
+            </Dropdown>
           </div>
         )}
       </div>
@@ -241,7 +274,16 @@ function VehiclesList() {
           <Table.Body className="divide-y">
             {vehicles
               .filter((vehicle) => {
-                if (filterSearch === '') {
+                if (!stateFilter) {
+                  return vehicle;
+                }
+
+                if (vehicle.state.current === stateFilter) {
+                  return vehicle;
+                }
+              })
+              .filter((vehicle) => {
+                if (!filterSearch) {
                   return vehicle;
                 }
 
@@ -266,8 +308,7 @@ function VehiclesList() {
                   className="bg-white dark:border-gray-700 dark:bg-gray-800"
                 >
                   <Table.Cell className="!p-4">
-                    {!selectedState ||
-                    selectedState === vehicle.state.current ? (
+                    {!selectedState || selectedVehicles[vehicle.id] ? (
                       <Checkbox
                         value={vehicle.state.current}
                         onChange={(e) =>
@@ -308,7 +349,7 @@ function VehiclesList() {
           </Table.Body>
         </Table>
       </div>
-      {!isLoading && (
+      {!isLoading && !stateFilter && !filterSearch && (
         <div className="flex items-center justify-center text-center">
           <Pagination
             currentPage={paginationPage}

@@ -22,7 +22,7 @@ const defaultValues: VehicleDisplay = {
   name: '',
   uniqueCode: '',
   category: '',
-  owner: '',
+  owner: 'tenants:9f944ddf-6d6c-488c-918e-392cb53494c6',
   properties: {},
   createdBy: '',
   createdAt: {
@@ -158,8 +158,8 @@ function CreateVehicle() {
               <label className="inline-flex relative items-center cursor-pointer">
                 <input
                   type="checkbox"
-                  value=""
                   className="sr-only peer"
+                  value=""
                   defaultChecked={true}
                   {...register('properties.availability', {})}
                 />

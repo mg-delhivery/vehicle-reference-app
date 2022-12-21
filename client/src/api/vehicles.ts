@@ -42,13 +42,9 @@ export const editVehicle = async (
   id: string,
   data: VehicleParticipantProperties
 ): Promise<void> => {
-  const dto = getParticipantProperties(data);
+  const properties = getParticipantProperties(data);
 
-  await axios.put(
-    `/api/vehicles/${id}`,
-    { properties: dto },
-    { ...getHeaders }
-  );
+  await axios.put(`/api/vehicles/${id}`, { properties }, { ...getHeaders });
 
   return;
 };
@@ -116,12 +112,16 @@ const getParticipantProperties = (
 ): VehicleParticipantProperties => {
   const props: VehicleParticipantProperties = {};
 
-  if (typeof initial.registrationYear === 'string') {
+  if (
+    typeof initial.registrationYear === 'string' &&
+    initial.registrationYear !== ''
+  ) {
     initial.registrationYear = parseInt(initial.registrationYear);
   }
 
   for (const [key, val] of Object.entries(initial)) {
-    if (initial.hasOwnProperty(key) && val) {
+    const isValidValue = val !== null && val !== '';
+    if (initial.hasOwnProperty(key) && isValidValue) {
       props[key] = val;
     }
   }

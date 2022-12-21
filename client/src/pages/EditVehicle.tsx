@@ -1,17 +1,11 @@
 import { ErrorMessage } from '@hookform/error-message';
-import {
-  Button,
-  Label,
-  Select,
-  Spinner,
-  TextInput,
-  Toast,
-} from 'flowbite-react';
+import { Button, Label, Select, Spinner, TextInput } from 'flowbite-react';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { createSearchParams, useNavigate, useParams } from 'react-router-dom';
 
 import { editVehicle, fetchVehicle } from '../api/vehicles';
+import { Toast } from '../components/Toast';
 import { VehicleStateDisplay } from '../components/VehicleState';
 import { VehicleStateTransitioner } from '../components/VehicleStrateTransitioner';
 import Title from '../layout/Title';
@@ -102,19 +96,11 @@ function EditVehicle() {
   }
   return (
     <div id="EditVehicle" className="relative flex flex-col items-center">
-      {submissionError && (
-        <Toast className="absolute -top-20 bg-red-500 text-slate-200">
-          <div className="ml-3 text-sm font-normal">{submissionError}</div>
-          <Toast.Toggle />
-        </Toast>
-      )}
+      {submissionError && <Toast kind="error">{submissionError}</Toast>}
 
       <div className="w-full">
         <div className="flex flex-row items-center gap-4 md:gap-6">
           <Title>Edit Vehicle</Title>
-          {/* {!isLoading && (
-            <VehicleStateTransitioner size="lg" rawState={vehicle.state} />
-          )} */}
         </div>
 
         {isLoading && (
