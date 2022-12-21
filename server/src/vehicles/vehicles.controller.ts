@@ -9,7 +9,7 @@ import {
   UsePipes,
   Put,
 } from '@nestjs/common';
-import { VehicleDTO, VehicleStateDTO } from '../common/dto/vehicle/vehicle.dto';
+import { VehicleDTO } from '../common/dto/vehicle/vehicle.dto';
 import { VehiclesService } from './vehicles.service';
 import { ApiTags } from '@nestjs/swagger';
 import {

@@ -18,7 +18,7 @@ export class ParticipantService {
   private readonly httpService: HttpService;
 
   getParticipantServiceBaseUrl(): string {
-    return `https://${process.env.TENANT_DNS}/core/api/v2/participantservice`;
+    return `https://${process.env.TENANT_DNS}/core/api/v2/participants`;
   }
 
   private getClientCredentialsBaseUrl(tenantDns: string): string {

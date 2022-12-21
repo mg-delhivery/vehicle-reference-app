@@ -10,5 +10,6 @@ import { VehicleStateMachine } from './vehicle.state-machine';
   imports: [HttpModule, ParticipantModule],
   providers: [VehiclesService, ParticipantService, VehicleStateMachine],
   controllers: [VehiclesController],
+  exports: [VehiclesService],
 })
 export class VehiclesModule {}
