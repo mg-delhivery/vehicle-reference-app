@@ -218,15 +218,15 @@ function ViewVehicle() {
           <div className="flex flex-col md:flex-row gap-4">
             <div className="grow">
               <div className="mb-2 block">
-                <Label htmlFor="createdAt" value="Created" />
+                <Label htmlFor="createdAt.display" value="Created" />
               </div>
               <TextInput
-                id={'createdAt'}
+                id={'createdAt.display'}
                 type="text"
                 disabled={true}
                 placeholder={vehicle?.createdAt.display}
                 required={true}
-                {...register('createdAt', {})}
+                {...register('createdAt.display', {})}
               />
             </div>
 
@@ -248,15 +248,15 @@ function ViewVehicle() {
           <div className="flex flex-col md:flex-row gap-4">
             <div className="grow">
               <div className="mb-2 block">
-                <Label htmlFor="updatedAt" value="Last Updated" />
+                <Label htmlFor="updatedAt.display" value="Last Updated" />
               </div>
               <TextInput
-                id={'updatedAt'}
+                id={'updatedAt.display'}
                 type="text"
                 disabled={true}
                 placeholder={vehicle?.updatedAt.display}
                 required={true}
-                {...register('updatedAt', {})}
+                {...register('updatedAt.display', {})}
               />
             </div>
 

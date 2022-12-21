@@ -186,7 +186,7 @@ function VehiclesList() {
         <div className="flex-none">
           <Button onClick={() => navigate('/vehicles/create')}>
             <FontAwesomeIcon icon={faPlus} />
-            <span className="ml-2">Create Vehicle</span>
+            <span className="ml-2">Create New Vehicle</span>
           </Button>
         </div>
       </div>
@@ -208,22 +208,24 @@ function VehiclesList() {
             </Button>
           </div>
         ) : (
-          <form
-            className="flex flex-col gap-4"
-            onSubmit={(e) => e.preventDefault()}
-          >
-            <TextInput
-              id="search"
-              placeholder="Search by vehicle name"
-              required={false}
-              addon={<FontAwesomeIcon icon={faSearch} />}
-              {...register('search', {
-                onChange: (e) => {
-                  handleSearch(e.target.value);
-                },
-              })}
-            />
-          </form>
+          <div className="w-96 flex flex-row gap-4">
+            <form
+              className="w-full flex flex-col gap-4"
+              onSubmit={(e) => e.preventDefault()}
+            >
+              <TextInput
+                id="search"
+                placeholder="Search by vehicle name"
+                required={false}
+                addon={<FontAwesomeIcon icon={faSearch} />}
+                {...register('search', {
+                  onChange: (e) => {
+                    handleSearch(e.target.value);
+                  },
+                })}
+              />
+            </form>
+          </div>
         )}
       </div>
       <div className="w-full">

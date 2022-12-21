@@ -15,15 +15,24 @@ import Title from '../layout/Title';
 
 const defaultValues: VehicleDisplay = {
   id: '',
-  state: '',
+  state: {
+    current: '',
+    transitions: [],
+  },
   name: '',
   uniqueCode: '',
   category: '',
-  owner: 'tenants:9f944ddf-6d6c-488c-918e-392cb53494c6',
+  owner: '',
   properties: {},
   createdBy: '',
-  createdAt: '',
-  updatedAt: '',
+  createdAt: {
+    epoch: 0,
+    display: '',
+  },
+  updatedAt: {
+    epoch: 0,
+    display: '',
+  },
   updatedBy: '',
 };
 
@@ -227,8 +236,16 @@ function CreateVehicle() {
                 disabled={false}
                 placeholder=""
                 required={false}
-                {...register('properties.registrationNumber', {})}
+                {...register('properties.registrationNumber', {
+                  pattern: /^[a-zA-Z0-9]{5,25}$/i,
+                })}
               />
+              {errors.properties?.registrationNumber &&
+                errors.properties?.registrationNumber.type === 'pattern' && (
+                  <p className="mt-2 text-xs text-red-700">
+                    Must be alphanumeric with 5-25 characters.
+                  </p>
+                )}
             </div>
             <div className="grow">
               <div className="mb-2 block">

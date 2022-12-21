@@ -1,3 +1,4 @@
+import { ErrorMessage } from '@hookform/error-message';
 import {
   Button,
   Label,
@@ -247,8 +248,16 @@ function EditVehicle() {
                   disabled={false}
                   placeholder={vehicle?.properties.registrationNumber}
                   required={false}
-                  {...register('properties.registrationNumber', {})}
+                  {...register('properties.registrationNumber', {
+                    pattern: /^[a-zA-Z0-9]{5,25}$/i,
+                  })}
                 />
+                {errors.properties?.registrationNumber &&
+                  errors.properties?.registrationNumber.type === 'pattern' && (
+                    <p className="mt-2 text-xs text-red-700">
+                      Must be alphanumeric with 5-25 characters.
+                    </p>
+                  )}
               </div>
               <div className="grow">
                 <div className="mb-2 block">
