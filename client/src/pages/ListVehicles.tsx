@@ -207,6 +207,9 @@ function ListVehicles() {
                 {!isTransitioningState ? `Transition to ${path}` : <Spinner />}
               </Button>
             ))}
+            {transitionPaths[selectedState].length === 0 && (
+              <p>No states available for transition.</p>
+            )}
             <Button color="light" size="xs" onClick={clearStateSelections}>
               Cancel
             </Button>
