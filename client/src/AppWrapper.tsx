@@ -3,6 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Outlet, RouterProvider, createBrowserRouter } from 'react-router-dom';
 
+import ConsoleUIProvider from './components/ConsoleUIProvider';
 import './index.css';
 import CreateVehicle from './pages/CreateVehicle';
 import EditVehicle from './pages/EditVehicle';
@@ -82,7 +83,9 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <ConsoleUIProvider>
+      <RouterProvider router={router} />
+    </ConsoleUIProvider>
   </React.StrictMode>
 );
 
