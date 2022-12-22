@@ -1,18 +1,19 @@
-// import { sharedAccessBundle } from 'header/AuthenticatedHeader';
 import axios from 'axios';
+import { sharedAccessBundle } from 'header/AuthenticatedHeader';
 
 import { getUxDateDisplay } from '../utils/dates';
 
 const getHeaders = () => ({
-  'X-COREOS-ACCESS': 'token_here', //`${sharedAccessBundle.value.accessToken}`,
+  'X-COREOS-ACCESS': `${sharedAccessBundle.value.accessToken}`,
   'X-COREOS-REQUEST-ID': Date.now().toString(),
-  'X-COREOS-TID': 'alpha', //sharedAccessBundle.value.tenantId,
+  'X-COREOS-TID': `${sharedAccessBundle.value.tenantId}`,
 });
 
 export const getVehicles = async (): Promise<VehicleDisplay[]> => {
+  console.log(sharedAccessBundle);
   const vehiclesResponse = await axios.get<VehicleParticipant[]>(
     `/api/vehicles`,
-    { ...getHeaders }
+    { headers: getHeaders() }
   );
 
   const { data } = vehiclesResponse;
@@ -22,7 +23,7 @@ export const getVehicles = async (): Promise<VehicleDisplay[]> => {
 
 export const fetchVehicle = async (id: string): Promise<VehicleDisplay> => {
   const { data } = await axios.get<VehicleParticipant>(`/api/vehicles/${id}`, {
-    ...getHeaders,
+    headers: getHeaders(),
   });
 
   return getDisplayFromParticipant(data);
@@ -33,7 +34,7 @@ export const createVehicle = async (
 ): Promise<void> => {
   const dto = getDtoFromDisplay(data);
 
-  await axios.post(`/api/vehicles`, dto, { ...getHeaders });
+  await axios.post(`/api/vehicles`, dto, { headers: getHeaders() });
 
   return;
 };
@@ -44,7 +45,11 @@ export const editVehicle = async (
 ): Promise<void> => {
   const properties = getParticipantProperties(data);
 
-  await axios.put(`/api/vehicles/${id}`, { properties }, { ...getHeaders });
+  await axios.put(
+    `/api/vehicles/${id}`,
+    { properties },
+    { headers: getHeaders() }
+  );
 
   return;
 };
@@ -57,7 +62,7 @@ export const transitionStates = async (
     return axios.put(
       `/api/vehicles/${id}/transition`,
       { state: newState },
-      { ...getHeaders }
+      { headers: getHeaders() }
     );
   });
 
