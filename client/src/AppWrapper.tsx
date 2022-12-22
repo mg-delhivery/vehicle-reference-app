@@ -1,3 +1,4 @@
+import initialize from 'header/initialize';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Outlet, RouterProvider, createBrowserRouter } from 'react-router-dom';
@@ -10,6 +11,8 @@ import ListVehicles from './pages/ListVehicles';
 import ViewVehicle from './pages/ViewVehicle';
 import reportWebVitals from './reportWebVitals';
 import Root from './routes/root';
+
+initialize();
 
 const router = createBrowserRouter([
   {
