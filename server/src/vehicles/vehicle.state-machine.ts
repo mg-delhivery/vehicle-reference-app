@@ -30,8 +30,10 @@ export class VehicleStateMachine {
 
     if (state) {
       // replace dead with more friendly term
-      state.current = state.current.replace('dead', 'decommissioned');
-      return state;
+      return {
+        current: state.current.replace('dead', 'decommissioned'),
+        transitions: [],
+      };
     }
 
     throw new NotFoundException();
