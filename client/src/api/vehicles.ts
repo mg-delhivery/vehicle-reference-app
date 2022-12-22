@@ -1,35 +1,49 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import { sharedAccessBundle } from 'header/AuthenticatedHeader';
+import { axiosInstance } from 'header/httpClient';
 
 import { getUxDateDisplay } from '../utils/dates';
 
-const getHeaders = () => {
-  const bundle = sharedAccessBundle;
+// const getHeaders = () => {
+//   const bundle = sharedAccessBundle;
 
-  return {
-    'X-COREOS-ACCESS': `${bundle.value.accessToken}`,
-    'X-COREOS-REQUEST-ID': Date.now().toString(),
-    'X-COREOS-TID': `${sharedAccessBundle.value.tenantId}`,
-  };
-};
+//   return {
+//     'X-COREOS-ACCESS': `${bundle.value.accessToken}`,
+//     'X-COREOS-REQUEST-ID': Date.now().toString(),
+//     'X-COREOS-TID': `${sharedAccessBundle.value.tenantId}`,
+//   };
+// };
+
+const tokenNotifier = (subject: {
+  accessToken: string;
+  tenantId: string;
+}) => {};
+
+// const isTokenLoaded = async (): Promise<boolean> => {
+//   const bundle = sharedAccessBundle;
+
+//   const subscription = bundle.subscribe();
+//   subscription.
+// };
 
 export const getVehicles = async (): Promise<VehicleDisplay[]> => {
-  const vehiclesResponse = await axios.get<VehicleParticipant[]>(
-    `/api/vehicles`,
-    { headers: getHeaders() }
-  );
+  const req: AxiosRequestConfig = {
+    url: `${process.env.REACT_APP_BASE_URL}/api/vehicles`,
+    method: 'get',
+  };
+  const resp = await axiosInstance<VehicleParticipant[]>(req);
 
-  const { data } = vehiclesResponse;
-
-  return data.map((vehicle) => getDisplayFromParticipant(vehicle));
+  return resp.map((vehicle) => getDisplayFromParticipant(vehicle));
 };
 
 export const fetchVehicle = async (id: string): Promise<VehicleDisplay> => {
-  const { data } = await axios.get<VehicleParticipant>(`/api/vehicles/${id}`, {
-    headers: getHeaders(),
-  });
+  const req: AxiosRequestConfig = {
+    url: `${process.env.REACT_APP_BASE_URL}/api/vehicles/${id}`,
+    method: 'get',
+  };
+  const resp = await axiosInstance<VehicleParticipant>(req);
 
-  return getDisplayFromParticipant(data);
+  return getDisplayFromParticipant(resp);
 };
 
 export const createVehicle = async (
@@ -37,7 +51,12 @@ export const createVehicle = async (
 ): Promise<void> => {
   const dto = getDtoFromDisplay(data);
 
-  await axios.post(`/api/vehicles`, dto, { headers: getHeaders() });
+  const req: AxiosRequestConfig = {
+    url: `${process.env.REACT_APP_BASE_URL}/api/vehicles`,
+    method: 'post',
+    data: dto,
+  };
+  await axiosInstance<void>(req);
 
   return;
 };
@@ -48,11 +67,12 @@ export const editVehicle = async (
 ): Promise<void> => {
   const properties = getParticipantProperties(data);
 
-  await axios.put(
-    `/api/vehicles/${id}`,
-    { properties },
-    { headers: getHeaders() }
-  );
+  const req: AxiosRequestConfig = {
+    url: `${process.env.REACT_APP_BASE_URL}/api/vehicles/${id}`,
+    method: 'put',
+    data: properties,
+  };
+  await axiosInstance<void>(req);
 
   return;
 };
@@ -62,11 +82,12 @@ export const transitionStates = async (
   vehicleIds: string[]
 ) => {
   const calls = vehicleIds.map((id) => {
-    return axios.put(
-      `/api/vehicles/${id}/transition`,
-      { state: newState },
-      { headers: getHeaders() }
-    );
+    const req: AxiosRequestConfig = {
+      url: `${process.env.REACT_APP_BASE_URL}/api/vehicles/${id}/transition`,
+      method: 'put',
+      data: { state: newState },
+    };
+    return axiosInstance<void>(req);
   });
 
   await Promise.all(calls);

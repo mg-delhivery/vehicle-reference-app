@@ -1,8 +1,13 @@
 /// <reference types="react-scripts" />
 
-declare module "header/initialize" {
-  function initialize(): void;
-  export = initialize;
+// declare module "header/initialize" {
+//   function initialize(): void;
+//   export = initialize;
+// }
+
+declare module "header/httpClient" {
+  function axiosInstance<T>(request: AxiosRequestConfig): Promise<T>;
+  module.exports = { axiosInstance};
 }
 
 interface VehicleState {
