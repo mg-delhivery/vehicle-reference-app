@@ -3,10 +3,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { ReactNode } from 'react';
 import { Link, useMatches } from 'react-router-dom';
 
-interface BreadcrumbsProps {
-  divider?: string;
-}
-
 interface Breadcrumb {
   title: string;
   path: string;
@@ -18,10 +14,12 @@ interface BreadcrumbHandler {
 
 const crumbLink = (crumb: Breadcrumb, i: number): ReactNode => {
   return (
-    <Link to={crumb.path} className="text-blue-600 underline">
+    <span>
       {i > 0 && <FontAwesomeIcon icon={faChevronRight} className="mr-4" />}
-      <span>{crumb.title}</span>
-    </Link>
+      <Link to={crumb.path} className="text-blue-600 underline">
+        <span>{crumb.title}</span>
+      </Link>
+    </span>
   );
 };
 
@@ -34,7 +32,7 @@ const crumbText = (crumb: Breadcrumb, i: number): ReactNode => {
   );
 };
 
-export const Breadcrumbs = ({ divider = '/' }: BreadcrumbsProps) => {
+export const Breadcrumbs = () => {
   let matches = useMatches();
   let crumbs = matches
     .filter((match) => {
