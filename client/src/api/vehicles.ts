@@ -54,7 +54,7 @@ export const editVehicle = async (
   id: string,
   data: VehicleParticipantProperties
 ): Promise<void> => {
-  const properties = getParticipantProperties(data);
+  const properties = { properties: getParticipantProperties(data) };
 
   const req: AxiosRequestConfig = {
     url: `${process.env.REACT_APP_BASE_URL}/api/vehicles/${id}`,
