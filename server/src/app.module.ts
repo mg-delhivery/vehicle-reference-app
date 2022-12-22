@@ -6,10 +6,17 @@ import { ParticipantService } from './participant/participant.service';
 import { ParticipantModule } from './participant/participant.module';
 import { VehiclesController } from './vehicles/vehicles.controller';
 import { HttpModule } from '@nestjs/axios';
-import { VehicleStateMachine } from './vehicles/vehicle.state-machine';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [HttpModule, VehiclesModule, ParticipantModule],
+  imports: [
+    HttpModule,
+    VehiclesModule,
+    ParticipantModule,
+    ConfigModule.forRoot({
+      envFilePath: ['.env.local', '.env'],
+    }),
+  ],
   controllers: [AppController, VehiclesController],
   providers: [AppService, ParticipantService],
 })
