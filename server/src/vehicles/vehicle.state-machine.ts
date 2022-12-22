@@ -29,7 +29,11 @@ export class VehicleStateMachine {
     });
 
     if (state) {
-      return state;
+      // replace dead with more friendly term
+      return {
+        current: state.current.replace('dead', 'decommissioned'),
+        transitions: [],
+      };
     }
 
     throw new NotFoundException();
