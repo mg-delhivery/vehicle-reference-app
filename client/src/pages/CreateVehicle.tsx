@@ -8,35 +8,42 @@ import {
 } from 'flowbite-react';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { createSearchParams, useNavigate, useParams } from 'react-router-dom';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 
 import { createVehicle } from '../api/vehicles';
 import Title from '../layout/Title';
 
 const defaultValues: VehicleDisplay = {
   id: '',
-  state: '',
+  state: {
+    current: '',
+    transitions: [],
+  },
   name: '',
   uniqueCode: '',
   category: '',
   owner: 'tenants:9f944ddf-6d6c-488c-918e-392cb53494c6',
   properties: {},
   createdBy: '',
-  createdAt: '',
-  updatedAt: '',
+  createdAt: {
+    epoch: 0,
+    display: '',
+  },
+  updatedAt: {
+    epoch: 0,
+    display: '',
+  },
   updatedBy: '',
 };
 
 function CreateVehicle() {
   const navigate = useNavigate();
-  const { id } = useParams();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionError, setSubmissionError] = useState<string>();
 
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm<VehicleParticipantForm>({
     defaultValues,
@@ -149,8 +156,8 @@ function CreateVehicle() {
               <label className="inline-flex relative items-center cursor-pointer">
                 <input
                   type="checkbox"
-                  value=""
                   className="sr-only peer"
+                  value=""
                   defaultChecked={true}
                   {...register('properties.availability', {})}
                 />
@@ -227,8 +234,16 @@ function CreateVehicle() {
                 disabled={false}
                 placeholder=""
                 required={false}
-                {...register('properties.registrationNumber', {})}
+                {...register('properties.registrationNumber', {
+                  pattern: /^[a-zA-Z0-9]{5,25}$/i,
+                })}
               />
+              {errors.properties?.registrationNumber &&
+                errors.properties?.registrationNumber.type === 'pattern' && (
+                  <p className="mt-2 text-xs text-red-700">
+                    Must be alphanumeric with 5-25 characters.
+                  </p>
+                )}
             </div>
             <div className="grow">
               <div className="mb-2 block">

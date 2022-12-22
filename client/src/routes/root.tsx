@@ -1,10 +1,7 @@
-import initialize from 'header/initialize';
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 
 import { Breadcrumbs } from '../components/Breadcrumbs';
-
-initialize();
 
 function Root() {
   return (

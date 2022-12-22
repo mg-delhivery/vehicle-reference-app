@@ -1,10 +1,4 @@
-import {
-  Button,
-  Label,
-  Spinner,
-  TextInput,
-  ToggleSwitch,
-} from 'flowbite-react';
+import { Button, Label, Spinner, TextInput } from 'flowbite-react';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
@@ -44,12 +38,7 @@ function ViewVehicle() {
   const [vehicle, setVehicle] = useState<VehicleDisplay>(defaultValues);
   const [isLoading, setIsLoading] = useState(true);
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<VehicleParticipantForm>({
+  const { register, handleSubmit, reset } = useForm<VehicleParticipantForm>({
     defaultValues: useMemo(() => vehicle, [vehicle]),
   });
   const onSubmit = (data: VehicleParticipantForm) => console.log(data);
@@ -61,11 +50,11 @@ function ViewVehicle() {
       setIsLoading(false);
     };
     executeFetchVehicle();
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     reset(vehicle);
-  }, [vehicle]);
+  }, [reset, vehicle]);
 
   if (!id) {
     return <div>Vehicle not found.</div>;
@@ -119,12 +108,15 @@ function ViewVehicle() {
               <div className="mb-2 block">
                 <Label htmlFor="properties.availability" value="Available" />
               </div>
-              <ToggleSwitch
-                id="properties.availability"
-                label=""
-                checked={!!vehicle.properties.availability}
-                onChange={() => null}
-              />
+              <label className="inline-flex relative items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  className="sr-only peer"
+                  disabled={true}
+                  {...register('properties.availability', {})}
+                />
+                <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+              </label>
             </div>
             <div className="grow">
               <div className="mb-2 block">
@@ -218,15 +210,15 @@ function ViewVehicle() {
           <div className="flex flex-col md:flex-row gap-4">
             <div className="grow">
               <div className="mb-2 block">
-                <Label htmlFor="createdAt" value="Created" />
+                <Label htmlFor="createdAt.display" value="Created" />
               </div>
               <TextInput
-                id={'createdAt'}
+                id={'createdAt.display'}
                 type="text"
                 disabled={true}
                 placeholder={vehicle?.createdAt.display}
                 required={true}
-                {...register('createdAt', {})}
+                {...register('createdAt.display', {})}
               />
             </div>
 
@@ -248,15 +240,15 @@ function ViewVehicle() {
           <div className="flex flex-col md:flex-row gap-4">
             <div className="grow">
               <div className="mb-2 block">
-                <Label htmlFor="updatedAt" value="Last Updated" />
+                <Label htmlFor="updatedAt.display" value="Last Updated" />
               </div>
               <TextInput
-                id={'updatedAt'}
+                id={'updatedAt.display'}
                 type="text"
                 disabled={true}
                 placeholder={vehicle?.updatedAt.display}
                 required={true}
-                {...register('updatedAt', {})}
+                {...register('updatedAt.display', {})}
               />
             </div>
 

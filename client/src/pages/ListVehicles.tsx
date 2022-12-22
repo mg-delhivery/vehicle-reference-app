@@ -1,30 +1,29 @@
-import { faPlus, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faPlus, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   Button,
   Checkbox,
-  Label,
+  Dropdown,
   Pagination,
   Spinner,
   Table,
   TextInput,
-  Toast,
 } from 'flowbite-react';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {
   Link,
   createSearchParams,
-  useLocation,
   useNavigate,
-  useParams,
   useSearchParams,
 } from 'react-router-dom';
 
 import { getVehicles, transitionStates } from '../api/vehicles';
-import { RelativeDate } from '../components/RelativeDate';
+import { Toast } from '../components/Toast';
 import { VehicleStateDisplay } from '../components/VehicleState';
 import Title from '../layout/Title';
+import { getFilterableStates } from '../utils/filterableStates';
+import { getStateDisplay } from '../utils/stateDisplay';
 
 interface VehicleSearchForm {
   search: string;
@@ -32,7 +31,7 @@ interface VehicleSearchForm {
 
 const ITEMS_PER_PAGE = 10;
 
-function VehiclesList() {
+function ListVehicles() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -46,10 +45,14 @@ function VehiclesList() {
   const [isTransitioningState, setIsTransitioningState] = useState(false);
   const [paginationPage, setPaginationPage] = useState(1);
   const [filterSearch, setFilterSearch] = useState('');
+  const [filterableStates, setFilterableStates] = useState<string[]>([]);
+  const [stateFilter, setStateFilter] = useState<string>('');
   const [selectedState, setSelectedState] = useState('');
   const [selectedVehicles, setSelectedVehicles] = useState<{
     [key: string]: boolean;
   }>({});
+
+  const { register, reset } = useForm<VehicleSearchForm>();
 
   useEffect(() => {
     if (searchParams.has('page')) {
@@ -61,7 +64,7 @@ function VehiclesList() {
         reset();
       }
     }
-  }, [searchParams]);
+  }, [reset, searchParams]);
 
   useEffect(() => {
     const getAllVehicles = async () => {
@@ -69,6 +72,7 @@ function VehiclesList() {
       setVehicles(vehicles);
       setIsLoading(false);
 
+      setFilterableStates(getFilterableStates(vehicles));
       const emptyVehicleSelections = getEmptyVehicleSelections(vehicles);
       setSelectedVehicles(emptyVehicleSelections);
       constructStateTransitionPaths(vehicles);
@@ -93,7 +97,7 @@ function VehiclesList() {
         setSearchParams(searchParams);
       }, 3000);
     }
-  }, []);
+  }, [searchParams, setSearchParams]);
 
   const triggerStateTransitions = async (newState: string) => {
     const forUpdate = Object.keys(selectedVehicles).filter(
@@ -103,9 +107,13 @@ function VehiclesList() {
     setIsTransitioningState(true);
     await transitionStates(newState, forUpdate);
     clearStateSelections();
-    // setReloadSeed(Math.random());
+
+    // Should be sufficient to reload vehicles
+    setReloadSeed(Math.random());
+    // But leaving this in place to trigger a full reload. Will revisit.
+    window.location.reload();
+
     setIsTransitioningState(false);
-    window.location.reload(); // for now, later fix the reload seed behavior to only reload the component.
   };
 
   const constructStateTransitionPaths = (vehicles: VehicleDisplay[]) => {
@@ -135,12 +143,6 @@ function VehiclesList() {
       })}`,
     });
   };
-
-  const {
-    register,
-    reset,
-    formState: { errors },
-  } = useForm<VehicleSearchForm>();
 
   const handleSearch = (query: string) => {
     setFilterSearch(query);
@@ -172,11 +174,10 @@ function VehiclesList() {
   };
 
   return (
-    <div id="VehiclesList" className="flex flex-col items-center gap-6">
+    <div id="ListVehicles" className="flex flex-col items-center gap-6">
       {toastMsg && (
-        <Toast className="fixed top-6 bg-green-500 text-slate-200">
-          <div className="ml-3 text-sm font-normal">{toastMsg}</div>
-          <Toast.Toggle />
+        <Toast kind="success" onClose={() => setToastMsg('')}>
+          {toastMsg}
         </Toast>
       )}
       <div className="w-full flex flex-row gap-4">
@@ -184,9 +185,12 @@ function VehiclesList() {
           <Title>Vehicles</Title>
         </div>
         <div className="flex-none">
-          <Button onClick={() => navigate('/vehicles/create')}>
+          <Button
+            className="whitespace-nowrap"
+            onClick={() => navigate('/vehicles/create')}
+          >
             <FontAwesomeIcon icon={faPlus} />
-            <span className="ml-2">Create Vehicle</span>
+            <span className="ml-2">Create New Vehicle</span>
           </Button>
         </div>
       </div>
@@ -203,27 +207,61 @@ function VehiclesList() {
                 {!isTransitioningState ? `Transition to ${path}` : <Spinner />}
               </Button>
             ))}
+            {transitionPaths[selectedState].length === 0 && (
+              <p>No states available for transition.</p>
+            )}
             <Button color="light" size="xs" onClick={clearStateSelections}>
               Cancel
             </Button>
           </div>
         ) : (
-          <form
-            className="flex flex-col gap-4"
-            onSubmit={(e) => e.preventDefault()}
-          >
-            <TextInput
-              id="search"
-              placeholder="Search by vehicle name"
-              required={false}
-              addon={<FontAwesomeIcon icon={faSearch} />}
-              {...register('search', {
-                onChange: (e) => {
-                  handleSearch(e.target.value);
-                },
-              })}
-            />
-          </form>
+          <div className="flex flex-row gap-4">
+            <form
+              className="w-full flex flex-col gap-4"
+              onSubmit={(e) => e.preventDefault()}
+            >
+              <TextInput
+                id="search"
+                placeholder="Search by vehicle name"
+                required={false}
+                addon={<FontAwesomeIcon icon={faSearch} />}
+                {...register('search', {
+                  onChange: (e) => {
+                    handleSearch(e.target.value);
+                  },
+                })}
+              />
+            </form>
+            <Dropdown label="Status" color="light">
+              {filterableStates.map((state) => (
+                <Dropdown.Item
+                  key={state}
+                  onClick={() => {
+                    if (state === stateFilter) {
+                      setStateFilter('');
+                    } else {
+                      setStateFilter(state);
+                    }
+                  }}
+                >
+                  {stateFilter === state && <FontAwesomeIcon icon={faCheck} />}
+                  <span className="ml-2">{getStateDisplay(state)}</span>
+                </Dropdown.Item>
+              ))}
+              {stateFilter && <Dropdown.Divider />}
+              {stateFilter && (
+                <Dropdown.Item>
+                  <Button
+                    color="light"
+                    size="xs"
+                    onClick={() => setStateFilter('')}
+                  >
+                    Clear Selection
+                  </Button>
+                </Dropdown.Item>
+              )}
+            </Dropdown>
+          </div>
         )}
       </div>
       <div className="w-full">
@@ -239,7 +277,18 @@ function VehiclesList() {
           <Table.Body className="divide-y">
             {vehicles
               .filter((vehicle) => {
-                if (filterSearch === '') {
+                if (!stateFilter) {
+                  return vehicle;
+                }
+
+                if (vehicle.state.current === stateFilter) {
+                  return vehicle;
+                }
+
+                return false;
+              })
+              .filter((vehicle) => {
+                if (!filterSearch) {
                   return vehicle;
                 }
 
@@ -250,13 +299,15 @@ function VehiclesList() {
                 ) {
                   return vehicle;
                 }
+
+                return false;
               })
               .sort((a, b) => {
                 return a.updatedAt.epoch > b.updatedAt.epoch ? -1 : 1;
               })
               .filter(
                 (vehicle, i) =>
-                  Math.ceil((i + 1) / ITEMS_PER_PAGE) == paginationPage
+                  Math.ceil((i + 1) / ITEMS_PER_PAGE) === paginationPage
               )
               .map((vehicle, i) => (
                 <Table.Row
@@ -264,8 +315,7 @@ function VehiclesList() {
                   className="bg-white dark:border-gray-700 dark:bg-gray-800"
                 >
                   <Table.Cell className="!p-4">
-                    {!selectedState ||
-                    selectedState === vehicle.state.current ? (
+                    {!selectedState || selectedVehicles[vehicle.id] ? (
                       <Checkbox
                         value={vehicle.state.current}
                         onChange={(e) =>
@@ -306,7 +356,7 @@ function VehiclesList() {
           </Table.Body>
         </Table>
       </div>
-      {!isLoading && (
+      {!isLoading && !stateFilter && !filterSearch && (
         <div className="flex items-center justify-center text-center">
           <Pagination
             currentPage={paginationPage}
@@ -324,4 +374,4 @@ function VehiclesList() {
   );
 }
 
-export default VehiclesList;
+export default ListVehicles;

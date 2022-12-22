@@ -28,7 +28,6 @@ module.exports = {
     mode: 'extends',
     plugins: [tailwindcss, autoprefixer],
   },
-
   webpack: whenProd(() => ({
     configure: (webpackConfig, { paths }) => {
       paths.appBuild = webpackConfig.output.path = path.resolve(

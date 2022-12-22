@@ -1,18 +1,10 @@
-import {
-  Button,
-  Label,
-  Select,
-  Spinner,
-  TextInput,
-  Toast,
-} from 'flowbite-react';
+import { Button, Label, Select, Spinner, TextInput } from 'flowbite-react';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { createSearchParams, useNavigate, useParams } from 'react-router-dom';
 
 import { editVehicle, fetchVehicle } from '../api/vehicles';
-import { VehicleStateDisplay } from '../components/VehicleState';
-import { VehicleStateTransitioner } from '../components/VehicleStrateTransitioner';
+import { Toast } from '../components/Toast';
 import Title from '../layout/Title';
 
 interface VehicleParticipantForm extends VehicleDisplay {}
@@ -90,30 +82,22 @@ function EditVehicle() {
       setIsLoading(false);
     };
     executeFetchVehicle();
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     reset(vehicle);
-  }, [vehicle]);
+  }, [reset, vehicle]);
 
   if (!id) {
     return <div>Vehicle not found.</div>;
   }
   return (
     <div id="EditVehicle" className="relative flex flex-col items-center">
-      {submissionError && (
-        <Toast className="absolute -top-20 bg-red-500 text-slate-200">
-          <div className="ml-3 text-sm font-normal">{submissionError}</div>
-          <Toast.Toggle />
-        </Toast>
-      )}
+      {submissionError && <Toast kind="error">{submissionError}</Toast>}
 
       <div className="w-full">
         <div className="flex flex-row items-center gap-4 md:gap-6">
           <Title>Edit Vehicle</Title>
-          {/* {!isLoading && (
-            <VehicleStateTransitioner size="lg" rawState={vehicle.state} />
-          )} */}
         </div>
 
         {isLoading && (
@@ -247,8 +231,16 @@ function EditVehicle() {
                   disabled={false}
                   placeholder={vehicle?.properties.registrationNumber}
                   required={false}
-                  {...register('properties.registrationNumber', {})}
+                  {...register('properties.registrationNumber', {
+                    pattern: /^[a-zA-Z0-9]{5,25}$/i,
+                  })}
                 />
+                {errors.properties?.registrationNumber &&
+                  errors.properties?.registrationNumber.type === 'pattern' && (
+                    <p className="mt-2 text-xs text-red-700">
+                      Must be alphanumeric with 5-25 characters.
+                    </p>
+                  )}
               </div>
               <div className="grow">
                 <div className="mb-2 block">

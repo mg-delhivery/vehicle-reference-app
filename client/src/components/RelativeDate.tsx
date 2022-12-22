@@ -1,4 +1,3 @@
-import { DateTime } from 'luxon';
 import React from 'react';
 
 import { getUxDateDisplay } from '../utils/dates';
