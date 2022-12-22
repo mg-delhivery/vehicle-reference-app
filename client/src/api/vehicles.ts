@@ -3,11 +3,15 @@ import { sharedAccessBundle } from 'header/AuthenticatedHeader';
 
 import { getUxDateDisplay } from '../utils/dates';
 
-const getHeaders = () => ({
-  'X-COREOS-ACCESS': `${sharedAccessBundle.value.accessToken}`,
-  'X-COREOS-REQUEST-ID': Date.now().toString(),
-  'X-COREOS-TID': `${sharedAccessBundle.value.tenantId}`,
-});
+const getHeaders = () => {
+  const bundle = sharedAccessBundle;
+
+  return {
+    'X-COREOS-ACCESS': `${bundle.value.accessToken}`,
+    'X-COREOS-REQUEST-ID': Date.now().toString(),
+    'X-COREOS-TID': `${sharedAccessBundle.value.tenantId}`,
+  };
+};
 
 export const getVehicles = async (): Promise<VehicleDisplay[]> => {
   const vehiclesResponse = await axios.get<VehicleParticipant[]>(
