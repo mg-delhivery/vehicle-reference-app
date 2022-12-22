@@ -10,7 +10,6 @@ const getHeaders = () => ({
 });
 
 export const getVehicles = async (): Promise<VehicleDisplay[]> => {
-  console.log(sharedAccessBundle);
   const vehiclesResponse = await axios.get<VehicleParticipant[]>(
     `/api/vehicles`,
     { headers: getHeaders() }
