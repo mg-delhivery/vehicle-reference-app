@@ -1,32 +1,21 @@
-import axios, { AxiosRequestConfig } from 'axios';
+import { AxiosRequestConfig } from 'axios';
 import { sharedAccessBundle } from 'header/AuthenticatedHeader';
 import { axiosInstance } from 'header/httpClient';
+import { firstValueFrom } from 'rxjs';
 
 import { getUxDateDisplay } from '../utils/dates';
 
-// const getHeaders = () => {
-//   const bundle = sharedAccessBundle;
+const isTokenLoaded = async (): Promise<void> => {
+  const bundle = sharedAccessBundle;
 
-//   return {
-//     'X-COREOS-ACCESS': `${bundle.value.accessToken}`,
-//     'X-COREOS-REQUEST-ID': Date.now().toString(),
-//     'X-COREOS-TID': `${sharedAccessBundle.value.tenantId}`,
-//   };
-// };
+  await firstValueFrom(bundle);
 
-const tokenNotifier = (subject: {
-  accessToken: string;
-  tenantId: string;
-}) => {};
-
-// const isTokenLoaded = async (): Promise<boolean> => {
-//   const bundle = sharedAccessBundle;
-
-//   const subscription = bundle.subscribe();
-//   subscription.
-// };
+  return;
+};
 
 export const getVehicles = async (): Promise<VehicleDisplay[]> => {
+  await isTokenLoaded();
+
   const req: AxiosRequestConfig = {
     url: `${process.env.REACT_APP_BASE_URL}/api/vehicles`,
     method: 'get',
