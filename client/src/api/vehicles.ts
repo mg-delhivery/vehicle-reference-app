@@ -1,21 +1,9 @@
 import { AxiosRequestConfig } from 'axios';
-import { sharedAccessBundle } from 'header/AuthenticatedHeader';
 import { axiosInstance } from 'header/httpClient';
-import { firstValueFrom } from 'rxjs';
 
 import { getUxDateDisplay } from '../utils/dates';
 
-const isTokenLoaded = async (): Promise<void> => {
-  const bundle = sharedAccessBundle;
-
-  await firstValueFrom(bundle);
-
-  return;
-};
-
 export const getVehicles = async (): Promise<VehicleDisplay[]> => {
-  await isTokenLoaded();
-
   const req: AxiosRequestConfig = {
     url: `${process.env.REACT_APP_BASE_URL}/api/vehicles`,
     method: 'get',
