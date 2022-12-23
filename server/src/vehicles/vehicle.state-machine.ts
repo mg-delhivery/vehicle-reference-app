@@ -32,7 +32,7 @@ export class VehicleStateMachine {
       // replace dead with more friendly term
       return {
         current: state.current.replace('dead', 'decommissioned'),
-        transitions: [],
+        transitions: state.transitions,
       };
     }
 

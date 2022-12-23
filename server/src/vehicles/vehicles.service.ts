@@ -1,6 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import {
   HttpException,
+  HttpStatus,
   Inject,
   Injectable,
   Logger,
@@ -209,6 +210,11 @@ export class VehiclesService implements OnModuleInit {
               errorData.status,
             );
           });
+      } else {
+        throw new HttpException(
+          `Error: Invalid State Transition ${vehicle.state.current} to ${request.state}`,
+          HttpStatus.BAD_REQUEST,
+        );
       }
     });
   }
