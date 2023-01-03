@@ -62,10 +62,11 @@ export class VehiclesService implements OnModuleInit {
             throw new Error(
               `Error communicating with Participant Service: ${errorData.description}`,
             );
+          } else {
+            this.logger.log(
+              `Participant Type ${VEHICLE_NAME_PLURAL} Already Exists`,
+            );
           }
-          this.logger.log(
-            `Participant Type ${VEHICLE_NAME_PLURAL} Already Exists`,
-          );
         });
       // create vehicle attributes
       await this.httpService.axiosRef
