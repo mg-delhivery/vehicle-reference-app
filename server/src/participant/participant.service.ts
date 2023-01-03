@@ -9,6 +9,7 @@ import { HttpService } from '@nestjs/axios';
 import { ServiceConstants } from '../common/constants/service.constants';
 import { v4 as uuidv4 } from 'uuid';
 import { AxiosRequestHeaders, AxiosResponse } from 'axios';
+import { ClientAuthHeaders } from 'src/common/models/client.auth.headers.model';
 
 @Injectable()
 export class ParticipantService {
@@ -25,21 +26,37 @@ export class ParticipantService {
     return `https://${process.env.TENANT_DNS}/core/api/v1/aaa`;
   }
 
-  async buildHeaders(): Promise<AxiosRequestHeaders> {
-    const axiosResponse = await this.generateClientCredentials();
+  async buildUserHeaders(
+    clientAuth: ClientAuthHeaders,
+  ): Promise<AxiosRequestHeaders> {
+    return {
+      [ServiceConstants.http_headers.x_coreos_request_id]:
+        clientAuth.x_coreos_request_id,
+      [ServiceConstants.http_headers.x_coreos_tid]: clientAuth.x_coreos_tid,
+      [ServiceConstants.http_headers.x_coreos_userinfo]:
+        '{ "id": "1", "name": "vehicle-reference-app"}',
+      [ServiceConstants.http_headers.x_coreos_access]:
+        clientAuth.x_coreos_access,
+      [ServiceConstants.http_headers.x_coreos_origin_token]:
+        clientAuth.x_coreos_access,
+    };
+  }
+
+  async buildAdminHeaders(): Promise<AxiosRequestHeaders> {
+    const adminCreds = await this.generateAppAdminCredentials();
     return {
       [ServiceConstants.http_headers.x_coreos_request_id]: uuidv4(),
       [ServiceConstants.http_headers.x_coreos_tid]: process.env.TENANT_ID,
       [ServiceConstants.http_headers.x_coreos_userinfo]:
         '{ "id": "1", "name": "vehicle-reference-app"}',
       [ServiceConstants.http_headers.x_coreos_access]:
-        axiosResponse.data.data.accessToken,
+        adminCreds.data.data.accessToken,
       [ServiceConstants.http_headers.x_coreos_origin_token]:
-        axiosResponse.data.data.accessToken,
+        adminCreds.data.data.accessToken,
     };
   }
 
-  async generateClientCredentials(): Promise<AxiosResponse<any>> {
+  async generateAppAdminCredentials(): Promise<AxiosResponse<any>> {
     const url = `${this.getClientCredentialsBaseUrl(
       process.env.TENANT_DNS,
     )}/auth/client-credentials`;

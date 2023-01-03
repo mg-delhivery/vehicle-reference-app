@@ -23,6 +23,7 @@ import {
 import { handleErrorResponse } from '../common/error/axios.error';
 import { ParticipantService } from '../participant/participant.service';
 import { VehicleStateMachine } from './vehicle.state-machine';
+import { ClientAuthHeaders } from 'src/common/models/client.auth.headers.model';
 
 @Injectable()
 export class VehiclesService implements OnModuleInit {
@@ -39,7 +40,7 @@ export class VehiclesService implements OnModuleInit {
 
   async onModuleInit() {
     try {
-      const headers = await this.participantService.buildHeaders();
+      const headers = await this.participantService.buildAdminHeaders();
       // create vehicle participant type
       await this.httpService.axiosRef
         .post(
@@ -97,10 +98,14 @@ export class VehiclesService implements OnModuleInit {
     return `https://${process.env.TENANT_DNS}/core/api/v2/participants/${VEHICLE_NAME_PLURAL}`;
   }
 
-  async getAllVehicles(): Promise<VehicleDTO[]> {
+  async getAllVehicles(
+    clientAuthHeaders: ClientAuthHeaders,
+  ): Promise<VehicleDTO[]> {
     return await this.httpService.axiosRef
       .get(this.getVehiclesUrl(), {
-        headers: await this.participantService.buildHeaders(),
+        headers: await this.participantService.buildUserHeaders(
+          clientAuthHeaders,
+        ),
       })
       .then((response) => {
         const vehicles: any[] = response.data.data.participants;
@@ -119,10 +124,15 @@ export class VehiclesService implements OnModuleInit {
       });
   }
 
-  async getVehicle(vehicleId: string): Promise<VehicleDTO> {
+  async getVehicle(
+    clientAuthHeaders: ClientAuthHeaders,
+    vehicleId: string,
+  ): Promise<VehicleDTO> {
     return await this.httpService.axiosRef
       .get(this.getVehiclesUrl() + `/${vehicleId}`, {
-        headers: await this.participantService.buildHeaders(),
+        headers: await this.participantService.buildUserHeaders(
+          clientAuthHeaders,
+        ),
       })
       .then((response) => {
         const vehicle = response.data.data;
@@ -140,10 +150,15 @@ export class VehiclesService implements OnModuleInit {
       });
   }
 
-  async addVehicle(vehicle: AddVehicleRequestDTO): Promise<void> {
+  async addVehicle(
+    clientAuthHeaders: ClientAuthHeaders,
+    vehicle: AddVehicleRequestDTO,
+  ): Promise<void> {
     await this.httpService.axiosRef
       .post(this.getVehiclesUrl(), vehicle, {
-        headers: await this.participantService.buildHeaders(),
+        headers: await this.participantService.buildUserHeaders(
+          clientAuthHeaders,
+        ),
       })
       .then(() => {
         this.logger.log(`Vehicle ${vehicle.name} successfully added`);
@@ -160,12 +175,15 @@ export class VehiclesService implements OnModuleInit {
   }
 
   async updateVehicle(
+    clientAuthHeaders: ClientAuthHeaders,
     vehicleId: string,
     vehicle: UpdateVehiclePropertiesRequestDTO,
   ): Promise<void> {
     await this.httpService.axiosRef
       .put(this.getVehiclesUrl() + `/${vehicleId}`, vehicle, {
-        headers: await this.participantService.buildHeaders(),
+        headers: await this.participantService.buildUserHeaders(
+          clientAuthHeaders,
+        ),
       })
       .then(() => {
         this.logger.log(`Vehicle ${vehicleId} successfully updated`);
@@ -182,44 +200,49 @@ export class VehiclesService implements OnModuleInit {
   }
 
   async transitionVehicle(
+    clientAuthHeaders: ClientAuthHeaders,
     vehicleId: string,
     request: TransitionVehicleStateRequestDTO,
   ): Promise<void> {
-    await this.getVehicle(vehicleId).then(async (vehicle) => {
-      //get possible transitions for current state
-      if (vehicle.state.transitions.includes(request.state)) {
-        const transitionCodes = this.vehicleStateMachines.getTransitionCodes(
-          vehicle.state.current,
-        );
-        await this.lifeCycleEvent(
-          vehicleId,
-          transitionCodes.eventCode,
-          transitionCodes.reasonCode,
-        )
-          .then(() => {
-            this.logger.log(
-              `Vehicle ${vehicleId} transitioned from ${vehicle.state.current} to ${request.state}`,
-            );
-          })
-          .catch((error) => {
-            this.logger.error(error);
-            const errorData = handleErrorResponse(error);
-            this.logger.error(errorData);
-            throw new HttpException(
-              `Failed to transition Vehicle ${vehicleId}: ${errorData.description}`,
-              errorData.status,
-            );
-          });
-      } else {
-        throw new HttpException(
-          `Error: Invalid State Transition ${vehicle.state.current} to ${request.state}`,
-          HttpStatus.BAD_REQUEST,
-        );
-      }
-    });
+    await this.getVehicle(clientAuthHeaders, vehicleId).then(
+      async (vehicle) => {
+        //get possible transitions for current state
+        if (vehicle.state.transitions.includes(request.state)) {
+          const transitionCodes = this.vehicleStateMachines.getTransitionCodes(
+            vehicle.state.current,
+          );
+          await this.lifeCycleEvent(
+            clientAuthHeaders,
+            vehicleId,
+            transitionCodes.eventCode,
+            transitionCodes.reasonCode,
+          )
+            .then(() => {
+              this.logger.log(
+                `Vehicle ${vehicleId} transitioned from ${vehicle.state.current} to ${request.state}`,
+              );
+            })
+            .catch((error) => {
+              this.logger.error(error);
+              const errorData = handleErrorResponse(error);
+              this.logger.error(errorData);
+              throw new HttpException(
+                `Failed to transition Vehicle ${vehicleId}: ${errorData.description}`,
+                errorData.status,
+              );
+            });
+        } else {
+          throw new HttpException(
+            `Error: Invalid State Transition ${vehicle.state.current} to ${request.state}`,
+            HttpStatus.BAD_REQUEST,
+          );
+        }
+      },
+    );
   }
 
   private async lifeCycleEvent(
+    clientAuthHeaders: ClientAuthHeaders,
     vehicleId: string,
     eventCode: string,
     reasonCode: string,
@@ -237,7 +260,9 @@ export class VehiclesService implements OnModuleInit {
         },
       },
       {
-        headers: await this.participantService.buildHeaders(),
+        headers: await this.participantService.buildUserHeaders(
+          clientAuthHeaders,
+        ),
       },
     );
   }
