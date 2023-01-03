@@ -3664,10 +3664,10 @@ connect-history-api-fallback@^2.0.0:
   resolved "https://registry.yarnpkg.com/connect-history-api-fallback/-/connect-history-api-fallback-2.0.0.tgz#647264845251a0daf25b97ce87834cace0f5f1c8"
   integrity sha512-U73+6lQFmfiNPrYbXqr6kZ1i1wiRqXnp2nhMsINseWXO8lDau0LGEffJ8kQi4EjLZympVgRdvqjAgiZ1tgzDDA==
 
-consoleui-library@^1.1.9:
-  version "1.1.9"
-  resolved "https://registry.yarnpkg.com/consoleui-library/-/consoleui-library-1.1.9.tgz#1a195a00bf0b0b14cc6fee812a5205eeb8799444"
-  integrity sha512-qNEntteaS7T1aW0W3GMyDS+O82XcII189Sk6uxLSt49uSNDQ1izcqe+f2vJ5ukOwmc4jV5N/IfoE8AdvvHj+aA==
+consoleui-library@^1.1.13:
+  version "1.1.13"
+  resolved "https://registry.yarnpkg.com/consoleui-library/-/consoleui-library-1.1.13.tgz#503f82e6da58a0f6caf7ae80dd23fce525a850e2"
+  integrity sha512-1SkE1ZYMlnOIdeGhIYTvTomlrRbpkzKOUIaH1t9kLJOoENR2gSbjQxcVCu0R2pW5dZyO6ozm5kaBM4EvM4ltMA==
   dependencies:
     "@babel/preset-env" "^7.18.10"
     "@testing-library/jest-dom" "^5.16.4"
