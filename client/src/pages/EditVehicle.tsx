@@ -32,7 +32,7 @@ const defaultValues: VehicleDisplay = {
   updatedBy: '',
 };
 
-function EditVehicle() {
+function EditVehicle(props: any) {
   const navigate = useNavigate();
   const { id } = useParams();
   const [vehicle, setVehicle] = useState<VehicleDisplay>(defaultValues);
@@ -59,7 +59,7 @@ function EditVehicle() {
     setSubmissionError(undefined);
 
     try {
-      await editVehicle(id, data.properties);
+      await editVehicle(id, data.properties, props.console);
 
       navigate({
         pathname: '../..',
@@ -77,8 +77,8 @@ function EditVehicle() {
 
   useEffect(() => {
     const executeFetchVehicle = async () => {
-      const vehicleDisplay = await fetchVehicle(id || '');
-      setVehicle(vehicleDisplay);
+      const vehicleDisplay = await fetchVehicle(id || '', props.console);
+      //setVehicle(vehicleDisplay);
       setIsLoading(false);
     };
     executeFetchVehicle();

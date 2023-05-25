@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@craco/craco": "^7.0.0",
     "@fortawesome/fontawesome-svg-core": "^6.2.1",
     "@fortawesome/free-solid-svg-icons": "^6.2.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "@os1-platform/console-ui-react": "^0.1.6",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
     "@testing-library/user-event": "^13.2.1",
@@ -16,8 +16,6 @@
     "@types/react-dom": "^18.0.0",
     "@types/react-fontawesome": "^1.6.5",
     "axios": "^1.2.1",
-    "consoleui-library": "^1.1.13",
-    "craco-module-federation": "^1.1.0",
     "dayjs": "^1.11.7",
     "flowbite": "^1.5.5",
     "flowbite-react": "^0.3.7",
@@ -28,12 +26,13 @@
     "react-router-dom": "^6.4.5",
     "react-scripts": "5.0.1",
     "typescript": "^4.4.2",
-    "web-vitals": "^2.1.0"
+    "web-vitals": "^2.1.0",
+    "tailwindcss": "^2.2.14"
   },
   "scripts": {
-    "start": "craco start",
-    "build": "PUBLIC_URL=./ craco build",
-    "test": "craco test",
+    "start": "PORT=4500 HTTPS=true react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -60,7 +59,6 @@
     "autoprefixer": "^10.4.13",
     "postcss": "^8.4.20",
     "prettier": "^2.8.1",
-    "tailwindcss": "^3.2.4",
     "webpack-remote-types-plugin": "^0.2.7"
   }
 }

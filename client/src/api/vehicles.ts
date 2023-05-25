@@ -1,70 +1,86 @@
-import { AxiosRequestConfig } from 'axios';
-import { axiosInstance } from 'header/httpClient';
+// import axios, { AxiosRequestConfig } from 'axios';
+import Client from '../utils/Client';
 
 import { getUxDateDisplay } from '../utils/dates';
 
-export const getVehicles = async (): Promise<VehicleDisplay[]> => {
-  const req: AxiosRequestConfig = {
-    url: `${process.env.REACT_APP_BASE_URL}/api/vehicles`,
-    method: 'get',
-  };
-  const resp = await axiosInstance<VehicleParticipant[]>(req);
+export const getVehicles = async (client: any) => {
+  if (client) {
+    const axiosClient = new Client(client.authInitializer, `${process.env.REACT_APP_BASE_URL}/api/vehicles`);
+    const reqHeaders = {
+      withAuth: false,
+    };
+    const resp = await axiosClient.get('45', reqHeaders);
+    const vehicleData = <VehicleParticipant[]>(resp.data);
 
-  return resp.map((vehicle) => getDisplayFromParticipant(vehicle));
+    return vehicleData.map((vehicle) => getDisplayFromParticipant(vehicle));
+  }
 };
 
-export const fetchVehicle = async (id: string): Promise<VehicleDisplay> => {
-  const req: AxiosRequestConfig = {
-    url: `${process.env.REACT_APP_BASE_URL}/api/vehicles/${id}`,
-    method: 'get',
+export const fetchVehicle = async (id: string, client: any) => {
+  const axiosClient = new Client(client.authInitializer, `${process.env.REACT_APP_BASE_URL}/api/vehicles/${id}`);
+  const reqHeaders = {
+    withAuth: false,
   };
-  const resp = await axiosInstance<VehicleParticipant>(req);
-
-  return getDisplayFromParticipant(resp);
+  try {
+    const resp = await axiosClient.get('fetchVehicles-id-1', reqHeaders);
+    return getDisplayFromParticipant(resp);
+  } catch (error) {
+    console.error('error', error);
+  }
 };
 
 export const createVehicle = async (
-  data: VehicleParticipantForm
+  data: VehicleParticipantForm,
+  client: any
 ): Promise<void> => {
   const dto = getDtoFromDisplay(data);
 
-  const req: AxiosRequestConfig = {
-    url: `${process.env.REACT_APP_BASE_URL}/api/vehicles`,
-    method: 'post',
-    data: dto,
+  const axiosClient = new Client(client.authInitializer, `${process.env.REACT_APP_BASE_URL}/api/vehicles`);
+  const reqHeaders = {
+    withAuth: false,
   };
-  await axiosInstance<void>(req);
-
-  return;
+  try {
+    await axiosClient.post('createVehicles-1', dto, reqHeaders);
+    return;
+  } catch (error) {
+    console.error('error', error);
+  }
 };
 
 export const editVehicle = async (
   id: string,
-  data: VehicleParticipantProperties
+  data: VehicleParticipantProperties,
+  client: any
 ): Promise<void> => {
   const properties = { properties: getParticipantProperties(data) };
 
-  const req: AxiosRequestConfig = {
-    url: `${process.env.REACT_APP_BASE_URL}/api/vehicles/${id}`,
-    method: 'put',
-    data: properties,
+  const axiosClient = new Client(client.authInitializer, `${process.env.REACT_APP_BASE_URL}/api/vehicles/${id}`);
+  const reqHeaders = {
+    withAuth: false,
   };
-  await axiosInstance<void>(req);
-
-  return;
+  try {
+    await axiosClient.put('editehicles-1', properties, reqHeaders);
+    return;
+  } catch (error) {
+    console.error('error', error);
+  }
 };
 
 export const transitionStates = async (
   newState: string,
-  vehicleIds: string[]
+  vehicleIds: string[],
+  client: any
 ) => {
   const calls = vehicleIds.map((id) => {
-    const req: AxiosRequestConfig = {
-      url: `${process.env.REACT_APP_BASE_URL}/api/vehicles/${id}/transition`,
-      method: 'put',
-      data: { state: newState },
+    const axiosClient = new Client(client.authInitializer, `${process.env.REACT_APP_BASE_URL}/api/vehicles/${id}/transition`);
+    const reqHeaders = {
+      withAuth: false,
     };
-    return axiosInstance<void>(req);
+    try {
+      return axiosClient.put('transitionStates', { state: newState }, reqHeaders);
+    } catch (error) {
+      console.error('error', error);
+    }
   });
 
   await Promise.all(calls);
@@ -73,7 +89,7 @@ export const transitionStates = async (
 };
 
 const getDisplayFromParticipant = (
-  participant: VehicleParticipant
+  participant: any
 ): VehicleDisplay => {
   return {
     id: participant.id,

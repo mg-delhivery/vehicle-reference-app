@@ -1,3 +1,4 @@
+import { OS1Toast } from '@os1-platform/console-ui-react';
 import {
   Button,
   Label,
@@ -36,7 +37,7 @@ const defaultValues: VehicleDisplay = {
   updatedBy: '',
 };
 
-function CreateVehicle() {
+function CreateVehicle(props: any) {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionError, setSubmissionError] = useState<string>();
@@ -54,7 +55,7 @@ function CreateVehicle() {
     setSubmissionError(undefined);
 
     try {
-      await createVehicle(data);
+      await createVehicle(data, props.console);
       navigate({
         pathname: '..',
         search: `?${createSearchParams({
@@ -69,13 +70,28 @@ function CreateVehicle() {
     }
   };
 
+  const toastConfig = {
+    bgColor: 'green',
+    message: 'Operation Successful',
+    timeout: 10,
+    icon: 'info',
+    closeButton: true,
+  };
+
   return (
-    <div id="CreateVehicle" className="relative flex flex-col items-center">
+    <div
+      id="CreateVehicle"
+      className="relative flex flex-col items-center mt-5"
+    >
       {submissionError && (
-        <Toast className="absolute -top-20 bg-red-500 text-slate-200">
-          <div className="ml-3 text-sm font-normal">{submissionError}</div>
-          <Toast.Toggle />
-        </Toast>
+        <OS1Toast
+          clientId={'platform:app:ui'}
+          loginRedirectPath={'/vehicle'}
+          logoutRedirectPath={'/'}
+          appId={'Single Leg-app:435858a9-1238-5ca9-b100-a5d46d108910'}
+          elementId={'toastElement'}
+          toastConfig={toastConfig}
+        />
       )}
 
       <div className="w-full">
