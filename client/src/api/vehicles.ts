@@ -1,5 +1,3 @@
-// import axios, { AxiosRequestConfig } from 'axios';
-// import Client from '../utils/Client';
 import { OS1HttpClient } from '@os1-platform/console-ui-react'
 
 import { getUxDateDisplay } from '../utils/dates';
