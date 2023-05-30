@@ -188,10 +188,7 @@ function ListVehicles(props: any) {
     <div id="ListVehicles" className="flex flex-col items-center gap-6 mt-5">
       {toastMsg && (
         <OS1Toast
-          clientId={'platform:app:ui'}
-          loginRedirectPath={'/vehicle'}
-          logoutRedirectPath={'/'}
-          appId={'Single Leg-app:435858a9-1238-5ca9-b100-a5d46d108910'}
+          consoleInstance={props.console}
           elementId={'toastElement'}
           toastConfig={toastConfig}
         />

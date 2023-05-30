@@ -1,15 +1,16 @@
 // import axios, { AxiosRequestConfig } from 'axios';
-import Client from '../utils/Client';
+// import Client from '../utils/Client';
+import { OS1HttpClient } from '@os1-platform/console-ui-react'
 
 import { getUxDateDisplay } from '../utils/dates';
 
 export const getVehicles = async (client: any) => {
   if (client) {
-    const axiosClient = new Client(client.authInitializer, `${process.env.REACT_APP_BASE_URL}/api/vehicles`);
+    const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}`);
     const reqHeaders = {
       withAuth: false,
     };
-    const resp = await axiosClient.get('45', reqHeaders);
+    const resp = await axiosClient.get('/api/vehicles', 'getVehicle-1', reqHeaders);
     const vehicleData = <VehicleParticipant[]>(resp.data);
 
     return vehicleData.map((vehicle) => getDisplayFromParticipant(vehicle));
@@ -17,12 +18,10 @@ export const getVehicles = async (client: any) => {
 };
 
 export const fetchVehicle = async (id: string, client: any) => {
-  const axiosClient = new Client(client.authInitializer, `${process.env.REACT_APP_BASE_URL}/api/vehicles/${id}`);
-  const reqHeaders = {
-    withAuth: false,
-  };
+  const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}/api/vehicles/${id}`);
+
   try {
-    const resp = await axiosClient.get('fetchVehicles-id-1', reqHeaders);
+    const resp = await axiosClient.get('fetchVehicles-id-1');
     return getDisplayFromParticipant(resp);
   } catch (error) {
     console.error('error', error);
@@ -35,12 +34,10 @@ export const createVehicle = async (
 ): Promise<void> => {
   const dto = getDtoFromDisplay(data);
 
-  const axiosClient = new Client(client.authInitializer, `${process.env.REACT_APP_BASE_URL}/api/vehicles`);
-  const reqHeaders = {
-    withAuth: false,
-  };
+  const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}/api/vehicles`);
+
   try {
-    await axiosClient.post('createVehicles-1', dto, reqHeaders);
+    await axiosClient.post('createVehicles-1', dto);
     return;
   } catch (error) {
     console.error('error', error);
@@ -54,12 +51,10 @@ export const editVehicle = async (
 ): Promise<void> => {
   const properties = { properties: getParticipantProperties(data) };
 
-  const axiosClient = new Client(client.authInitializer, `${process.env.REACT_APP_BASE_URL}/api/vehicles/${id}`);
-  const reqHeaders = {
-    withAuth: false,
-  };
+  const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}/api/vehicles/${id}`);
+
   try {
-    await axiosClient.put('editehicles-1', properties, reqHeaders);
+    await axiosClient.put('editehicles-1', properties);
     return;
   } catch (error) {
     console.error('error', error);
@@ -72,12 +67,9 @@ export const transitionStates = async (
   client: any
 ) => {
   const calls = vehicleIds.map((id) => {
-    const axiosClient = new Client(client.authInitializer, `${process.env.REACT_APP_BASE_URL}/api/vehicles/${id}/transition`);
-    const reqHeaders = {
-      withAuth: false,
-    };
+    const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}`);
     try {
-      return axiosClient.put('transitionStates', { state: newState }, reqHeaders);
+      return axiosClient.put(`/api/vehicles/${id}/transition`, { state: newState }, 'transitionStates');
     } catch (error) {
       console.error('error', error);
     }
