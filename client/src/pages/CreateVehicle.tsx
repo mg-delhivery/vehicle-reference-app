@@ -85,7 +85,6 @@ function CreateVehicle(props: any) {
     >
       {submissionError && (
         <OS1Toast
-          consoleInstance={props.console}
           elementId={'toastElement'}
           toastConfig={toastConfig}
         />

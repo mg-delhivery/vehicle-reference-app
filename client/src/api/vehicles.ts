@@ -8,7 +8,7 @@ export const getVehicles = async (client: any) => {
     const reqHeaders = {
       withAuth: false,
     };
-    const resp = await axiosClient.get('/api/vehicles', 'getVehicle-1', reqHeaders);
+    const resp = await axiosClient.get('/vehicles', 'getVehicles', reqHeaders);
     const vehicleData = <VehicleParticipant[]>(resp.data);
 
     return vehicleData.map((vehicle) => getDisplayFromParticipant(vehicle));
@@ -32,10 +32,10 @@ export const createVehicle = async (
 ): Promise<void> => {
   const dto = getDtoFromDisplay(data);
 
-  const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}/api/vehicles`);
+  const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}/vehicles`);
 
   try {
-    await axiosClient.post('createVehicles-1', dto);
+    await axiosClient.post('', dto);
     return;
   } catch (error) {
     console.error('error', error);

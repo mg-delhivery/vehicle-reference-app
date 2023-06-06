@@ -188,7 +188,6 @@ function ListVehicles(props: any) {
     <div id="ListVehicles" className="flex flex-col items-center gap-6 mt-5">
       {toastMsg && (
         <OS1Toast
-          consoleInstance={props.console}
           elementId={'toastElement'}
           toastConfig={toastConfig}
         />
