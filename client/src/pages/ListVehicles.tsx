@@ -33,7 +33,6 @@ interface VehicleSearchForm {
 const ITEMS_PER_PAGE = 10;
 
 function ListVehicles(props: any) {
-  console.log(props.console);
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 

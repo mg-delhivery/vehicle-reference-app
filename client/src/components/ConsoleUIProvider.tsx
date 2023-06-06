@@ -17,9 +17,7 @@ const ConsoleUIProvider = (props: any) => {
   useEffect(() => {
     setConsoleInstance(props.console);
   }, [props.console]);
-  if (consoleInstance) {
-    window.console.log(consoleInstance);
-  }
+
   const router = createBrowserRouter([
     {
       path: '/',
