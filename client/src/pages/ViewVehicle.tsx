@@ -45,8 +45,8 @@ function ViewVehicle(props: any) {
 
   useEffect(() => {
     const executeFetchVehicle = async () => {
-      const vehicleDisplay = await fetchVehicle(id || '', props.console);
-      //setVehicle(vehicleDisplay);
+      const vehicleDisplay = await fetchVehicle(id || '', props.console) as VehicleDisplay;
+      setVehicle(vehicleDisplay);
       setIsLoading(false);
     };
     executeFetchVehicle();

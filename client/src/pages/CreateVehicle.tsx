@@ -23,7 +23,7 @@ const defaultValues: VehicleDisplay = {
   name: '',
   uniqueCode: '',
   category: '',
-  owner: 'tenants:9f944ddf-6d6c-488c-918e-392cb53494c6',
+  owner: 'tenants:cfecb885-e060-514a-b4f7-0094cf6f48e2',
   properties: {},
   createdBy: '',
   createdAt: {

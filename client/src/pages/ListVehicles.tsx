@@ -345,7 +345,7 @@ function ListVehicles(props: any) {
                   <Table.Cell>
                     <Link
                       className="text-blue-700 underline"
-                      to={`/vehicles/${vehicle.id}`}
+                      to={`/vehicle/${vehicle.id}`}
                     >
                       {vehicle.name}
                     </Link>
@@ -357,7 +357,7 @@ function ListVehicles(props: any) {
                   <Table.Cell>
                     <Button
                       size="xs"
-                      onClick={() => navigate(`/vehicles/${vehicle.id}/edit`)}
+                      onClick={() => navigate(`/vehicle/${vehicle.id}/edit`)}
                     >
                       Edit
                     </Button>

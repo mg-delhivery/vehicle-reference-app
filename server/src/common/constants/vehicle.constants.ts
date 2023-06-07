@@ -1,5 +1,5 @@
-export const VEHICLE_NAME_SINGULAR = 'vehicle';
-export const VEHICLE_NAME_PLURAL = 'vehicles';
+export const VEHICLE_NAME_SINGULAR = 'test';
+export const VEHICLE_NAME_PLURAL = 'tests';
 
 export const PARTICIPANT_EXISTS_ERROR_CODE = '101110522301';
 

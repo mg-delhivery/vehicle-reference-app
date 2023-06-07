@@ -5,10 +5,7 @@ import { getUxDateDisplay } from '../utils/dates';
 export const getVehicles = async (client: any) => {
   if (client) {
     const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}`);
-    const reqHeaders = {
-      withAuth: false,
-    };
-    const resp = await axiosClient.get('/vehicles', 'getVehicles', reqHeaders);
+    const resp = await axiosClient.get('/vehicles', 'getVehicles');
     const vehicleData = <VehicleParticipant[]>(resp.data);
 
     return vehicleData.map((vehicle) => getDisplayFromParticipant(vehicle));
@@ -16,10 +13,10 @@ export const getVehicles = async (client: any) => {
 };
 
 export const fetchVehicle = async (id: string, client: any) => {
-  const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}/api/vehicles/${id}`);
+  const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}`);
 
   try {
-    const resp = await axiosClient.get('fetchVehicles-id-1');
+    const resp = await axiosClient.get(`/vehicles/${id}`,'fetchVehicles-id');
     return getDisplayFromParticipant(resp);
   } catch (error) {
     console.error('error', error);
@@ -32,10 +29,13 @@ export const createVehicle = async (
 ): Promise<void> => {
   const dto = getDtoFromDisplay(data);
 
-  const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}/vehicles`);
+  const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}`);
 
   try {
-    await axiosClient.post('', dto);
+    const reqHeaders = {
+      withAuth: false
+    };
+    await axiosClient.post('/vehicles', dto, 'createVehicles', reqHeaders);
     return;
   } catch (error) {
     console.error('error', error);
@@ -49,10 +49,10 @@ export const editVehicle = async (
 ): Promise<void> => {
   const properties = { properties: getParticipantProperties(data) };
 
-  const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}/api/vehicles/${id}`);
+  const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}/vehicles/${id}`);
 
   try {
-    await axiosClient.put('editehicles-1', properties);
+    await axiosClient.put('/',properties,'editehicles-1');
     return;
   } catch (error) {
     console.error('error', error);
