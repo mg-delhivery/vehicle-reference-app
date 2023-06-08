@@ -1,5 +1,5 @@
 import { Button, Label, Select, Spinner, TextInput } from 'flowbite-react';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { createSearchParams, useNavigate, useParams } from 'react-router-dom';
 
@@ -49,7 +49,7 @@ function EditVehicle(props: any) {
     defaultValues: useMemo(() => vehicle, [vehicle]),
   });
 
-  const onSubmit = async (data: VehicleParticipantForm) => {
+  const onSubmit = useCallback((async (data: VehicleParticipantForm) => {
     if (!id) {
       console.error('Vehicle id not set.');
       return;
@@ -73,7 +73,7 @@ function EditVehicle(props: any) {
       setIsSubmitting(false);
       setSubmissionError('Edit failed.');
     }
-  };
+  }), [props.console]);
 
   useEffect(() => {
     const executeFetchVehicle = async () => {
@@ -82,7 +82,7 @@ function EditVehicle(props: any) {
       setIsLoading(false);
     };
     executeFetchVehicle();
-  }, [id]);
+  }, [id, props.console]);
 
   useEffect(() => {
     reset(vehicle);

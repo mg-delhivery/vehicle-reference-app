@@ -12,6 +12,16 @@ export const getVehicles = async (client: any) => {
   }
 };
 
+
+export const getToken = async (client: any) => {
+  if (client) {
+    const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}`);
+    const resp = await axiosClient.get('/vehicles/token', 'getToken');
+    const token = <any>(resp.data);
+
+    return token;
+  }
+};
 export const fetchVehicle = async (id: string, client: any) => {
   const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}`);
 
@@ -32,10 +42,7 @@ export const createVehicle = async (
   const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}`);
 
   try {
-    const reqHeaders = {
-      withAuth: false
-    };
-    await axiosClient.post('/vehicles', dto, 'createVehicles', reqHeaders);
+    await axiosClient.post('/vehicles', dto, 'createVehicles');
     return;
   } catch (error) {
     console.error('error', error);
@@ -48,6 +55,7 @@ export const editVehicle = async (
   client: any
 ): Promise<void> => {
   const properties = { properties: getParticipantProperties(data) };
+  console.log(properties)
 
   const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}/vehicles/${id}`);
 

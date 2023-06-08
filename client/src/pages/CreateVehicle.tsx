@@ -7,7 +7,7 @@ import {
   TextInput,
   Toast,
 } from 'flowbite-react';
-import React, { useState } from 'react';
+import React, { useState, memo, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { createSearchParams, useNavigate } from 'react-router-dom';
 
@@ -23,7 +23,7 @@ const defaultValues: VehicleDisplay = {
   name: '',
   uniqueCode: '',
   category: '',
-  owner: 'tenants:cfecb885-e060-514a-b4f7-0094cf6f48e2',
+  owner: sessionStorage.getItem("appOwnerId") as string,
   properties: {},
   createdBy: '',
   createdAt: {
@@ -50,7 +50,7 @@ function CreateVehicle(props: any) {
     defaultValues,
   });
 
-  const onSubmit = async (data: VehicleParticipantForm) => {
+  const onSubmit = useCallback((async (data: VehicleParticipantForm) => {
     setIsSubmitting(true);
     setSubmissionError(undefined);
 
@@ -68,8 +68,8 @@ function CreateVehicle(props: any) {
       setIsSubmitting(false);
       setSubmissionError('Vehicle creation failed.');
     }
-  };
-
+  }), [props.console]);
+  
   const toastConfig = {
     bgColor: 'green',
     message: 'Operation Successful',
@@ -96,7 +96,7 @@ function CreateVehicle(props: any) {
         </div>
 
         <form
-          onSubmitCapture={handleSubmit(onSubmit)}
+          //onSubmitCapture={handleSubmit(onSubmit)}
           className="flex flex-col gap-4"
           onSubmit={handleSubmit(onSubmit)}
         >
@@ -292,4 +292,4 @@ function CreateVehicle(props: any) {
   );
 }
 
-export default CreateVehicle;
+export default memo(CreateVehicle);

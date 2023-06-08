@@ -65,7 +65,7 @@ function ViewVehicle(props: any) {
       <div className="flex flex-row items-center gap-4 md:gap-6">
         <Title>{vehicle?.name}</Title>
         {!isLoading && (
-          <VehicleStateDisplay size="lg" rawState={vehicle.state.current} />
+          <VehicleStateDisplay size="lg" rawState={vehicle?.state.current} />
         )}
       </div>
       {isLoading && (

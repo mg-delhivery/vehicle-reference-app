@@ -7,6 +7,7 @@ import EditVehicle from '../pages/EditVehicle';
 import ErrorPage from '../pages/ErrorPage';
 import ListVehicles from '../pages/ListVehicles';
 import ViewVehicle from '../pages/ViewVehicle';
+import {getToken} from '../api/vehicles';
 import Root from '../routes/root';
 import App from './AppInitiater';
 
@@ -16,7 +17,13 @@ const ConsoleUIProvider = (props: any) => {
   const [consoleInstance, setConsoleInstance] = useState(null);
   useEffect(() => {
     setConsoleInstance(props.console);
+    (async function (){
+      const token = await getToken(props.console)
+      sessionStorage.setItem("appOwnerId", token);
+    })()
   }, [props.console]);
+
+  
 
   const router = createBrowserRouter([
     {
