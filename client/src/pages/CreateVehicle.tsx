@@ -1,3 +1,4 @@
+import { OS1Toast } from '@os1-platform/console-ui-react';
 import {
   Button,
   Label,
@@ -6,40 +7,40 @@ import {
   TextInput,
   Toast,
 } from 'flowbite-react';
-import React, { useState } from 'react';
+import React, { useState, memo, useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { createSearchParams, useNavigate } from 'react-router-dom';
 
 import { createVehicle } from '../api/vehicles';
 import Title from '../layout/Title';
 
-const defaultValues: VehicleDisplay = {
-  id: '',
-  state: {
-    current: '',
-    transitions: [],
-  },
-  name: '',
-  uniqueCode: '',
-  category: '',
-  owner: 'tenants:9f944ddf-6d6c-488c-918e-392cb53494c6',
-  properties: {},
-  createdBy: '',
-  createdAt: {
-    epoch: 0,
-    display: '',
-  },
-  updatedAt: {
-    epoch: 0,
-    display: '',
-  },
-  updatedBy: '',
-};
-
-function CreateVehicle() {
+function CreateVehicle(props: any) {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionError, setSubmissionError] = useState<string>();
+
+  const defaultValues: VehicleDisplay = {
+    id: '',
+    state: {
+      current: '',
+      transitions: [],
+    },
+    name: '',
+    uniqueCode: '',
+    category: '',
+    owner: sessionStorage.getItem("appOwnerId") as string,
+    properties: {},
+    createdBy: '',
+    createdAt: {
+      epoch: 0,
+      display: '',
+    },
+    updatedAt: {
+      epoch: 0,
+      display: '',
+    },
+    updatedBy: '',
+  };  
 
   const {
     register,
@@ -49,12 +50,12 @@ function CreateVehicle() {
     defaultValues,
   });
 
-  const onSubmit = async (data: VehicleParticipantForm) => {
+  const onSubmit = useCallback((async (data: VehicleParticipantForm) => {
     setIsSubmitting(true);
     setSubmissionError(undefined);
 
     try {
-      await createVehicle(data);
+      await createVehicle(data, props.console);
       navigate({
         pathname: '..',
         search: `?${createSearchParams({
@@ -67,15 +68,26 @@ function CreateVehicle() {
       setIsSubmitting(false);
       setSubmissionError('Vehicle creation failed.');
     }
+  }), [props.console]);
+  
+  const toastConfig = {
+    bgColor: 'green',
+    message: 'Operation Successful',
+    timeout: 10,
+    icon: 'info',
+    closeButton: true,
   };
 
   return (
-    <div id="CreateVehicle" className="relative flex flex-col items-center">
+    <div
+      id="CreateVehicle"
+      className="relative flex flex-col items-center mt-5"
+    >
       {submissionError && (
-        <Toast className="absolute -top-20 bg-red-500 text-slate-200">
-          <div className="ml-3 text-sm font-normal">{submissionError}</div>
-          <Toast.Toggle />
-        </Toast>
+        <OS1Toast
+          elementId={'toastElement'}
+          toastConfig={toastConfig}
+        />
       )}
 
       <div className="w-full">
@@ -84,7 +96,7 @@ function CreateVehicle() {
         </div>
 
         <form
-          onSubmitCapture={handleSubmit(onSubmit)}
+          //onSubmitCapture={handleSubmit(onSubmit)}
           className="flex flex-col gap-4"
           onSubmit={handleSubmit(onSubmit)}
         >
@@ -280,4 +292,4 @@ function CreateVehicle() {
   );
 }
 
-export default CreateVehicle;
+export default memo(CreateVehicle);

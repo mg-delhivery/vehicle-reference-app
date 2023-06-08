@@ -32,7 +32,7 @@ const defaultValues: VehicleDisplay = {
   updatedBy: '',
 };
 
-function ViewVehicle() {
+function ViewVehicle(props: any) {
   const navigate = useNavigate();
   const { id } = useParams();
   const [vehicle, setVehicle] = useState<VehicleDisplay>(defaultValues);
@@ -45,7 +45,7 @@ function ViewVehicle() {
 
   useEffect(() => {
     const executeFetchVehicle = async () => {
-      const vehicleDisplay = await fetchVehicle(id || '');
+      const vehicleDisplay = await fetchVehicle(id || '', props.console) as VehicleDisplay;
       setVehicle(vehicleDisplay);
       setIsLoading(false);
     };
@@ -65,7 +65,7 @@ function ViewVehicle() {
       <div className="flex flex-row items-center gap-4 md:gap-6">
         <Title>{vehicle?.name}</Title>
         {!isLoading && (
-          <VehicleStateDisplay size="lg" rawState={vehicle.state.current} />
+          <VehicleStateDisplay size="lg" rawState={vehicle?.state.current} />
         )}
       </div>
       {isLoading && (

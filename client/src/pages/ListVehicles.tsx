@@ -1,5 +1,6 @@
 import { faCheck, faPlus, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { OS1Toast } from '@os1-platform/console-ui-react';
 import {
   Button,
   Checkbox,
@@ -31,7 +32,7 @@ interface VehicleSearchForm {
 
 const ITEMS_PER_PAGE = 10;
 
-function ListVehicles() {
+function ListVehicles(props: any) {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -68,7 +69,8 @@ function ListVehicles() {
 
   useEffect(() => {
     const getAllVehicles = async () => {
-      const vehicles = await getVehicles();
+      let vehicles = await getVehicles(props.console);
+      if (vehicles == undefined) vehicles = [];
       setVehicles(vehicles);
       setIsLoading(false);
 
@@ -78,7 +80,7 @@ function ListVehicles() {
       constructStateTransitionPaths(vehicles);
     };
     getAllVehicles();
-  }, [reloadSeed]);
+  }, [reloadSeed, props.console]);
 
   useEffect(() => {
     if (searchParams.has('success')) {
@@ -105,7 +107,7 @@ function ListVehicles() {
     );
 
     setIsTransitioningState(true);
-    await transitionStates(newState, forUpdate);
+    await transitionStates(newState, forUpdate, props.console);
     clearStateSelections();
 
     // Should be sufficient to reload vehicles
@@ -129,7 +131,7 @@ function ListVehicles() {
   };
 
   const getEmptyVehicleSelections = (vehicles: VehicleDisplay[]) =>
-    vehicles.reduce((accumulator, v) => {
+    vehicles?.reduce((accumulator, v) => {
       const updated = { ...accumulator };
       updated[v.id] = false;
       return updated;
@@ -173,21 +175,30 @@ function ListVehicles() {
     setSelectedVehicles(newSelections);
   };
 
+  const toastConfig = {
+    bgColor: 'green',
+    message: toastMsg || '',
+    timeout: 10,
+    icon: 'info',
+    closeButton: true,
+  };
+
   return (
-    <div id="ListVehicles" className="flex flex-col items-center gap-6">
+    <div id="ListVehicles" className="flex flex-col items-center gap-6 mt-5">
       {toastMsg && (
-        <Toast kind="success" onClose={() => setToastMsg('')}>
-          {toastMsg}
-        </Toast>
+        <OS1Toast
+          elementId={'toastElement'}
+          toastConfig={toastConfig}
+        />
       )}
-      <div className="w-full flex flex-row gap-4">
+      <div className="w-full flex flex-row justify-between gap-4">
         <div className="grow">
           <Title>Vehicles</Title>
         </div>
-        <div className="flex-none">
+        <div className="flex-none mt-3">
           <Button
             className="whitespace-nowrap"
-            onClick={() => navigate('/vehicles/create')}
+            onClick={() => navigate('/vehicle/create')}
           >
             <FontAwesomeIcon icon={faPlus} />
             <span className="ml-2">Create New Vehicle</span>
@@ -334,7 +345,7 @@ function ListVehicles() {
                   <Table.Cell>
                     <Link
                       className="text-blue-700 underline"
-                      to={`/vehicles/${vehicle.id}`}
+                      to={`/vehicle/${vehicle.id}`}
                     >
                       {vehicle.name}
                     </Link>
@@ -346,7 +357,7 @@ function ListVehicles() {
                   <Table.Cell>
                     <Button
                       size="xs"
-                      onClick={() => navigate(`/vehicles/${vehicle.id}/edit`)}
+                      onClick={() => navigate(`/vehicle/${vehicle.id}/edit`)}
                     >
                       Edit
                     </Button>

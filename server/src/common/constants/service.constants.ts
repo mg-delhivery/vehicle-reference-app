@@ -6,5 +6,5 @@ export const ServiceConstants = {
     x_coreos_userinfo: 'X-COREOS-USERINFO',
     x_coreos_origin_token: 'X-COREOS-ORIGIN-TOKEN',
   },
-  vehicle_app: 'vehicle-reference-app',
+  vehicle_app: 'vehicle-consoleUi',
 };

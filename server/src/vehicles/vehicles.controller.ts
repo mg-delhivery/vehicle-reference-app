@@ -34,6 +34,11 @@ export class VehiclesController {
     return await this.vehicleService.getAllVehicles();
   }
 
+  @Get('/token')
+  private async getToken(): Promise<string> {
+    return await this.vehicleService.getToken();
+  }
+
   @Get('/:vehicleId')
   private async getVehicle(
     @Param('vehicleId') vehicleId: string,

@@ -97,6 +97,10 @@ export class VehiclesService implements OnModuleInit {
     return `https://${process.env.TENANT_DNS}/core/api/v2/participants/${VEHICLE_NAME_PLURAL}`;
   }
 
+  private getTenantTokenUrl(): string {
+    return `https://${process.env.TENANT_DNS}/core/api/v1/aaa/tenants/${process.env.TENANT_ID}`;
+  }
+
   async getAllVehicles(): Promise<VehicleDTO[]> {
     return await this.httpService.axiosRef
       .get(this.getVehiclesUrl(), {
@@ -114,6 +118,26 @@ export class VehiclesService implements OnModuleInit {
         this.logger.error(errorData);
         throw new HttpException(
           `Failed to get Vehicles: ${errorData.description}`,
+          errorData.status,
+        );
+      });
+  }
+
+  async getToken(): Promise<string> {
+    return await this.httpService.axiosRef
+      .get(this.getTenantTokenUrl(), {
+        headers: await this.participantService.buildHeaders(),
+      })
+      .then((response) => {
+         const tenantOwnerId: string = response.data.data.id;
+         
+        return tenantOwnerId
+      })
+      .catch((error) => {
+        const errorData = handleErrorResponse(error);
+        this.logger.error(errorData);
+        throw new HttpException(
+          `Failed to get Tenant Token: ${errorData.description}`,
           errorData.status,
         );
       });

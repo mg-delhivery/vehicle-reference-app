@@ -1,70 +1,84 @@
-import { AxiosRequestConfig } from 'axios';
-import { axiosInstance } from 'header/httpClient';
+import { OS1HttpClient } from '@os1-platform/console-ui-react'
 
 import { getUxDateDisplay } from '../utils/dates';
 
-export const getVehicles = async (): Promise<VehicleDisplay[]> => {
-  const req: AxiosRequestConfig = {
-    url: `${process.env.REACT_APP_BASE_URL}/api/vehicles`,
-    method: 'get',
-  };
-  const resp = await axiosInstance<VehicleParticipant[]>(req);
+export const getVehicles = async (client: any) => {
+  if (client) {
+    const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}`);
+    const resp = await axiosClient.get('/vehicles', 'getVehicles');
+    const vehicleData = <VehicleParticipant[]>(resp.data);
 
-  return resp.map((vehicle) => getDisplayFromParticipant(vehicle));
+    return vehicleData.map((vehicle) => getDisplayFromParticipant(vehicle));
+  }
 };
 
-export const fetchVehicle = async (id: string): Promise<VehicleDisplay> => {
-  const req: AxiosRequestConfig = {
-    url: `${process.env.REACT_APP_BASE_URL}/api/vehicles/${id}`,
-    method: 'get',
-  };
-  const resp = await axiosInstance<VehicleParticipant>(req);
 
-  return getDisplayFromParticipant(resp);
+export const getToken = async (client: any) => {
+  if (client) {
+    const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}`);
+    const resp = await axiosClient.get('/vehicles/token', 'getToken');
+    const token = <any>(resp.data);
+
+    return token;
+  }
+};
+export const fetchVehicle = async (id: string, client: any) => {
+  const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}`);
+
+  try {
+    const resp = await axiosClient.get(`/vehicles/${id}`,'fetchVehicles-id');
+    return getDisplayFromParticipant(resp);
+  } catch (error) {
+    console.error('error', error);
+  }
 };
 
 export const createVehicle = async (
-  data: VehicleParticipantForm
+  data: VehicleParticipantForm,
+  client: any
 ): Promise<void> => {
   const dto = getDtoFromDisplay(data);
 
-  const req: AxiosRequestConfig = {
-    url: `${process.env.REACT_APP_BASE_URL}/api/vehicles`,
-    method: 'post',
-    data: dto,
-  };
-  await axiosInstance<void>(req);
+  const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}`);
 
-  return;
+  try {
+    await axiosClient.post('/vehicles', dto, 'createVehicles');
+    return;
+  } catch (error) {
+    console.error('error', error);
+  }
 };
 
 export const editVehicle = async (
   id: string,
-  data: VehicleParticipantProperties
+  data: VehicleParticipantProperties,
+  client: any
 ): Promise<void> => {
   const properties = { properties: getParticipantProperties(data) };
+  console.log(properties)
 
-  const req: AxiosRequestConfig = {
-    url: `${process.env.REACT_APP_BASE_URL}/api/vehicles/${id}`,
-    method: 'put',
-    data: properties,
-  };
-  await axiosInstance<void>(req);
+  const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}/vehicles/${id}`);
 
-  return;
+  try {
+    await axiosClient.put('/',properties,'editehicles-1');
+    return;
+  } catch (error) {
+    console.error('error', error);
+  }
 };
 
 export const transitionStates = async (
   newState: string,
-  vehicleIds: string[]
+  vehicleIds: string[],
+  client: any
 ) => {
   const calls = vehicleIds.map((id) => {
-    const req: AxiosRequestConfig = {
-      url: `${process.env.REACT_APP_BASE_URL}/api/vehicles/${id}/transition`,
-      method: 'put',
-      data: { state: newState },
-    };
-    return axiosInstance<void>(req);
+    const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}`);
+    try {
+      return axiosClient.put(`/api/vehicles/${id}/transition`, { state: newState }, 'transitionStates');
+    } catch (error) {
+      console.error('error', error);
+    }
   });
 
   await Promise.all(calls);
@@ -73,7 +87,7 @@ export const transitionStates = async (
 };
 
 const getDisplayFromParticipant = (
-  participant: VehicleParticipant
+  participant: any
 ): VehicleDisplay => {
   return {
     id: participant.id,

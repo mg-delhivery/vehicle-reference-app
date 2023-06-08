@@ -1,5 +1,5 @@
 import { Button, Label, Select, Spinner, TextInput } from 'flowbite-react';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { createSearchParams, useNavigate, useParams } from 'react-router-dom';
 
@@ -32,7 +32,7 @@ const defaultValues: VehicleDisplay = {
   updatedBy: '',
 };
 
-function EditVehicle() {
+function EditVehicle(props: any) {
   const navigate = useNavigate();
   const { id } = useParams();
   const [vehicle, setVehicle] = useState<VehicleDisplay>(defaultValues);
@@ -49,7 +49,7 @@ function EditVehicle() {
     defaultValues: useMemo(() => vehicle, [vehicle]),
   });
 
-  const onSubmit = async (data: VehicleParticipantForm) => {
+  const onSubmit = useCallback((async (data: VehicleParticipantForm) => {
     if (!id) {
       console.error('Vehicle id not set.');
       return;
@@ -59,7 +59,7 @@ function EditVehicle() {
     setSubmissionError(undefined);
 
     try {
-      await editVehicle(id, data.properties);
+      await editVehicle(id, data.properties, props.console);
 
       navigate({
         pathname: '../..',
@@ -73,16 +73,16 @@ function EditVehicle() {
       setIsSubmitting(false);
       setSubmissionError('Edit failed.');
     }
-  };
+  }), [props.console]);
 
   useEffect(() => {
     const executeFetchVehicle = async () => {
-      const vehicleDisplay = await fetchVehicle(id || '');
+      const vehicleDisplay = await fetchVehicle(id || '', props.console) as VehicleDisplay;
       setVehicle(vehicleDisplay);
       setIsLoading(false);
     };
     executeFetchVehicle();
-  }, [id]);
+  }, [id, props.console]);
 
   useEffect(() => {
     reset(vehicle);
@@ -152,7 +152,7 @@ function EditVehicle() {
                     type="checkbox"
                     value=""
                     className="sr-only peer"
-                    defaultChecked={vehicle.properties.availability}
+                    defaultChecked={vehicle?.properties.availability}
                     {...register('properties.availability', {})}
                   />
                   <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>

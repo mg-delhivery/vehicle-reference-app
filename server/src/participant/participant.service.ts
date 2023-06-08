@@ -31,7 +31,7 @@ export class ParticipantService {
       [ServiceConstants.http_headers.x_coreos_request_id]: uuidv4(),
       [ServiceConstants.http_headers.x_coreos_tid]: process.env.TENANT_ID,
       [ServiceConstants.http_headers.x_coreos_userinfo]:
-        '{ "id": "1", "name": "vehicle-reference-app"}',
+        '{ "id": "1", "name": "vehicle-consoleUi"}',
       [ServiceConstants.http_headers.x_coreos_access]:
         axiosResponse.data.data.accessToken,
       [ServiceConstants.http_headers.x_coreos_origin_token]:
