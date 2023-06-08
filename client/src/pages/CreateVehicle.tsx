@@ -7,40 +7,40 @@ import {
   TextInput,
   Toast,
 } from 'flowbite-react';
-import React, { useState, memo, useCallback } from 'react';
+import React, { useState, memo, useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { createSearchParams, useNavigate } from 'react-router-dom';
 
 import { createVehicle } from '../api/vehicles';
 import Title from '../layout/Title';
 
-const defaultValues: VehicleDisplay = {
-  id: '',
-  state: {
-    current: '',
-    transitions: [],
-  },
-  name: '',
-  uniqueCode: '',
-  category: '',
-  owner: sessionStorage.getItem("appOwnerId") as string,
-  properties: {},
-  createdBy: '',
-  createdAt: {
-    epoch: 0,
-    display: '',
-  },
-  updatedAt: {
-    epoch: 0,
-    display: '',
-  },
-  updatedBy: '',
-};
-
 function CreateVehicle(props: any) {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionError, setSubmissionError] = useState<string>();
+
+  const defaultValues: VehicleDisplay = {
+    id: '',
+    state: {
+      current: '',
+      transitions: [],
+    },
+    name: '',
+    uniqueCode: '',
+    category: '',
+    owner: sessionStorage.getItem("appOwnerId") as string,
+    properties: {},
+    createdBy: '',
+    createdAt: {
+      epoch: 0,
+      display: '',
+    },
+    updatedAt: {
+      epoch: 0,
+      display: '',
+    },
+    updatedBy: '',
+  };  
 
   const {
     register,
