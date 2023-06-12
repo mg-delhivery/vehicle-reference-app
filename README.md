@@ -3,7 +3,7 @@
 
 This guide introduces the Vehicle Reference App, using which one can create and manage the lifecycle of the vehicles. Vehicle app demonstrates how a developer can build a web app to manage logistics network participants such as Vehicles using the participant service. The app also demonstrates integration with [Console](https://docs.getos1.com/docs/console-ui-overview), a workspace using which end customers can access all webapps from a single place. 
 
-**Note: **Follow the steps below to run the app in your local machine. 
+**Note:** Follow the steps below to run the app in your local machine. 
 
 
 ## **Application Organization**
