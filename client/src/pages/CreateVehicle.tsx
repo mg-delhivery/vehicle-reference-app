@@ -27,7 +27,6 @@ function CreateVehicle(props: any) {
     },
     name: '',
     uniqueCode: '',
-    category: '',
     owner: sessionStorage.getItem("appOwnerId") as string,
     properties: {},
     createdBy: '',
@@ -114,7 +113,7 @@ function CreateVehicle(props: any) {
             />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="grow">
+            {/* <div className="grow">
               <div className="mb-2 block">
                 <Label htmlFor="category" value="Category" />
               </div>
@@ -123,10 +122,10 @@ function CreateVehicle(props: any) {
                 type="text"
                 disabled={false}
                 placeholder=""
-                required={true}
+                required={false}
                 {...register('category', {})}
               />
-            </div>
+            </div> */}
             <div className="grow">
               <div className="mb-2 block">
                 <Label htmlFor="uniqueCode" value="Code (unique)" />

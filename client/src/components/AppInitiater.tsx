@@ -1,8 +1,24 @@
-import { OS1Provider } from '@os1-platform/console-ui-react';
+import { OS1Provider, OS1HttpClient, functionBoundOption, } from '@os1-platform/console-ui-react';
 
 import Initiate from './Initiate';
 
 function AppInitiater(props: any) {
+  /** This function is only for demonstration purpose that loads dropdown values dynamically */
+  (async function autoComplete() {
+    let returnValue: {value: string, text: string}[]=[]
+        if (props.console) {
+            var cl = new OS1HttpClient(props.console.authInitializer, 'https://jsonplaceholder.typicode.com/todos');
+            
+            const resp = await cl.get(``,'test-id');
+            resp.data.map((response: any)=>{
+                    returnValue.push({value: response.title, text: response.title})
+                })
+
+            functionBoundOption(returnValue,"Dropdown1" )
+        }
+})()
+
+/**These are injectable controls that are optional component */
   const controls = [
     {
       type: 'SearchBox',
@@ -15,28 +31,25 @@ function AppInitiater(props: any) {
     {
       type: 'DropDown',
       width: 100,
-      placeholder: 'Search Items',
+      placeholder: 'Select Items',
       id: 'Dropdown1',
-      functionBoundOption: [
-        { value: 'Team A', text: 'Team A' },
-        { value: 'Team B', text: 'Team B' },
-        { value: 'Team C', text: 'Team C' },
-      ],
-    },
+      hasAsyncFunctionBoundOption: true
+    }
   ];
 
   const handleConsoleInstanceChange = (changedConsoleInstance: any) => {
     props.setConsole(changedConsoleInstance);
   };
+  console.log(process.env.REACT_APP_CLIENT_ID, process.env.REACT_APP_BASE_URL)
 
   return (
     <>
       <OS1Provider
-        clientId={'platform:app:ui'}
+        clientId={process.env.REACT_APP_CLIENT_ID}
         loginRedirectPath={'/vehicle'}
         logoutRedirectPath={'/'}
-        //devOrgName={'delhivery'}
-        appId={'Single Leg-app:435858a9-1238-5ca9-b100-a5d46d108910'}
+        //devTenantId={REACT_APP_DEV_TENANT_ID}
+        appId={process.env.REACT_APP_INITIAL_APP_ID}
         controls={controls}
       >
         <Initiate setConsole={handleConsoleInstanceChange} />
