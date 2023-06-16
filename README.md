@@ -82,7 +82,7 @@ yarn start
 
 ## **How to setup the Backend (Server)**
 
-The backend server facilitates vehicle creation, update, and lifecycle management. It also provides a baseline reference on how to model a vehicle or any other participant in a logistics network such as Facility using the Participant Service. The intention of this is to give the developer an easy point of reference for a few things:
+The backend server facilitates vehicle creation, update, and lifecycle management. It also provides a baseline reference on how to model a vehicle or any other participant in a logistics network such as a Facility using the Participant Service. In particular this demonstrates the following:
 
 * Generating access token
 * Communicating with Participant Service
