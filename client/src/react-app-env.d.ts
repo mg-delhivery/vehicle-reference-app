@@ -58,12 +58,12 @@ interface VehicleDisplay {
   name: string;
   uniqueCode: string;
   owner: string;
-  category: string;
   properties: VehicleParticipantProperties;
   createdAt: DateInfo;
   createdBy: string;
   updatedAt: DateInfo;
   updatedBy: string;
+  category?: string;
 }
 
 interface VehicleParticipantForm extends VehicleDisplay {}

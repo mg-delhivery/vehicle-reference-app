@@ -1,6 +1,6 @@
 import { faCheck, faPlus, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { OS1Toast } from '@os1-platform/console-ui-react';
+import { OS1Toast, OS1Modal } from '@os1-platform/console-ui-react';
 import {
   Button,
   Checkbox,
@@ -42,6 +42,10 @@ function ListVehicles(props: any) {
     [key: string]: string[];
   }>({});
   const [toastMsg, setToastMsg] = useState<string>();
+  const [modalMsg, setModalMsg] = useState<string>("");
+  const [currentTimeZone, setCurrentTimeZone] = useState<string>();
+  const [convertedDate, setConvertedDate] = useState<string>();
+  const [showToast, setShowToast] = useState(false)
   const [isLoading, setIsLoading] = useState(true);
   const [isTransitioningState, setIsTransitioningState] = useState(false);
   const [paginationPage, setPaginationPage] = useState(1);
@@ -100,6 +104,31 @@ function ListVehicles(props: any) {
       }, 3000);
     }
   }, [searchParams, setSearchParams]);
+
+  useEffect(()=>{
+    if (props.console) {
+
+      props.console.eventBus().on(props.console.events().OnChangeEvent, (e: any) => {
+        window.console.log(e)
+        if (e.target.id == 'Dropdown1'){
+          setModalMsg(e.target.value)
+          document.getElementById("modaleElement")?.classList.toggle("hidden")
+        }
+
+        if (e.target.id == 'timeZone-DropDown'){
+          if (document.getElementById("TimeZonetoastElement"))
+          (document.getElementById("TimeZonetoastElement")as HTMLElement).style.display=""
+          console.log(props.console.convertTime(new Date()))
+          console.log(props.console.currentTimeZone())
+          //document.getElementById("modaleElement")?.classList.toggle("hidden")
+          setShowToast(true)
+        }
+      })
+      props.console.eventBus().on(props.console.events().OnClickEvent, (e: any) => {
+        window.console.log(e)
+      })
+    }
+  },[props.console])
 
   const triggerStateTransitions = async (newState: string) => {
     const forUpdate = Object.keys(selectedVehicles).filter(
@@ -183,12 +212,54 @@ function ListVehicles(props: any) {
     closeButton: true,
   };
 
+  const timeZoneToastConfig = {
+    bgColor: 'green',
+    message: `This event is triggered on change in timeZone`  || '',
+    timeout: 10,
+    icon: 'info',
+    closeButton: true,
+  };
+
+  const modalConfig = {
+    title: "DropDown Value",
+    bgColor: "green",
+    message: "This modal is redered by on Change Event of DropDown",
+    icon: "info",
+    buttons: [
+        {
+            id: "button-ele-1",
+            backgroundColor: "red",
+            text: "Cancel",
+            event: "upEvent"
+        }
+    ]
+}
+
+useEffect(()=>{
+  window.addEventListener('upEvent', (event) => {
+    //window.console.log("Button clicked", event);
+    document.getElementById("modaleElement")?.classList.toggle("hidden")
+})
+},[])
+
   return (
     <div id="ListVehicles" className="flex flex-col items-center gap-6 mt-5">
       {toastMsg && (
         <OS1Toast
           elementId={'toastElement'}
           toastConfig={toastConfig}
+        />
+      )}
+      {showToast && (
+        <OS1Toast
+          elementId={'TimeZonetoastElement'}
+          toastConfig={timeZoneToastConfig}
+        />
+      )}
+      {modalMsg && (
+        <OS1Modal
+          elementId={'modaleElement'}
+          modalConfig={modalConfig}
         />
       )}
       <div className="w-full flex flex-row justify-between gap-4">

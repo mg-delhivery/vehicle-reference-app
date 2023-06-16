@@ -4,7 +4,6 @@ export const AddVehicleSchema = Joi.object({
   owner: Joi.string().required(),
   name: Joi.string().required(),
   uniqueCode: Joi.string().required(),
-  category: Joi.string().required(),
   subCategory: Joi.string().optional(),
   properties: Joi.object({
     mode: Joi.string().required(),
