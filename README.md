@@ -12,7 +12,7 @@ The app is organized into two parts as below:
 
 **1. Front-End Client:** This provides the user interface for the vehicle creation and management.
 
-**2. Backend Server:** Enables creation, updates, and lifecycle management for Vehicles by using the participant service at the backend. The Vehicle object is modeled using the participant service.
+**2. Backend Server:** Enables creation, updates, and lifecycle management for Vehicles by using the participant service at the backend. The Vehicle object is modeled using the [Participant Service](https://docs.getos1.com/docs/creating-participants).
 
 
 ## **How to setup the Front-End (Client)**
@@ -21,7 +21,7 @@ Follow the steps below to get started with the front-end client:
 
 ### **Configure Proxy**
 
-To ensure successful authentication, you must configure your  `/etc/hosts` file on your local machine to handle traffic as a domain name. To accomplish this, you can set up your Tenant URL using a Nix Shell
+To ensure successful authentication, you must configure your  `/etc/hosts` file on your local machine to handle traffic as a domain name. To accomplish this, you can set up your Tenant URL using a Nix compatiable shell.
 
 
 
@@ -54,19 +54,15 @@ Windows stores the `hosts` file at `C:\Windows\System32\drivers\etc\`. To modify
 1. Open a Notepad as an Administrator.
 2. In the notepad, go to **File > Open** and navigate to `C:\Windows\System32\drivers\etc\`.
 3. The `hosts` file won’t be visible by default because it doesn’t have a file extension. To make it visible, change the file type filter from **Text Documents (.txt)** to **All File (.*)**, and then select the `hosts` file. 
-4. After opening the file, you can add your energy at the end of the file, following the format in the above examples for Linux and Mac.
+4. After opening the file, you can add your entry at the end of the file, following the format in the above examples for Linux and Mac.
 
 ```
 127.0.0.1 ${TENANT_NAME}-cdev.${TENANT_URL}
 ```
 
-These commands append your tenant’s domain to the `etc`
-
 #### **Running Locally**
 
-After configuring your proxy, follow the steps below to run the application on your local machine:
-
-
+After configuring your proxy, you'll need to run the `cd client` following client commands. Follow the steps below to run the application on your local machine:
 
 1. Install the necessary dependencies
 
@@ -74,7 +70,14 @@ After configuring your proxy, follow the steps below to run the application on y
 yarn install
 ```
 
-2. Next, start your local server. 
+2. Add all values required in the `.env file`. Developers can access the required values from the app summary page in the [Developer Portal](https://portal.getos1.com/#/login). See the required values
+    1. client_id - this should be the frontend client id.
+    2. App id - app id given on portal.
+    3. Dev tenant id - tenant id given on portal.
+
+	Refer to the [Getting Started with the OS1 Platform](https://docs.getos1.com/docs/getting-started-1#step-5-retrieving-and-using-your-platform-credentials) guide for obtaining these details.  
+
+3. Next, start your local server. 
 
 ```
 yarn start
@@ -89,11 +92,14 @@ The backend server facilitates vehicle creation, update, and lifecycle managemen
 
 ### **Setup**
 
-1. Install dependencies: `yarn`.
-2. Rename your `.env.local.skeleton` to `.env.local`.
-3. Add values for each required variable in the `.env.local` file. These details are available on your app summary page in the Developer Portal. Refer to the [Getting Started with the OS1 Platform](https://docs.getos1.com/docs/getting-started-1#step-5-retrieving-and-using-your-platform-credentials) guide for obtaining these details.  
+1. First, from the root of the directory enter `cd server`.
+2. Install dependencies: `yarn`.
+3. Rename your `.env.local.skeleton` to `.env.local`.
+4. Add values for each required variable in the `.env.local` file. These details are available on your app summary page in the Developer Portal. Refer to the [Getting Started with the OS1 Platform](https://docs.getos1.com/docs/getting-started-1#step-5-retrieving-and-using-your-platform-credentials) guide for obtaining these details.  
 
 ### **Running the App**
 
 1. Start your application: `yarn start`.
 2. The `Vehicle's` participant type and vehicle attributes will be defined during the application startup if they don't exist.
+
+The browser will open http://localhost:4500. However, you developers need to update the URL to `https://${TENANT_NAME}-cdev.${TENANT_URL}:4500` in order for the keycloak redirection to work. 
