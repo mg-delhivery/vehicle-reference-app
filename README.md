@@ -54,7 +54,7 @@ Windows stores the `hosts` file at `C:\Windows\System32\drivers\etc\`. To modify
 1. Open a Notepad as an Administrator.
 2. In the notepad, go to **File > Open** and navigate to `C:\Windows\System32\drivers\etc\`.
 3. The `hosts` file won’t be visible by default because it doesn’t have a file extension. To make it visible, change the file type filter from **Text Documents (.txt)** to **All File (.*)**, and then select the `hosts` file. 
-4. After opening the file, you can add your energy at the end of the file, following the format in the above examples for Linux and Mac.
+4. After opening the file, you can add your entry at the end of the file, following the format in the above examples for Linux and Mac.
 
 ```
 127.0.0.1 ${TENANT_NAME}-cdev.${TENANT_URL}
