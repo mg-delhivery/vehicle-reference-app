@@ -13,7 +13,7 @@ import {
   PARTICIPANT_EXISTS_ERROR_CODE,
   VEHICLE_NAME_PLURAL,
 } from '../common/constants/vehicle.constants';
-import { ServiceConstants } from '../common/constants/service.constants';
+import { ServiceConstants, getTenantDNS } from '../common/constants/service.constants';
 import { VehicleDTO } from '../common/dto/vehicle/vehicle.dto';
 import {
   AddVehicleRequestDTO,
@@ -94,11 +94,11 @@ export class VehiclesService implements OnModuleInit {
   }
 
   private getVehiclesUrl(): string {
-    return `https://${process.env.TENANT_DNS}/core/api/v2/participants/${VEHICLE_NAME_PLURAL}`;
+    return `https://${getTenantDNS(process.env.TENANT_DNS)}/core/api/v2/participants/${VEHICLE_NAME_PLURAL}`;
   }
 
   private getTenantTokenUrl(): string {
-    return `https://${process.env.TENANT_DNS}/core/api/v1/aaa/tenants/${process.env.TENANT_ID}`;
+    return `https://${getTenantDNS(process.env.TENANT_DNS)}/core/api/v1/aaa/tenants/${process.env.TENANT_ID}`;
   }
 
   async getAllVehicles(): Promise<VehicleDTO[]> {

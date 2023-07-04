@@ -8,3 +8,9 @@ export const ServiceConstants = {
   },
   vehicle_app: 'vehicle-consoleUi',
 };
+
+export function getTenantDNS(tenantDNS:string): string{
+  const baseDNS = tenantDNS.split('://')[1];
+
+  return baseDNS;
+}

@@ -6,7 +6,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { ServiceConstants } from '../common/constants/service.constants';
+import { ServiceConstants, getTenantDNS } from '../common/constants/service.constants';
 import { v4 as uuidv4 } from 'uuid';
 import { AxiosRequestHeaders, AxiosResponse } from 'axios';
 
@@ -18,11 +18,11 @@ export class ParticipantService {
   private readonly httpService: HttpService;
 
   getParticipantServiceBaseUrl(): string {
-    return `https://${process.env.TENANT_DNS}/core/api/v2/participants`;
+    return `https://${getTenantDNS(process.env.TENANT_DNS)}/core/api/v2/participants`;
   }
 
   private getClientCredentialsBaseUrl(tenantDns: string): string {
-    return `https://${process.env.TENANT_DNS}/core/api/v1/aaa`;
+    return `https://${getTenantDNS(process.env.TENANT_DNS)}/core/api/v1/aaa`;
   }
 
   async buildHeaders(): Promise<AxiosRequestHeaders> {
@@ -41,7 +41,7 @@ export class ParticipantService {
 
   async generateClientCredentials(): Promise<AxiosResponse<any>> {
     const url = `${this.getClientCredentialsBaseUrl(
-      process.env.TENANT_DNS,
+      getTenantDNS(process.env.TENANT_DNS),
     )}/auth/client-credentials`;
 
     const headers = {
