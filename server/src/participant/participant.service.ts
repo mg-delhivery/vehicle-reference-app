@@ -18,11 +18,11 @@ export class ParticipantService {
   private readonly httpService: HttpService;
 
   getParticipantServiceBaseUrl(): string {
-    return `https://${getTenantDNS(process.env.TENANT_DNS)}/core/api/v2/participants`;
+    return `${process.env.TENANT_DNS}/core/api/v2/participants`;
   }
 
   private getClientCredentialsBaseUrl(tenantDns: string): string {
-    return `https://${getTenantDNS(process.env.TENANT_DNS)}/core/api/v1/aaa`;
+    return `${process.env.TENANT_DNS}/core/api/v1/aaa`;
   }
 
   async buildHeaders(): Promise<AxiosRequestHeaders> {

@@ -94,11 +94,11 @@ export class VehiclesService implements OnModuleInit {
   }
 
   private getVehiclesUrl(): string {
-    return `https://${getTenantDNS(process.env.TENANT_DNS)}/core/api/v2/participants/${VEHICLE_NAME_PLURAL}`;
+    return `${process.env.TENANT_DNS}/core/api/v2/participants/${VEHICLE_NAME_PLURAL}`;
   }
 
   private getTenantTokenUrl(): string {
-    return `https://${getTenantDNS(process.env.TENANT_DNS)}/core/api/v1/aaa/tenants/${process.env.TENANT_ID}`;
+    return `${process.env.TENANT_DNS}/core/api/v1/aaa/tenants/${process.env.TENANT_ID}`;
   }
 
   async getAllVehicles(): Promise<VehicleDTO[]> {
