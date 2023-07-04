@@ -6,7 +6,7 @@ function AppInitiater(props: any) {
   /** This function is only for demonstration purpose that loads dropdown values dynamically */
   (async function autoComplete() {
     let returnValue: {value: string, text: string}[]=[]
-        if (props.console) {
+        if (props && props.console) {
             var cl = new OS1HttpClient(props.console.authInitializer, 'https://jsonplaceholder.typicode.com/todos');
             
             const resp = await cl.get(``,'test-id');
@@ -40,7 +40,6 @@ function AppInitiater(props: any) {
   const handleConsoleInstanceChange = (changedConsoleInstance: any) => {
     props.setConsole(changedConsoleInstance);
   };
-  console.log(process.env.REACT_APP_CLIENT_ID, process.env.REACT_APP_BASE_URL)
 
   return (
     <>

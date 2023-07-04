@@ -1840,10 +1840,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     "fastq" "^1.6.0"
 
-"@os1-platform/console-ui-js@^0.1.8":
-  "integrity" "sha512-1cK4nVV+edtAE6TI3rQZvXasn/Gd1rmVl/wzFrs5g0QydnMFZChjRx2w1NkUQDxnYyil6+68Ym5fnL/qd69Rog=="
-  "resolved" "https://registry.npmjs.org/@os1-platform/console-ui-js/-/console-ui-js-0.1.8.tgz"
-  "version" "0.1.8"
+"@os1-platform/console-ui-js@^0.2.3":
+  "integrity" "sha512-vedN1d3pvrIAtPrJNmyipBNLRrGNXLbjosrgo6dy6+bSWmY/DEHYciHwZF9qwqsQ2lnRVvF0Cy/0HFz96Qlxgw=="
+  "resolved" "https://registry.npmjs.org/@os1-platform/console-ui-js/-/console-ui-js-0.2.3.tgz"
+  "version" "0.2.3"
   dependencies:
     "@fortawesome/fontawesome" "^1.1.8"
     "@fullhuman/postcss-purgecss" "^5.0.0"
@@ -1860,13 +1860,13 @@
     "uuid" "^8.3.2"
     "uuid-by-string" "^3.0.4"
 
-"@os1-platform/console-ui-react@^0.1.6":
-  "integrity" "sha512-gplOS4FQKDLLuPKHvKIPapC6jzmcQSkeeHiDy5l23k/Wp6zQSS1Z4RFFyzlfM5TFfs6+l9bjS4h7mvaiJEZ/7w=="
-  "resolved" "https://registry.npmjs.org/@os1-platform/console-ui-react/-/console-ui-react-0.1.6.tgz"
-  "version" "0.1.6"
+"@os1-platform/console-ui-react@^0.2.5":
+  "integrity" "sha512-We+mm8ela735Fosj5zifAEUvyqb4qKBsjDFcJBUd1lo6gpteT95TADBmQ6SsN+ZW90Zzfknjg+s401bKrIGPLw=="
+  "resolved" "https://registry.npmjs.org/@os1-platform/console-ui-react/-/console-ui-react-0.2.5.tgz"
+  "version" "0.2.5"
   dependencies:
     "@fullhuman/postcss-purgecss" "^5.0.0"
-    "@os1-platform/console-ui-js" "^0.1.8"
+    "@os1-platform/console-ui-js" "^0.2.3"
     "@react-native-community/eslint-config" "^2.0.0"
     "@types/react" "^17.0.37"
     "axios" "^0.21.4"
@@ -3899,9 +3899,9 @@
   "version" "1.0.3"
 
 "ci-info@^3.2.0":
-  "integrity" "sha512-2CpRNYmImPx+RXKLq6jko/L07phmS9I02TyqkcNU20GCF/GgaWvc58hPtjxDX8lPpkdwc9sNh72V9k00S7ezog=="
-  "resolved" "https://registry.npmjs.org/ci-info/-/ci-info-3.7.0.tgz"
-  "version" "3.7.0"
+  "integrity" "sha512-eXTggHWSooYhq49F2opQhuHWgzucfF2YgODK4e1566GQs5BIfP30B0oenwBJHfWxAs2fyPB1s7Mg949zLf61Yw=="
+  "resolved" "https://registry.npmjs.org/ci-info/-/ci-info-3.8.0.tgz"
+  "version" "3.8.0"
 
 "cipher-base@^1.0.0", "cipher-base@^1.0.1", "cipher-base@^1.0.3":
   "integrity" "sha512-Kkht5ye6ZGmwv40uUDZztayT2ThLQGfnj/T71N/XzeZeo3nf8foyW7zGTsPYkEya3m5f3cAypH+qe7YOrM1U2Q=="
