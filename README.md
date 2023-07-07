@@ -21,8 +21,7 @@ Follow the steps below to get started with the front-end client:
 
 ### **Configure Proxy**
 
-To ensure successful authentication, you must configure your  `/etc/hosts` file on your local machine to handle traffic as a domain name. To accomplish this, you can set up your Tenant URL using a Nix compatiable shell.
-
+To ensure successful authentication, you must configure your  `/etc/hosts` file on your local machine to handle traffic as a domain name. To accomplish this, you can set up your Tenant URL using a Nix compatible shell.
 
 
 1. The first step is to look up your Tenant URL in the [Developer Portal. ](https://portal.getos1.com/#/login)You can view the instructions for obtaining your Tenant URL in our [Getting Started with the OS1 Platform](https://docs.getos1.com/docs/getting-started-1#step-5-retrieving-and-using-your-platform-credentials) guide. 
@@ -62,7 +61,7 @@ Windows stores the `hosts` file at `C:\Windows\System32\drivers\etc\`. To modify
 
 #### **Running Locally**
 
-After configuring your proxy, you'll need to run the `cd client` following client commands. Follow the steps below to run the application on your local machine:
+After configuring your proxy, you'll need enter `cd client` to change to the client directory. Follow the steps below to run the application on your local machine:
 
 1. Install the necessary dependencies
 
