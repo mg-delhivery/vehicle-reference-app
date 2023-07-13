@@ -1,21 +1,27 @@
 
 # **Overview**
 
-This guide introduces the Vehicle Reference App, using which one can create and manage the lifecycle of the vehicles. Vehicle app demonstrates how a developer can build a web app to manage logistics network participants such as Vehicles using the participant service. The app also demonstrates integration with [Console](https://docs.getos1.com/docs/console-ui-overview), a workspace using which end customers can access all webapps from a single place. 
+The Vehicle Reference app is specially designed to assist developers in creating a web application that can efficiently manage logistics network participants such as vehicles through the participant service. Moreover, the app is seamlessly integrated with [Console](https://docs.getos1.com/docs/console-ui-overview), which is a workspace that provides users with access to all your web applications in one place. 
 
 **Note:** Follow the steps below to run the app in your local machine. 
 
 
 ## **Application Organization**
 
-The app is organized into two parts as below:
+The app is organized into two parts:
 
 **1. Front-End Client:** This provides the user interface for the vehicle creation and management.
 
 **2. Backend Server:** Enables creation, updates, and lifecycle management for Vehicles by using the participant service at the backend. The Vehicle object is modeled using the [Participant Service](https://docs.getos1.com/docs/creating-participants).
 
 
-## **How to setup the Front-End (Client)**
+# **How to set up**
+
+Developers need to first register an app in the developer portal and obtain credentials for the app. Refer to the [Getting Started with the OS1 Platform](https://docs.getos1.com/docs/getting-started-1#step-4-register-an-app) guide for registering an app and obtaining credentials. 
+
+**Note:** Be sure to select **web app** for the app type.
+
+## **Setting up the Front-End (Client)**
 
 Follow the steps below to get started with the front-end client:
 
@@ -37,31 +43,39 @@ TENANT_URL=<Add your tenant url here>
 #### Linux
 
 ```
-echo "127.0.0.1 ${TENANT_NAME}-cdev.${TENANT_URL}" >> /etc/hosts
+echo "$(echo "127.0.0.1 ${TENANT_URL//https:\/\/$TENANT_NAME/$TENANT_NAME-cdev}")" >> /etc/hosts
 ```
 
 #### Mac
 
 ```
-echo "127.0.0.1 ${TENANT_NAME}-cdev.${TENANT_URL}" | sudo tee -a /etc/hosts
+echo "$(echo "127.0.0.1 ${TENANT_URL//https:\/\/$TENANT_NAME/$TENANT_NAME-cdev}")" | sudo tee -a /etc/hosts
 ```
+
+#### Example
+
+127.0.0.1 os1devs-cdev.sandbox.getos1.com
+Format will be:
+IPAddress  <TenantId>-cdev.<BaseDomainUrlFromTenantUrl>
 
 #### Windows
 
 Windows stores the `hosts` file at `C:\Windows\System32\drivers\etc\`. To modify the file:
 
-1. Open a Notepad as an Administrator.
+1. Open a *Notepad* as an *Administrator*.
 2. In the notepad, go to **File > Open** and navigate to `C:\Windows\System32\drivers\etc\`.
 3. The `hosts` file won’t be visible by default because it doesn’t have a file extension. To make it visible, change the file type filter from **Text Documents (.txt)** to **All File (.*)**, and then select the `hosts` file. 
 4. After opening the file, you can add your entry at the end of the file, following the format in the above examples for Linux and Mac.
 
 ```
-127.0.0.1 ${TENANT_NAME}-cdev.${TENANT_URL}
+127.0.0.1 ${TENANT_URL//https:\/\/$TENANT_NAME/$TENANT_NAME-cdev}
 ```
+
+These commands append your tenant’s domain to the `etc`
 
 #### **Running Locally**
 
-After configuring your proxy, you'll need enter `cd client` to change to the client directory. Follow the steps below to run the application on your local machine:
+After configuring your proxy, you'll need to enter `cd client` to change to the client directory. Follow the steps below to run the application on your local machine:
 
 1. Install the necessary dependencies
 
@@ -76,15 +90,17 @@ yarn install
 
 	Refer to the [Getting Started with the OS1 Platform](https://docs.getos1.com/docs/getting-started-1#step-5-retrieving-and-using-your-platform-credentials) guide for obtaining these details.  
 
-3. Next, start your local server. 
+3. Next, start your local server using the configuured proxy URL.
 
 ```
 yarn start
 ```
 
+The app will start on localhost:4500. Put the proxy configured url in the browser to open the app.
+
 ## **How to setup the Backend (Server)**
 
-The backend server facilitates vehicle creation, update, and lifecycle management. It also provides a baseline reference on how to model a vehicle or any other participant in a logistics network such as a Facility using the Participant Service. In particular this demonstrates the following:
+The backend server facilitates vehicle creation, update, and lifecycle management. It also provides a baseline reference on how to model a vehicle or any other participant in a logistics network such as Facility using the Participant Service. The intention of this is to give the developer an easy point of reference for the following:
 
 * Generating access token
 * Communicating with Participant Service
