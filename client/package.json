@@ -6,7 +6,7 @@
     "@fortawesome/fontawesome-svg-core": "^6.2.1",
     "@fortawesome/free-solid-svg-icons": "^6.2.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
-    "@os1-platform/console-ui-react": "^0.2.5",
+    "@os1-platform/console-ui-react": "^0.5.2",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
     "@testing-library/user-event": "^13.2.1",
@@ -18,16 +18,17 @@
     "axios": "^1.2.1",
     "dayjs": "^1.11.7",
     "flowbite": "^1.5.5",
-    "flowbite-react": "^0.3.7",
+    "flowbite-react": "^0.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.40.0",
     "react-query": "^3.39.2",
     "react-router-dom": "^6.4.5",
     "react-scripts": "5.0.1",
-    "tailwindcss": "^2.2.14",
+    "tailwindcss": "3.3.2",
     "typescript": "^4.4.2",
-    "web-vitals": "^2.1.0"
+    "web-vitals": "^2.1.0",
+    "react-icons": "^4.10.1"
   },
   "scripts": {
     "start": "PORT=4500 HTTPS=true react-scripts start",
@@ -54,11 +55,13 @@
     ]
   },
   "devDependencies": {
+    "@tailwindcss/forms": "^0.4.0",
     "@trivago/prettier-plugin-sort-imports": "^4.0.0",
     "@types/luxon": "^3.1.0",
     "autoprefixer": "^10.4.13",
     "postcss": "^8.4.20",
     "prettier": "^2.8.1",
+    "tailwind-scrollbar-hide": "^1.1.7",
     "webpack-remote-types-plugin": "^0.2.7"
   }
 }

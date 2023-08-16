@@ -38,7 +38,7 @@ const ConsoleUIProvider = (props: any) => {
       ],
     },
     {
-      path: '/vehicle',
+      path: '/vehicles',
       element: <Root />,
       errorElement: <ErrorPage />,
       handle: {
