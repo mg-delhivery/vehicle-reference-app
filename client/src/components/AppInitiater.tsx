@@ -45,9 +45,9 @@ function AppInitiater(props: any) {
     <>
       <OS1Provider
         clientId={process.env.REACT_APP_CLIENT_ID}
-        loginRedirectPath={'/vehicle'}
+        loginRedirectPath={'/vehicles'}
         logoutRedirectPath={'/'}
-        //devTenantId={REACT_APP_DEV_TENANT_ID}
+        devTenantId={process.env.REACT_APP_DEV_TENANT_ID}
         appId={process.env.REACT_APP_INITIAL_APP_ID}
         controls={controls}
       >

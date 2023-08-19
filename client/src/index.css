@@ -16,10 +16,6 @@ code {
     monospace;
 }
 
-.console-ui-dropdown-selected{
-  border: none;
-}
-
 body > iframe {
   display: none;
 }
