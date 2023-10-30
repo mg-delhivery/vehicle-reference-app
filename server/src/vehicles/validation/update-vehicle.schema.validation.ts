@@ -9,5 +9,6 @@ export const UpdateVehicleSchema = Joi.object({
     registrationNumber: Joi.string().optional(),
     registrationYear: Joi.number().optional(),
     availability: Joi.boolean().optional(),
+    callback: Joi.string()
   }).required(),
 });

@@ -1,11 +1,12 @@
 import { Button, Label, Select, Spinner, TextInput } from 'flowbite-react';
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
-import { createSearchParams, useNavigate, useParams } from 'react-router-dom';
+import { createSearchParams, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
 import { editVehicle, fetchVehicle } from '../api/vehicles';
 import { Toast } from '../components/Toast';
 import Title from '../layout/Title';
+import { OS1Toast } from '@os1-platform/console-ui-react';
 
 interface VehicleParticipantForm extends VehicleDisplay {}
 
@@ -39,6 +40,8 @@ function EditVehicle(props: any) {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionError, setSubmissionError] = useState<string>();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [toastMsg, setToastMsg] = useState<string>();
 
   const {
     register,
@@ -48,6 +51,31 @@ function EditVehicle(props: any) {
   } = useForm<VehicleParticipantForm>({
     defaultValues: useMemo(() => vehicle, [vehicle]),
   });
+
+
+  useEffect(() => {
+    if (searchParams.has('success')) {
+      const message = searchParams.get('message');
+      if (message === 'edited') {
+        if (window && window?.name){
+          const event = JSON.parse(window.name)
+          setToastMsg(`fuelType : ${event?.properties.fuelType}, mode: ${event?.properties.mode}, Operator Id: ${event?.properties.operatorId} `);
+          setIsSubmitting(false);
+          searchParams.delete('success');
+          searchParams.delete('message');
+          setSearchParams(searchParams);
+         }
+      }
+    }
+  }, [searchParams, setSearchParams ]);
+
+
+  useEffect(()=>{
+    setTimeout(() => {
+      setToastMsg(undefined);
+    }, 10000);
+  }, [toastMsg])
+
 
   const onSubmit = useCallback((async (data: VehicleParticipantForm) => {
     if (!id) {
@@ -59,10 +87,11 @@ function EditVehicle(props: any) {
     setSubmissionError(undefined);
 
     try {
-      await editVehicle(id, data.properties, props.console);
+      if (props.console)
+       await editVehicle(id, data.properties, props.console);
 
       navigate({
-        pathname: '../..',
+        pathname: window.location.pathname,
         search: `?${createSearchParams({
           success: 'true',
           message: 'edited',
@@ -91,7 +120,23 @@ function EditVehicle(props: any) {
   if (!id) {
     return <div>Vehicle not found.</div>;
   }
+
+  const toastConfig = {
+    bgColor: 'green',
+    message: toastMsg || '',
+    timeout: 10,
+    icon: 'info',
+    closeButton: true,
+  };
+
   return (
+    <>
+    {toastMsg && (
+      <OS1Toast
+        elementId={'toastElement'}
+        toastConfig={toastConfig}
+      />
+    )}
     <div id="EditVehicle" className="relative flex flex-col items-center">
       {submissionError && <Toast kind="error">{submissionError}</Toast>}
 
@@ -110,7 +155,7 @@ function EditVehicle(props: any) {
           <form
             onSubmitCapture={handleSubmit(onSubmit)}
             className="flex flex-col gap-4"
-            onSubmit={handleSubmit(onSubmit)}
+            // onSubmit={handleSubmit(onSubmit)}
           >
             <div>
               <div className="mb-2 block">
@@ -152,7 +197,7 @@ function EditVehicle(props: any) {
                     type="checkbox"
                     value=""
                     className="sr-only peer"
-                    defaultChecked={vehicle?.properties.availability}
+                    defaultChecked={vehicle?.properties?.availability}
                     {...register('properties.availability', {})}
                   />
                   <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
@@ -181,7 +226,7 @@ function EditVehicle(props: any) {
                   id={'properties.mode'}
                   type="text"
                   disabled={false}
-                  placeholder={vehicle?.properties.mode}
+                  placeholder={vehicle?.properties?.mode}
                   required={true}
                   {...register('properties.mode', {})}
                 />
@@ -197,7 +242,7 @@ function EditVehicle(props: any) {
                   id={'properties.operatorId'}
                   type="text"
                   disabled={false}
-                  placeholder={vehicle?.properties.operatorId}
+                  placeholder={vehicle?.properties?.operatorId}
                   required={true}
                   {...register('properties.operatorId', {})}
                 />
@@ -213,7 +258,7 @@ function EditVehicle(props: any) {
                   id={'properties.payloadCapacity'}
                   type="text"
                   disabled={false}
-                  placeholder={vehicle?.properties.payloadCapacity}
+                  placeholder={vehicle?.properties?.payloadCapacity}
                   required={false}
                   {...register('properties.payloadCapacity', {})}
                 />
@@ -229,14 +274,14 @@ function EditVehicle(props: any) {
                   id={'properties.registrationNumber'}
                   type="text"
                   disabled={false}
-                  placeholder={vehicle?.properties.registrationNumber}
+                  placeholder={vehicle?.properties?.registrationNumber}
                   required={false}
                   {...register('properties.registrationNumber', {
                     pattern: /^[a-zA-Z0-9]{5,25}$/i,
                   })}
                 />
                 {errors.properties?.registrationNumber &&
-                  errors.properties?.registrationNumber.type === 'pattern' && (
+                  errors.properties?.registrationNumber?.type === 'pattern' && (
                     <p className="mt-2 text-xs text-red-700">
                       Must be alphanumeric with 5-25 characters.
                     </p>
@@ -253,7 +298,7 @@ function EditVehicle(props: any) {
                   id={'properties.registrationYear'}
                   type="number"
                   disabled={false}
-                  placeholder={vehicle?.properties.registrationYear?.toString()}
+                  placeholder={vehicle?.properties?.registrationYear?.toString()}
                   required={false}
                   {...register('properties.registrationYear', {})}
                 />
@@ -275,6 +320,7 @@ function EditVehicle(props: any) {
         )}
       </div>
     </div>
+    </>
   );
 }
 

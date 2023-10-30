@@ -1,5 +1,5 @@
 //import { sharedAccessBundle } from 'header/AuthenticatedHeader';
-import { PropsWithChildren, useEffect, useState } from 'react';
+import { PropsWithChildren, useEffect, useState, useCallback, memo } from 'react';
 import { Outlet, RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 import CreateVehicle from '../pages/CreateVehicle';
@@ -13,17 +13,32 @@ import App from './AppInitiater';
 
 // import { Home } from './home';
 
+window.name = ""
+
 const ConsoleUIProvider = (props: any) => {
   const [consoleInstance, setConsoleInstance] = useState(null);
+
   useEffect(() => {
+
     setConsoleInstance(props.console);
     (async function (){
       const token = await getToken(props.console)
       sessionStorage.setItem("appOwnerId", token);
     })()
+    const handleEvent = (e: any)=>{
+      console.log(e)
+      window.name =JSON.stringify(e.detail.data.data)
+      console.log("Message recieved at SSE broker timestamp :-", e.detail.data.brokerTimestamp );
+      console.log("Message recieved at SSE agent timestamp :-", e.detail.data.agentTimestamp );
+      console.log("Message recieved at Console timestamp :-", e.detail.data.consoleTimestamp)
+    }
+    document.addEventListener(props.console?.events()?.SSECallBackEvent,handleEvent)
+
+    return () => {
+      document.removeEventListener(props.console?.events()?.SSECallBackEvent, handleEvent);
+    };
   }, [props.console]);
 
-  
 
   const router = createBrowserRouter([
     {
@@ -33,7 +48,7 @@ const ConsoleUIProvider = (props: any) => {
       children: [
         {
           index: true,
-          element: <ListVehicles console={consoleInstance} />,
+          element: <ListVehicles console={consoleInstance}/>,
         },
       ],
     },
@@ -49,7 +64,7 @@ const ConsoleUIProvider = (props: any) => {
       children: [
         {
           index: true,
-          element: <ListVehicles console={consoleInstance} />,
+          element: <ListVehicles console={consoleInstance}/>,
         },
         {
           path: 'create',

@@ -97,6 +97,10 @@ export class VehiclesService implements OnModuleInit {
     return `${process.env.TENANT_DNS}/core/api/v2/participants/${VEHICLE_NAME_PLURAL}`;
   }
 
+  private getCallBackEvent(): string {
+    return `${process.env.TENANT_DNS}/core/api/v2/participants/${VEHICLE_NAME_PLURAL}`;
+  }
+
   private getTenantTokenUrl(): string {
     return `${process.env.TENANT_DNS}/core/api/v1/aaa/tenants/${process.env.TENANT_ID}`;
   }
@@ -165,8 +169,26 @@ export class VehiclesService implements OnModuleInit {
   }
 
   async addVehicle(vehicle: AddVehicleRequestDTO): Promise<void> {
+    const callback = vehicle.callback
+    delete vehicle?.callback
     await this.httpService.axiosRef
       .post(this.getVehiclesUrl(), vehicle, {
+        headers: await this.participantService.buildHeaders(),
+      })
+      .then(() => {
+        this.logger.log(`Vehicle ${vehicle.name} successfully added`);
+      })
+      .catch((error) => {
+        this.logger.error(error);
+        const errorData = handleErrorResponse(error);
+        this.logger.error(errorData);
+        throw new HttpException(
+          `Failed to create Vehicle ${vehicle.name}: ${errorData.description}`,
+          errorData.status,
+        );
+      });
+      await this.httpService.axiosRef
+      .post(callback, vehicle, {
         headers: await this.participantService.buildHeaders(),
       })
       .then(() => {
@@ -187,8 +209,28 @@ export class VehiclesService implements OnModuleInit {
     vehicleId: string,
     vehicle: UpdateVehiclePropertiesRequestDTO,
   ): Promise<void> {
+    console.log(vehicle)
+    const callback = vehicle?.properties?.callback
+    delete vehicle?.properties?.callback
     await this.httpService.axiosRef
       .put(this.getVehiclesUrl() + `/${vehicleId}`, vehicle, {
+        headers: await this.participantService.buildHeaders(),
+      })
+      .then(() => {
+        this.logger.log(`Vehicle ${vehicleId} successfully updated`);
+      })
+      .catch((error) => {
+        this.logger.error(error);
+        const errorData = handleErrorResponse(error);
+        this.logger.error(errorData);
+        throw new HttpException(
+          `Failed to update Vehicle ${vehicleId}: ${errorData.description}`,
+          errorData.status,
+        );
+      });
+
+      await this.httpService.axiosRef
+      .post(callback, vehicle, {
         headers: await this.participantService.buildHeaders(),
       })
       .then(() => {

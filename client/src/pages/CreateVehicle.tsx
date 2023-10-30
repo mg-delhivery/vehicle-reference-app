@@ -9,7 +9,7 @@ import {
 } from 'flowbite-react';
 import React, { useState, memo, useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { createSearchParams, useNavigate } from 'react-router-dom';
+import { createSearchParams, useNavigate, useSearchParams } from 'react-router-dom';
 
 import { createVehicle } from '../api/vehicles';
 import Title from '../layout/Title';
@@ -18,6 +18,8 @@ function CreateVehicle(props: any) {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionError, setSubmissionError] = useState<string>();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [toastMsg, setToastMsg] = useState<string>();
 
   const defaultValues: VehicleDisplay = {
     id: '',
@@ -49,19 +51,43 @@ function CreateVehicle(props: any) {
     defaultValues,
   });
 
+  useEffect(() => {
+    if (searchParams.has('success')) {
+      const message = searchParams.get('message');
+
+      if (message === 'created') {
+       if (window && window?.name){
+        const event = JSON.parse(window.name)
+        setToastMsg(`name : ${event.name}, owner: ${event.owner}, unique Code: ${event.uniqueCode} `);
+        setIsSubmitting(false);
+        searchParams.delete('success');
+        searchParams.delete('message');
+        setSearchParams(searchParams);
+       }
+      }
+    }
+  }, [searchParams, setSearchParams ]);
+
+
+  useEffect(()=>{
+    setTimeout(() => {
+      setToastMsg(undefined);
+    }, 10000);
+  }, [toastMsg])
+
   const onSubmit = useCallback((async (data: VehicleParticipantForm) => {
     setIsSubmitting(true);
     setSubmissionError(undefined);
 
     try {
       await createVehicle(data, props.console);
-      navigate({
-        pathname: '..',
-        search: `?${createSearchParams({
-          success: 'true',
-          message: 'created',
-        })}`,
-      });
+    navigate({
+      pathname: '/vehicles/create',
+      search: `?${createSearchParams({
+        success: 'true',
+        message: 'created',
+      })}`,
+    });
     } catch (e) {
       console.error(e);
       setIsSubmitting(false);
@@ -71,24 +97,24 @@ function CreateVehicle(props: any) {
   
   const toastConfig = {
     bgColor: 'green',
-    message: 'Operation Successful',
+    message: toastMsg || '',
     timeout: 10,
     icon: 'info',
     closeButton: true,
   };
 
   return (
-    <div
-      id="CreateVehicle"
-      className="relative flex flex-col items-center mt-5"
-    >
-      {submissionError && (
+    <>
+      {toastMsg && (
         <OS1Toast
           elementId={'toastElement'}
           toastConfig={toastConfig}
         />
       )}
-
+    <div
+      id="CreateVehicle"
+      className="relative flex flex-col items-center mt-5"
+    >
       <div className="w-full">
         <div className="flex flex-row items-center gap-4 md:gap-6">
           <Title>Create Vehicle</Title>
@@ -288,6 +314,7 @@ function CreateVehicle(props: any) {
         </form>
       </div>
     </div>
+    </>
   );
 }
 
