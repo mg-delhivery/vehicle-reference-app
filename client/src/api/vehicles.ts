@@ -38,11 +38,22 @@ export const createVehicle = async (
   client: any
 ): Promise<void> => {
   const dto = getDtoFromDisplay(data);
-
+  dto['callback'] = "{{SSE_CALLBACK}}"
+  console.log("api call requested :-", new Date(), "having unix timestamp:- ", Date.now())
   const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}`);
 
   try {
-    await axiosClient.post('/vehicles', dto, 'createVehicles');
+    await axiosClient.post(
+      '/vehicles',
+      dto,
+      'createVehicles',
+      { withAuth: false },
+      {
+        headers: {
+          'Callback': "{{SSE_CALLBACK}}",
+          'Content-Type': 'application/json',
+        }
+      });
     return;
   } catch (error) {
     console.error('error', error);
@@ -55,11 +66,16 @@ export const editVehicle = async (
   client: any
 ): Promise<void> => {
   const properties = { properties: getParticipantProperties(data) };
-  console.log(properties)
 
   const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}/vehicles/${id}`);
 
   try {
+    const requestTime = Date.now()
+    console.log("Request for callback Url", new Date())
+    const callbackUrl = await axiosClient.getEventBrokerUrl()
+    console.log("callback Url Revieved and api call is made after ms:- ", Date.now() - requestTime, "current Time is :-", new Date() )
+    properties.properties['callback'] = callbackUrl.callback
+
     await axiosClient.put('/',properties,'editehicles-1');
     return;
   } catch (error) {
@@ -92,15 +108,15 @@ const getDisplayFromParticipant = (
   return {
     id: participant.id,
     state: participant.state,
-    uniqueCode: participant.uniqueCode,
-    owner: participant.owner,
-    category: participant.category || '',
+    uniqueCode: participant?.uniqueCode,
+    owner: participant?.owner,
+    category: participant?.category || '',
     name: participant.name,
     properties: participant.properties,
     createdAt: getDateStructure(participant.createdAt),
-    createdBy: participant.createdBy.name,
-    updatedAt: getDateStructure(participant.updatedAt),
-    updatedBy: participant.updatedBy.name,
+    createdBy: participant?.createdBy?.name,
+    updatedAt: getDateStructure(participant?.updatedAt),
+    updatedBy: participant?.updatedBy?.name,
   };
 };
 

@@ -30,6 +30,7 @@ interface VehicleParticipantProperties {
   registrationNumber?: string;
   registrationYear?: number;
   availability?: boolean;
+  callback?: string
 }
 
 interface VehicleParticipant {
@@ -75,4 +76,5 @@ interface AddVehicleRequestDTO {
   category?: string;
   subCategory?: string;
   properties?: VehicleParticipantProperties;
+  callback?: string
 }

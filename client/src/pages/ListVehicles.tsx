@@ -85,13 +85,15 @@ function ListVehicles(props: any) {
     };
     getAllVehicles();
   }, [reloadSeed, props.console]);
-
   useEffect(() => {
     if (searchParams.has('success')) {
       const message = searchParams.get('message');
 
       if (message === 'created') {
-        setToastMsg('Vehicle created');
+       if (window && window?.name){
+        const event = JSON.parse(window.name)
+        setToastMsg(`name : ${event.name}, owner: ${event.owner}, unique Code: ${event.uniqueCode} `);
+       }
       } else if (message === 'edited') {
         setToastMsg('Vehicle edited');
       }
@@ -103,7 +105,7 @@ function ListVehicles(props: any) {
         setSearchParams(searchParams);
       }, 3000);
     }
-  }, [searchParams, setSearchParams]);
+  }, [searchParams, setSearchParams ]);
 
   useEffect(()=>{
     if (props.console) {
@@ -207,7 +209,7 @@ function ListVehicles(props: any) {
   const toastConfig = {
     bgColor: 'green',
     message: toastMsg || '',
-    timeout: 10,
+    timeout: 20,
     icon: 'info',
     closeButton: true,
   };
@@ -269,7 +271,7 @@ useEffect(()=>{
         <div className="flex-none mt-3">
           <Button
             className="whitespace-nowrap"
-            onClick={() => navigate('/vehicle/create')}
+            onClick={() => navigate('/vehicles/create')}
           >
             <FontAwesomeIcon icon={faPlus} />
             <span className="ml-2">Create New Vehicle</span>
@@ -428,7 +430,7 @@ useEffect(()=>{
                   <Table.Cell>
                     <Button
                       size="xs"
-                      onClick={() => navigate(`/vehicle/${vehicle.id}/edit`)}
+                      onClick={() => navigate(`/vehicles/${vehicle.id}/edit`)}
                     >
                       Edit
                     </Button>

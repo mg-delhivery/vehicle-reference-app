@@ -15,6 +15,7 @@ export interface VehicleProperties {
   registrationNumber?: string;
   registrationYear?: number;
   availability?: boolean;
+  callback?: string;
 }
 
 export interface GetAllVehiclesResponse {
