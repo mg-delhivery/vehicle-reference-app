@@ -1768,9 +1768,9 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@os1-platform/console-ui-js@^0.5.2":
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/@os1-platform/console-ui-js/-/console-ui-js-0.5.2.tgz#9991d4cef6b87e5bf9a7533e83adf121d0d56b3c"
+"@os1-platform/console-ui-js@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@os1-platform/console-ui-js/-/console-ui-js-0.6.0.tgz#9991d4cef6b87e5bf9a7533e83adf121d0d56b3c"
   integrity sha512-9rjp1Ay8r71MPIJmwIXwJx63XePEF0xHVlq4980YBHeT8Zc4V0ZibtFgBkTKt9/FuCUT2ph2kkmOj6SR/Q+wNw==
   dependencies:
     "@fortawesome/fontawesome" "^1.1.8"
@@ -1790,13 +1790,13 @@
     uuid "^8.3.2"
     uuid-by-string "^3.0.4"
 
-"@os1-platform/console-ui-react@^0.5.2":
+"@os1-platform/console-ui-react@^0.6.0":
   version "0.5.2"
-  resolved "https://registry.yarnpkg.com/@os1-platform/console-ui-react/-/console-ui-react-0.5.2.tgz#f4f6590fce2ea1b1c34ce901356834d14ca95b81"
+  resolved "https://registry.yarnpkg.com/@os1-platform/console-ui-react/-/console-ui-react-0.6.0.tgz#f4f6590fce2ea1b1c34ce901356834d14ca95b81"
   integrity sha512-g3ou2ZDVkRm3T/O2cVz6bcMZZYyClTMVisAN03yClT8LnfD0qv62Y8Df7HEIKVRof46u424u3pscrg3gFSYq2g==
   dependencies:
     "@fullhuman/postcss-purgecss" "^5.0.0"
-    "@os1-platform/console-ui-js" "^0.5.2"
+    "@os1-platform/console-ui-js" "^0.6.0"
     "@react-native-community/eslint-config" "^2.0.0"
     "@types/react" "^17.0.37"
     axios "^0.21.4"
@@ -2333,8 +2333,8 @@
   integrity sha512-+yno3ItTEwGxXiS/75Q/aHaa5srkpnJaH+kdkTVJ3DtJEwv92itpKbxU+FjPoh2m/5G9zmUQfrL4A4C13c+iGA==
 
 "@types/node@^18.14.0":
-  version "18.17.5"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.17.5.tgz#c58b12bca8c2a437b38c15270615627e96dd0bc5"
+  version "18.17.12"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.17.12.tgz#c58b12bca8c2a437b38c15270615627e96dd0bc5"
   integrity sha512-xNbS75FxH6P4UXTPUJp/zNPq6/xsfdJKussCWNOnz4aULWIRwMgP1LgaB5RiBnMX1DPCYenuqGZfnIAx5mbFLA==
 
 "@types/parse-json@^4.0.0":
