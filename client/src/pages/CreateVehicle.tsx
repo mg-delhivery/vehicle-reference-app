@@ -56,18 +56,18 @@ function CreateVehicle(props: any) {
       const message = searchParams.get('message');
 
       if (message === 'created') {
-       if (window && window?.name){
-        const event = JSON.parse(window.name)
-        setToastMsg(`name : ${event.name}, owner: ${event.owner}, unique Code: ${event.uniqueCode} `);
+      //  if (window && window?.name){
+      //   const event = JSON.parse(window?.name)
+        //console.log(event)
+        //setToastMsg(`name : ${event.data.name}, owner: ${event.data.owner}, unique Code: ${event.data.uniqueCode} `);
         setIsSubmitting(false);
         searchParams.delete('success');
         searchParams.delete('message');
         setSearchParams(searchParams);
+       //}
        }
-      }
-    }
+     }
   }, [searchParams, setSearchParams ]);
-
 
   useEffect(()=>{
     setTimeout(() => {

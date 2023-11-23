@@ -27,10 +27,10 @@ const ConsoleUIProvider = (props: any) => {
     })()
     const handleEvent = (e: any)=>{
       console.log(e)
-      window.name =JSON.stringify(e.detail.data.data)
-      console.log("Message recieved at SSE broker timestamp :-", e.detail.data.brokerTimestamp );
-      console.log("Message recieved at SSE agent timestamp :-", e.detail.data.agentTimestamp );
-      console.log("Message recieved at Console timestamp :-", e.detail.data.consoleTimestamp)
+      window.name =JSON.stringify(e.detail.payload.data)
+      console.log("Message recieved at SSE broker timestamp :-", e.detail.payload.brokerTimestamp );
+      console.log("Message recieved at SSE agent timestamp :-", e.detail.payload.agentTimestamp );
+      console.log("Message recieved at Console timestamp :-", e.detail.payload.consoleTimestamp)
     }
     document.addEventListener(props.console?.events()?.SSECallBackEvent,handleEvent)
 

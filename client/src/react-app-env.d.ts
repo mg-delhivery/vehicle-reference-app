@@ -76,5 +76,5 @@ interface AddVehicleRequestDTO {
   category?: string;
   subCategory?: string;
   properties?: VehicleParticipantProperties;
-  callback?: string
+  callback?: object
 }

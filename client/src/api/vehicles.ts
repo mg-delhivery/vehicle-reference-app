@@ -1,6 +1,8 @@
 import { OS1HttpClient } from '@os1-platform/console-ui-react'
+import { v4 as uuidv4 } from 'uuid';
 
 import { getUxDateDisplay } from '../utils/dates';
+import { VEHICLE_NAME_PLURAL } from '../utils/constants';
 
 export const getVehicles = async (client: any) => {
   if (client) {
@@ -33,27 +35,58 @@ export const fetchVehicle = async (id: string, client: any) => {
   }
 };
 
+export const getAccessToken = async (client: any) => {
+  if (client) {
+    const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_TENANT_DNS}`);
+    const headers = {
+      "X-COREOS-REQUEST-ID": uuidv4(),
+    };
+    const clientCredentialsPayload = {
+      clientId: `${process.env.REACT_APP_PARTICIPANT_CLIENT_ID}`,
+      clientSecret: `${process.env.REACT_APP_PARTICIPANT_CLIENT_SECRET}`,
+    };
+    try {
+      const resp =  await axiosClient.post(
+        `/core/api/v1/aaa/auth/client-credentials`,
+        clientCredentialsPayload,
+        'createVehicles',
+        { withUserInfo: false },
+        { headers }
+        );
+        const token = <any>(resp.data);
+
+        return token;
+    } catch (error) {
+      console.error('error', error);
+    }    
+  }
+};
+
 export const createVehicle = async (
   data: VehicleParticipantForm,
   client: any
 ): Promise<void> => {
   const dto = getDtoFromDisplay(data);
-  dto['callback'] = "{{SSE_CALLBACK}}"
+  dto['callback'] = {
+    "url": "{{SSE_CALLBACK}}",
+    "meta": {}
+  }
   console.log("api call requested :-", new Date(), "having unix timestamp:- ", Date.now())
-  const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}`);
-
+  const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_TENANT_DNS}`);
+  const token =  await getAccessToken(client)
   try {
     await axiosClient.post(
-      '/vehicles',
+      `core/api/v2/participants/${VEHICLE_NAME_PLURAL}`,
       dto,
       'createVehicles',
-      { withAuth: false },
+      {withAuth: false, withAccess: false},
       {
         headers: {
-          'Callback': "{{SSE_CALLBACK}}",
-          'Content-Type': 'application/json',
+          'X-COREOS-ORIGIN-TOKEN': token.data.accessToken,
+          'x-coreos-access': token.data.accessToken
         }
-      });
+      }
+      );
     return;
   } catch (error) {
     console.error('error', error);
@@ -72,7 +105,8 @@ export const editVehicle = async (
   try {
     const requestTime = Date.now()
     console.log("Request for callback Url", new Date())
-    const callbackUrl = await axiosClient.getEventBrokerUrl()
+    const sseClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_TENANT_DNS}`);
+    const callbackUrl = await sseClient.getEventBrokerUrl()
     console.log("callback Url Revieved and api call is made after ms:- ", Date.now() - requestTime, "current Time is :-", new Date() )
     properties.properties['callback'] = callbackUrl.callback
 
