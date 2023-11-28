@@ -40,7 +40,7 @@ export const createVehicle = async (
   const dto = getDtoFromDisplay(data);
   dto['callback'] = "{{SSE_CALLBACK}}"
   console.log("api call requested :-", new Date(), "having unix timestamp:- ", Date.now())
-  const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}`);
+  const axiosClient = new OS1HttpClient(client.authInitializer, `https://os1devs.sandbox.getos1.com`);
 
   try {
     await axiosClient.post(
