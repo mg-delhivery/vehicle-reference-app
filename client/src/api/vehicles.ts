@@ -98,19 +98,19 @@ export const editVehicle = async (
   data: VehicleParticipantProperties,
   client: any
 ): Promise<void> => {
-  const properties = { properties: getParticipantProperties(data) };
+  const properties = { properties: getParticipantProperties(data) }; // Construct payload data
 
-  const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}/vehicles/${id}`);
+  const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}/vehicles/${id}`); // Instantiate OS1HttpClient with vehicle ID endpoint
 
   try {
-    const requestTime = Date.now()
-    console.log("Request for callback Url", new Date())
-    const sseClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_TENANT_DNS}`); // Sets up new client
-    const callbackUrl = await sseClient.getEventBrokerUrl() 
-    console.log("callback Url Revieved and api call is made after ms:- ", Date.now() - requestTime, "current Time is :-", new Date() )
-    properties.properties['callback'] = callbackUrl.callback // Passing the payload of the callabck URL we received
+    const requestTime = Date.now() // Log initial request timestamp
+    console.log("Request for callback Url", new Date()) // Logs a readable stimestam
+    const sseClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_TENANT_DNS}`); // Sets up new separate client
+    const callbackUrl = await sseClient.getEventBrokerUrl() // Gets SSE callback URL
+    console.log("callback Url Revieved and api call is made after ms:- ", Date.now() - requestTime, "current Time is :-", new Date() ) // Logs time taken to get URL
+    properties.properties['callback'] = callbackUrl.callback // Passses the payload of the callabck URL received
 
-    await axiosClient.put('/',properties,'editehicles-1');
+    await axiosClient.put('/',properties,'editehicles-1'); // Makes API Call to edit vehicle
     return;
   } catch (error) {
     console.error('error', error);
