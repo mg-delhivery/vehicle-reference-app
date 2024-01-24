@@ -14,5 +14,5 @@ export const AddVehicleSchema = Joi.object({
     registrationYear: Joi.number().optional(),
     availability: Joi.boolean().optional(),
   }).required(),
-  callback: Joi.string()
+  callback: Joi.object()
 });

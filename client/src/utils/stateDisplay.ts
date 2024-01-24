@@ -1,7 +1,7 @@
 export const getStateDisplay = (fullState: string) => {
-  const state = fullState.split(':');
+  const state = fullState?.split(':');
 
-  if (state.length > 1) {
+  if (state?.length > 1) {
     return state[1];
   }
 

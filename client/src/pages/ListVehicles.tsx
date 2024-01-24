@@ -1,4 +1,4 @@
-import { faCheck, faPlus, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faMinus, faPlus, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { OS1Toast, OS1Modal } from '@os1-platform/console-ui-react';
 import {
@@ -19,7 +19,7 @@ import {
   useSearchParams,
 } from 'react-router-dom';
 
-import { getVehicles, transitionStates } from '../api/vehicles';
+import { getVehicles, transitionStates, subscribeTopic, unSubscribeTopic } from '../api/vehicles';
 import { Toast } from '../components/Toast';
 import { VehicleStateDisplay } from '../components/VehicleState';
 import Title from '../layout/Title';
@@ -71,17 +71,62 @@ function ListVehicles(props: any) {
     }
   }, [reset, searchParams]);
 
+  useEffect(()=>{
+    const handleEvent = async(e: any)=>{
+      setToastMsg(undefined);
+      console.log(e)
+      //window.name =JSON.stringify(e.detail.payload.data)
+      //const vehicleData = <VehicleParticipant[]>(e.detail.payload.data.data);
+
+      //const vehicle = getDisplayFromParticipant(e.detail.payload.data.data);
+      // console.log("vehicleTest", vehicle, vehicles)
+      // vehicles.push(vehicle)
+      // console.log("vehicle", vehicles)
+      // setVehicles(vehicles)
+      // setFilterableStates(getFilterableStates(vehicles));
+      // const emptyVehicleSelections = getEmptyVehicleSelections(vehicles);
+      // setSelectedVehicles(emptyVehicleSelections);
+      // constructStateTransitionPaths(vehicles);
+      setTimeout(async() => {
+        let vehicles = await getVehicles(props.console);
+        if (vehicles == undefined) vehicles = [];
+        setVehicles(vehicles);
+        if (e?.detail?.payload?.data?.data){
+          setToastMsg(`name : ${e?.detail?.payload?.data?.data?.name}, owner: ${e?.detail?.payload?.data?.data?.owner}, unique Code: ${e?.detail?.payload?.data?.data?.uniqueCode} `);
+          console.log("Message recieved at SSE broker timestamp for broadcast:-", e.detail.payload.brokerTimestamp );
+          console.log("Message recieved at SSE agent timestamp for broadcast:-", e.detail.payload.agentTimestamp );
+          console.log("Message recieved at Console timestamp for broadcast:-", e.detail.payload.consoleTimestamp)
+        }
+        else{
+          setToastMsg('Vehicle edited');
+          console.log("Message recieved at SSE broker timestamp:-", e.detail.payload.brokerTimestamp );
+          console.log("Message recieved at SSE agent timestamp:-", e.detail.payload.agentTimestamp );
+          console.log("Message recieved at Console timestamp:-", e.detail.payload.consoleTimestamp)
+        }
+  
+        setFilterableStates(getFilterableStates(vehicles));
+        const emptyVehicleSelections = getEmptyVehicleSelections(vehicles);
+        setSelectedVehicles(emptyVehicleSelections);
+        constructStateTransitionPaths(vehicles);
+      }, 200);
+    }
+    document.addEventListener(props.console?.events()?.SSECallBackEvent,handleEvent)
+  },[props.console])
+
   useEffect(() => {
     const getAllVehicles = async () => {
-      let vehicles = await getVehicles(props.console);
-      if (vehicles == undefined) vehicles = [];
-      setVehicles(vehicles);
-      setIsLoading(false);
-
-      setFilterableStates(getFilterableStates(vehicles));
-      const emptyVehicleSelections = getEmptyVehicleSelections(vehicles);
-      setSelectedVehicles(emptyVehicleSelections);
-      constructStateTransitionPaths(vehicles);
+      if (props.console){
+      //  await subscribeTopic(props.console);
+        let vehicles = await getVehicles(props.console);
+        if (vehicles == undefined) vehicles = [];
+        setVehicles(vehicles);
+        setIsLoading(false);
+  
+        setFilterableStates(getFilterableStates(vehicles));
+        const emptyVehicleSelections = getEmptyVehicleSelections(vehicles);
+        setSelectedVehicles(emptyVehicleSelections);
+        constructStateTransitionPaths(vehicles);
+      }
     };
     getAllVehicles();
   }, [reloadSeed, props.console]);
@@ -206,6 +251,13 @@ function ListVehicles(props: any) {
     setSelectedVehicles(newSelections);
   };
 
+  const unSubscribe = async() => {
+    if (props.console){
+      console.log("Inside Unsubscribe")
+      await unSubscribeTopic(props.console)
+    }
+  };
+
   const toastConfig = {
     bgColor: 'green',
     message: toastMsg || '',
@@ -244,6 +296,8 @@ useEffect(()=>{
 })
 },[])
 
+
+
   return (
     <div id="ListVehicles" className="flex flex-col items-center gap-6 mt-5">
       {toastMsg && (
@@ -268,7 +322,14 @@ useEffect(()=>{
         <div className="grow">
           <Title>Vehicles</Title>
         </div>
-        <div className="flex-none mt-3">
+        <div className="flex mt-3">
+        <Button
+            className="whitespace-nowrap mr-5"
+            onClick={() => unSubscribe()}
+          >
+            <FontAwesomeIcon icon={faMinus} />
+            <span className="ml-2">Unsubscribe Topic</span>
+          </Button>
           <Button
             className="whitespace-nowrap"
             onClick={() => navigate('/vehicles/create')}
