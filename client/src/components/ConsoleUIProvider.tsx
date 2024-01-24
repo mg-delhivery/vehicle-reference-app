@@ -53,7 +53,7 @@ const ConsoleUIProvider = (props: any) => {
       ],
     },
     {
-      path: '/vehicles',
+      path: '/os1-vehicle-reference-app',
       element: <Root />,
       errorElement: <ErrorPage />,
       handle: {

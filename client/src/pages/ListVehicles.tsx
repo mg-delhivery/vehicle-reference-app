@@ -332,7 +332,7 @@ useEffect(()=>{
           </Button>
           <Button
             className="whitespace-nowrap"
-            onClick={() => navigate('/vehicles/create')}
+            onClick={() => navigate('/os1-vehicle-reference-app/create')}
           >
             <FontAwesomeIcon icon={faPlus} />
             <span className="ml-2">Create New Vehicle</span>
@@ -491,7 +491,7 @@ useEffect(()=>{
                   <Table.Cell>
                     <Button
                       size="xs"
-                      onClick={() => navigate(`/vehicles/${vehicle.id}/edit`)}
+                      onClick={() => navigate(`/os1-vehicle-reference-app/${vehicle.id}/edit`)}
                     >
                       Edit
                     </Button>

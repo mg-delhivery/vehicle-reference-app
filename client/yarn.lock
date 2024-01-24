@@ -1642,6 +1642,11 @@
   resolved "https://registry.npmjs.org/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz"
   integrity sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==
 
+"@microsoft/fetch-event-source@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@microsoft/fetch-event-source/-/fetch-event-source-2.0.1.tgz#9ceecc94b49fbaa15666e38ae8587f64acce007d"
+  integrity sha512-W6CLUJ2eBMw3Rec70qrsEW0jOm/3twwJv21mrmj2yORiaVmVYGS4sSS5yUwvQc1ZlDLYGPnClVWmUUMagKNsfA==
+
 "@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1":
   version "5.1.1-v1"
   resolved "https://registry.npmjs.org/@nicolo-ribaudo/eslint-scope-5-internals/-/eslint-scope-5-internals-5.1.1-v1.tgz"
@@ -1670,13 +1675,14 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@os1-platform/console-ui-js@^0.6.0":
-  version "0.6.0"
-  resolved "https://registry.npmjs.org/@os1-platform/console-ui-js/-/console-ui-js-0.6.0.tgz"
-  integrity sha512-5TWpLdbNnKz0k4YiYyxPI2VG7ipKwxMfVjchvZ9q2jHOzsQDcDwAjyA9ZIGvLTw/TkQlQceKFWz4KC7OFUiBAA==
+"@os1-platform/console-ui-js@0.8.4":
+  version "0.8.4"
+  resolved "https://registry.yarnpkg.com/@os1-platform/console-ui-js/-/console-ui-js-0.8.4.tgz#4db1f55cc4143bccba927a8c412e5625a4943040"
+  integrity sha512-MrFJB3jC020/OUnqgZOgW4g3CwK5dcl+R9fFRoOiX7Ueji5h0JoCx/WpDVyBSZnON8IiEBPsa3YAHsGu2zfzXQ==
   dependencies:
     "@fortawesome/fontawesome" "^1.1.8"
     "@fullhuman/postcss-purgecss" "^5.0.0"
+    "@microsoft/fetch-event-source" "^2.0.1"
     "@types/node" "^18.14.0"
     axios "^0.21.4"
     cssnano "^5.1.15"
@@ -1692,13 +1698,13 @@
     uuid "^8.3.2"
     uuid-by-string "^3.0.4"
 
-"@os1-platform/console-ui-react@^0.6.0":
-  version "0.6.0"
-  resolved "https://registry.npmjs.org/@os1-platform/console-ui-react/-/console-ui-react-0.6.0.tgz"
-  integrity sha512-utKfHQznEljZ0lqigNzi4GAnjDd2Cl66UjNHU2WnUkWr5im0j88+lv/sfcGV+L9NJgwV9vpZrByEl24P18r8Mg==
+"@os1-platform/console-ui-react@0.8.4":
+  version "0.8.4"
+  resolved "https://registry.yarnpkg.com/@os1-platform/console-ui-react/-/console-ui-react-0.8.4.tgz#bc1c550e710ed8854ed76e4015600c3f2dba1970"
+  integrity sha512-gbYHG8iPSK0vqPQ05ddQleWwxMPHKv9TXZHeaameEgAUbvj/VssMW7sYfXsVYXUU0UWW8EtW20lzufEHUTgZ1g==
   dependencies:
     "@fullhuman/postcss-purgecss" "^5.0.0"
-    "@os1-platform/console-ui-js" "^0.6.0"
+    "@os1-platform/console-ui-js" "0.8.4"
     "@react-native-community/eslint-config" "^2.0.0"
     "@types/react" "^17.0.37"
     axios "^0.21.4"
