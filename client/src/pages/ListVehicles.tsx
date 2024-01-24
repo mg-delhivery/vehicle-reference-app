@@ -19,7 +19,7 @@ import {
   useSearchParams,
 } from 'react-router-dom';
 
-import { getVehicles, transitionStates, subscribeTopic, unSubscribeTopic } from '../api/vehicles';
+import { getVehicles, transitionStates } from '../api/vehicles';
 import { Toast } from '../components/Toast';
 import { VehicleStateDisplay } from '../components/VehicleState';
 import Title from '../layout/Title';
@@ -254,7 +254,7 @@ function ListVehicles(props: any) {
   const unSubscribe = async() => {
     if (props.console){
       console.log("Inside Unsubscribe")
-      await unSubscribeTopic(props.console)
+      //await unSubscribeTopic(props.console)
     }
   };
 

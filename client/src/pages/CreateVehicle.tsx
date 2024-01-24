@@ -11,7 +11,7 @@ import React, { useState, memo, useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { createSearchParams, useNavigate, useSearchParams } from 'react-router-dom';
 
-import { createVehicle, subscribeTopic } from '../api/vehicles';
+import { createVehicle } from '../api/vehicles';
 import Title from '../layout/Title';
 
 function CreateVehicle(props: any) {
@@ -53,12 +53,12 @@ function CreateVehicle(props: any) {
 
   useEffect(()=> {
     const fetchData = async () => {
-      try {
-        if (props.console)
-          await subscribeTopic(props.console);
-      } catch (error) {
-          console.error("Error in useEffect:", error);
-      }
+      // try {
+      //   if (props.console)
+      //     //await subscribeTopic(props.console);
+      // } catch (error) {
+      //     console.error("Error in useEffect:", error);
+      // }
   };
   fetchData();
   },[props.console])

@@ -1,18 +1,18 @@
 import { OS1HttpClient } from '@os1-platform/console-ui-react'
 
 import { getUxDateDisplay } from '../utils/dates';
-import { VEHICLE_NAME_PLURAL } from '../utils/constants';
+//import { VEHICLE_NAME_PLURAL } from '../utils/constants';
 import { subscribe } from 'diagnostics_channel';
 
-export const subscribeTopic = async(client: any)=>{
-  const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}`);
-  await axiosClient.subscribeBroadCastTopic([ "Test12", "Test13"])
-}
+// export const subscribeTopic = async(client: any)=>{
+//   const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}`);
+//   await axiosClient.subscribeBroadCastTopic([ "Test12", "Test13"])
+// }
 
-export const unSubscribeTopic = async(client: any)=>{
-  const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}`);
-  await axiosClient.unsubscribeBroadCastTopic([ "Test12"])
-}
+// export const unSubscribeTopic = async(client: any)=>{
+//   const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}`);
+//   await axiosClient.unsubscribeBroadCastTopic([ "Test12"])
+// }
 
 export const getVehicles = async (client: any) => {
   if (client) {
@@ -46,32 +46,6 @@ export const fetchVehicle = async (id: string, client: any) => {
   }
 };
 
-export const getAccessToken = async (client: any) => {
-  if (client) {
-    const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}`);
-    const headers = {
-      "X-COREOS-REQUEST-ID": uuidv4(),
-    };
-    const clientCredentialsPayload = {
-      clientId: `${process.env.REACT_APP_PARTICIPANT_CLIENT_ID}`,
-      clientSecret: `${process.env.REACT_APP_PARTICIPANT_CLIENT_SECRET}`,
-    };
-    try {
-      const resp =  await axiosClient.post(
-        `/core/api/v1/aaa/auth/client-credentials`,
-        clientCredentialsPayload,
-        'createVehicles',
-        { withUserInfo: false },
-        { headers }
-        );
-        const token = <any>(resp.data);
-
-        return token;
-    } catch (error) {
-      console.error('error', error);
-    }    
-  }
-};
 
 export const createVehicle = async (
   data: VehicleParticipantForm,
@@ -122,7 +96,7 @@ export const editVehicle = async (
     properties.properties['callback'] = callbackUrl.callback
 
     await axiosClient.put('/',properties,'editehicles-1');
-    await sseClient.broadCastEvents([ "Test12"], properties.properties )
+    //await axiosClient.broadCastEvents([ "Test12"], properties.properties )
     return;
   } catch (error) {
     console.error('error', error);
