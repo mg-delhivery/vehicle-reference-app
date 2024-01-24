@@ -1803,11 +1803,6 @@
   "resolved" "https://registry.npmjs.org/@microsoft/fetch-event-source/-/fetch-event-source-2.0.1.tgz"
   "version" "2.0.1"
 
-"@microsoft/fetch-event-source@^2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@microsoft/fetch-event-source/-/fetch-event-source-2.0.1.tgz#9ceecc94b49fbaa15666e38ae8587f64acce007d"
-  integrity sha512-W6CLUJ2eBMw3Rec70qrsEW0jOm/3twwJv21mrmj2yORiaVmVYGS4sSS5yUwvQc1ZlDLYGPnClVWmUUMagKNsfA==
-
 "@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1":
   "integrity" "sha512-54/JRvkLIzzDWshCWfuhadfrfZVPiElY8Fcgmg1HroEly/EDSszzhBAsarCux+D/kOslTRquNzuyGSmUSTTHGg=="
   "resolved" "https://registry.npmjs.org/@nicolo-ribaudo/eslint-scope-5-internals/-/eslint-scope-5-internals-5.1.1-v1.tgz"
@@ -1837,32 +1832,32 @@
     "fastq" "^1.6.0"
 
 "@os1-platform/console-ui-js@0.8.4":
-  version "0.8.4"
-  resolved "https://registry.yarnpkg.com/@os1-platform/console-ui-js/-/console-ui-js-0.8.4.tgz#4db1f55cc4143bccba927a8c412e5625a4943040"
-  integrity sha512-MrFJB3jC020/OUnqgZOgW4g3CwK5dcl+R9fFRoOiX7Ueji5h0JoCx/WpDVyBSZnON8IiEBPsa3YAHsGu2zfzXQ==
+  "integrity" "sha512-MrFJB3jC020/OUnqgZOgW4g3CwK5dcl+R9fFRoOiX7Ueji5h0JoCx/WpDVyBSZnON8IiEBPsa3YAHsGu2zfzXQ=="
+  "resolved" "https://registry.npmjs.org/@os1-platform/console-ui-js/-/console-ui-js-0.8.4.tgz"
+  "version" "0.8.4"
   dependencies:
     "@fortawesome/fontawesome" "^1.1.8"
     "@fullhuman/postcss-purgecss" "^5.0.0"
     "@microsoft/fetch-event-source" "^2.0.1"
     "@types/node" "^18.14.0"
-    axios "^0.21.4"
-    cssnano "^5.1.15"
-    moment-timezone "^0.5.42"
-    node-libs-browser "^2.2.1"
-    oidc-client "^1.11.5"
-    path "^0.12.7"
-    postcss "^8.3.11"
-    postcss-cli "^8.3.1"
-    tailwindcss "3.0.8"
-    ts-node "^10.9.1"
-    typescript "^4.9.5"
-    uuid "^8.3.2"
-    uuid-by-string "^3.0.4"
+    "axios" "^0.21.4"
+    "cssnano" "^5.1.15"
+    "moment-timezone" "^0.5.42"
+    "node-libs-browser" "^2.2.1"
+    "oidc-client" "^1.11.5"
+    "path" "^0.12.7"
+    "postcss" "^8.3.11"
+    "postcss-cli" "^8.3.1"
+    "tailwindcss" "3.0.8"
+    "ts-node" "^10.9.1"
+    "typescript" "^4.9.5"
+    "uuid" "^8.3.2"
+    "uuid-by-string" "^3.0.4"
 
 "@os1-platform/console-ui-react@0.8.4":
-  version "0.8.4"
-  resolved "https://registry.yarnpkg.com/@os1-platform/console-ui-react/-/console-ui-react-0.8.4.tgz#bc1c550e710ed8854ed76e4015600c3f2dba1970"
-  integrity sha512-gbYHG8iPSK0vqPQ05ddQleWwxMPHKv9TXZHeaameEgAUbvj/VssMW7sYfXsVYXUU0UWW8EtW20lzufEHUTgZ1g==
+  "integrity" "sha512-gbYHG8iPSK0vqPQ05ddQleWwxMPHKv9TXZHeaameEgAUbvj/VssMW7sYfXsVYXUU0UWW8EtW20lzufEHUTgZ1g=="
+  "resolved" "https://registry.npmjs.org/@os1-platform/console-ui-react/-/console-ui-react-0.8.4.tgz"
+  "version" "0.8.4"
   dependencies:
     "@fullhuman/postcss-purgecss" "^5.0.0"
     "@os1-platform/console-ui-js" "0.8.4"
@@ -5708,6 +5703,11 @@
   "integrity" "sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw=="
   "resolved" "https://registry.npmjs.org/fs.realpath/-/fs.realpath-1.0.0.tgz"
   "version" "1.0.0"
+
+"fsevents@^2.3.2", "fsevents@~2.3.2":
+  "integrity" "sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw=="
+  "resolved" "https://registry.npmjs.org/fsevents/-/fsevents-2.3.3.tgz"
+  "version" "2.3.3"
 
 "function-bind@^1.1.1", "function-bind@^1.1.2":
   "integrity" "sha512-7XHNxH7qX9xG5mIwxkhumTox/MIRNcOgDrxWsMt2pAr23WHp6MrRlN7FBSFpCpr+oVO0F744iUgR82nJMfG2SA=="

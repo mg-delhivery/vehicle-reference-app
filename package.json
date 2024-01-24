@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "The Vehicle Reference app is specially designed to assist developers in creating a web application that can efficiently manage logistics network participants such as vehicles through the participant service. Moreover, the app is seamlessly integrated with [Console](https://docs.getos1.com/docs/console-ui-overview), which is a workspace that provides users with access to all your web applications in one place.",
   "scripts": {
-    "build:client": "cd client && npm run build",
-    "copy:client": "cp -r client/build server/public",
-    "build:server": "cd server && npm run build",
+    "build:client": "cd client && npm install && npm run build",
+    "copy:client": "cp -r client/build/ server/public",
+    "build:server": "cd server && npm install && npm run build",
     "build": "npm run build:client && npm run copy:client && npm run build:server",
     "start": "cd server && npm start"
   },

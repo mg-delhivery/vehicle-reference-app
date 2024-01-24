@@ -2,7 +2,6 @@ import { OS1HttpClient } from '@os1-platform/console-ui-react'
 
 import { getUxDateDisplay } from '../utils/dates';
 //import { VEHICLE_NAME_PLURAL } from '../utils/constants';
-import { subscribe } from 'diagnostics_channel';
 
 // export const subscribeTopic = async(client: any)=>{
 //   const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}`);
