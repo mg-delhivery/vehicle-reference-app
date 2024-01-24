@@ -18,7 +18,7 @@ export const getVehicles = async (client: any) => {
   if (client) {
     const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}`);
     //await axiosClient.subscribeBroadCastTopic([ "Test12"])
-    const resp = await axiosClient.get('/vehicles', 'getVehicles');
+    const resp = await axiosClient.get('/os1-vehicle-reference-app/api/v1/vehicles', 'getVehicles');
     const vehicleData = <VehicleParticipant[]>(resp.data);
 
     return vehicleData.map((vehicle) => getDisplayFromParticipant(vehicle));
@@ -29,7 +29,7 @@ export const getVehicles = async (client: any) => {
 export const getToken = async (client: any) => {
   if (client) {
     const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}`);
-    const resp = await axiosClient.get('/vehicles/token', 'getToken');
+    const resp = await axiosClient.get('/os1-vehicle-reference-app/api/v1/vehicles/token', 'getToken');
     const token = <any>(resp.data);
 
     return token;
@@ -39,7 +39,7 @@ export const fetchVehicle = async (id: string, client: any) => {
   const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}`);
 
   try {
-    const resp = await axiosClient.get(`/vehicles/${id}`,'fetchVehicles-id');
+    const resp = await axiosClient.get(`/os1-vehicle-reference-app/api/v1/vehicles/${id}`,'fetchVehicles-id');
     return getDisplayFromParticipant(resp);
   } catch (error) {
     console.error('error', error);
@@ -62,7 +62,7 @@ export const createVehicle = async (
   //const token =  await getAccessToken(client)
   try {
     await axiosClient.post(
-      `/vehicles`,
+      `/os1-vehicle-reference-app/api/v1/vehicles`,
       dto,
       'createVehicles',
       {withAuth: false},
