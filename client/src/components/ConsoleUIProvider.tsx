@@ -26,11 +26,19 @@ const ConsoleUIProvider = (props: any) => {
       sessionStorage.setItem("appOwnerId", token);
     })()
     const handleEvent = (e: any)=>{
+<<<<<<< HEAD
       console.log(e)
       window.name =JSON.stringify(e.detail.payload.data)
       console.log("Message recieved at SSE broker timestamp :-", e.detail.payload.brokerTimestamp );
       console.log("Message recieved at SSE agent timestamp :-", e.detail.payload.agentTimestamp );
       console.log("Message recieved at Console timestamp :-", e.detail.payload.consoleTimestamp)
+=======
+      //console.log(e)
+      window.name =JSON.stringify(e.detail.payload.data)
+      // console.log("Message recieved at SSE broker timestamp :-", e.detail.payload.brokerTimestamp );
+      // console.log("Message recieved at SSE agent timestamp :-", e.detail.payload.agentTimestamp );
+      // console.log("Message recieved at Console timestamp :-", e.detail.payload.consoleTimestamp)
+>>>>>>> 5bdf13dcdeaf66df22d63d256429e0d86b2539ff
     }
     document.addEventListener(props.console?.events()?.SSECallBackEvent,handleEvent)
 
@@ -53,7 +61,7 @@ const ConsoleUIProvider = (props: any) => {
       ],
     },
     {
-      path: '/vehicles',
+      path: '/os1-vehicle-reference-app',
       element: <Root />,
       errorElement: <ErrorPage />,
       handle: {

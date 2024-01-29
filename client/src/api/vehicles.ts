@@ -2,12 +2,27 @@ import { OS1HttpClient } from '@os1-platform/console-ui-react'
 import { v4 as uuidv4 } from 'uuid';
 
 import { getUxDateDisplay } from '../utils/dates';
+<<<<<<< HEAD
 import { VEHICLE_NAME_PLURAL } from '../utils/constants';
+=======
+//import { VEHICLE_NAME_PLURAL } from '../utils/constants';
+
+// export const subscribeTopic = async(client: any)=>{
+//   const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}`);
+//   await axiosClient.subscribeBroadCastTopic([ "Test12", "Test13"])
+// }
+
+// export const unSubscribeTopic = async(client: any)=>{
+//   const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}`);
+//   await axiosClient.unsubscribeBroadCastTopic([ "Test12"])
+// }
+>>>>>>> 5bdf13dcdeaf66df22d63d256429e0d86b2539ff
 
 export const getVehicles = async (client: any) => {
   if (client) {
     const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}`);
-    const resp = await axiosClient.get('/vehicles', 'getVehicles');
+    //await axiosClient.subscribeBroadCastTopic([ "Test12"])
+    const resp = await axiosClient.get('/os1-vehicle-reference-app/api/v1/vehicles', 'getVehicles');
     const vehicleData = <VehicleParticipant[]>(resp.data);
 
     return vehicleData.map((vehicle) => getDisplayFromParticipant(vehicle));
@@ -18,7 +33,7 @@ export const getVehicles = async (client: any) => {
 export const getToken = async (client: any) => {
   if (client) {
     const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}`);
-    const resp = await axiosClient.get('/vehicles/token', 'getToken');
+    const resp = await axiosClient.get('/os1-vehicle-reference-app/api/v1/vehicles/token', 'getToken');
     const token = <any>(resp.data);
 
     return token;
@@ -28,13 +43,14 @@ export const fetchVehicle = async (id: string, client: any) => {
   const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}`);
 
   try {
-    const resp = await axiosClient.get(`/vehicles/${id}`,'fetchVehicles-id');
+    const resp = await axiosClient.get(`/os1-vehicle-reference-app/api/v1/vehicles/${id}`,'fetchVehicles-id');
     return getDisplayFromParticipant(resp);
   } catch (error) {
     console.error('error', error);
   }
 };
 
+<<<<<<< HEAD
 export const getAccessToken = async (client: any) => {
   if (client) {
     const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_TENANT_DNS}`);
@@ -61,6 +77,8 @@ export const getAccessToken = async (client: any) => {
     }    
   }
 };
+=======
+>>>>>>> 5bdf13dcdeaf66df22d63d256429e0d86b2539ff
 
 export const createVehicle = async (
   data: VehicleParticipantForm,
@@ -68,6 +86,7 @@ export const createVehicle = async (
 ): Promise<void> => {
   const dto = getDtoFromDisplay(data);
   dto['callback'] = {
+<<<<<<< HEAD
     "url": "{{SSE_CALLBACK}}",
     "meta": {}
   }
@@ -86,6 +105,27 @@ export const createVehicle = async (
           'x-coreos-access': token.data.accessToken
         }
       }
+=======
+    "url": "{{SSE_BROADCAST(Test12)}}",
+    "meta": {}
+  }
+  console.log("api call requested :-", new Date(), "having unix timestamp:- ", Date.now())
+  const axiosClient = new OS1HttpClient(client.authInitializer, `${process.env.REACT_APP_BASE_URL}`);
+ // await axiosClient.subscribeBroadCastTopic(["Test12"])
+  //const token =  await getAccessToken(client)
+  try {
+    await axiosClient.post(
+      `/os1-vehicle-reference-app/api/v1/vehicles`,
+      dto,
+      'createVehicles',
+      {withAuth: false},
+      // {
+      //   headers: {
+      //     'X-COREOS-ORIGIN-TOKEN': token.data.accessToken,
+      //     'x-coreos-access': token.data.accessToken
+      //   }
+      // }
+>>>>>>> 5bdf13dcdeaf66df22d63d256429e0d86b2539ff
       );
     return;
   } catch (error) {
@@ -111,6 +151,7 @@ export const editVehicle = async (
     properties.properties['callback'] = callbackUrl.callback
 
     await axiosClient.put('/',properties,'editehicles-1');
+    //await axiosClient.broadCastEvents([ "Test12"], properties.properties )
     return;
   } catch (error) {
     console.error('error', error);
@@ -136,7 +177,7 @@ export const transitionStates = async (
   return;
 };
 
-const getDisplayFromParticipant = (
+export const getDisplayFromParticipant = (
   participant: any
 ): VehicleDisplay => {
   return {

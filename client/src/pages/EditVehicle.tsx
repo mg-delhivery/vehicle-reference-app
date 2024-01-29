@@ -57,14 +57,10 @@ function EditVehicle(props: any) {
     if (searchParams.has('success')) {
       const message = searchParams.get('message');
       if (message === 'edited') {
-        if (window && window?.name){
-          const event = JSON.parse(window.name)
-          setToastMsg(`fuelType : ${event?.properties.fuelType}, mode: ${event?.properties.mode}, Operator Id: ${event?.properties.operatorId} `);
           setIsSubmitting(false);
           searchParams.delete('success');
           searchParams.delete('message');
           setSearchParams(searchParams);
-         }
       }
     }
   }, [searchParams, setSearchParams ]);

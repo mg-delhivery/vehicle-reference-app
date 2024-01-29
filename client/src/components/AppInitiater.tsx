@@ -45,11 +45,12 @@ function AppInitiater(props: any) {
     <>
       <OS1Provider
         clientId={process.env.REACT_APP_CLIENT_ID}
-        loginRedirectPath={'/vehicles'}
+        loginRedirectPath={'/os1-vehicle-reference-app'}
         logoutRedirectPath={'/'}
         devTenantId={process.env.REACT_APP_DEV_TENANT_ID}
         appId={process.env.REACT_APP_INITIAL_APP_ID}
         controls={controls}
+        interTabCommunicationRequired={true}
       >
         <Initiate setConsole={handleConsoleInstanceChange} />
       </OS1Provider>

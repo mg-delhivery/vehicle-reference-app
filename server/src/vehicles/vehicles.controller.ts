@@ -22,7 +22,7 @@ import { SchemaValidationPipe } from '../common/validation/validation.pipe';
 import { UpdateVehicleSchema } from './validation/update-vehicle.schema.validation';
 
 @ApiTags('Vehicle')
-@Controller('vehicles')
+@Controller('os1-vehicle-reference-app/api/v1/vehicles')
 export class VehiclesController {
   private logger = new Logger(this.constructor.name);
 

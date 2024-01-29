@@ -7,7 +7,7 @@ export class AddVehicleRequestDTO {
   category?: string;
   subCategory?: string;
   properties?: VehicleProperties;
-  callback?: string;
+  callback?: object;
 }
 
 export class UpdateVehiclePropertiesRequestDTO {

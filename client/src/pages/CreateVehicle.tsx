@@ -51,6 +51,17 @@ function CreateVehicle(props: any) {
     defaultValues,
   });
 
+  useEffect(()=> {
+    const fetchData = async () => {
+      // try {
+      //   if (props.console)
+      //     //await subscribeTopic(props.console);
+      // } catch (error) {
+      //     console.error("Error in useEffect:", error);
+      // }
+  };
+  fetchData();
+  },[props.console])
   useEffect(() => {
     if (searchParams.has('success')) {
       const message = searchParams.get('message');
@@ -82,7 +93,7 @@ function CreateVehicle(props: any) {
     try {
       await createVehicle(data, props.console);
     navigate({
-      pathname: '/vehicles/create',
+      pathname: '/os1-vehicle-reference-app/create',
       search: `?${createSearchParams({
         success: 'true',
         message: 'created',

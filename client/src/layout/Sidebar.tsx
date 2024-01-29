@@ -9,12 +9,12 @@ function SidebarContainer() {
     <div className="w-fit">
       <div className="px-6 pt-10">
         <span className="text-xl md:text-2xl">
-          <Link to="/vehicles">Vehicle Demo app</Link>
+          <Link to="/os1-vehicle-reference-app">Vehicle Demo app</Link>
         </span>
       </div>
       <Sidebar>
         <Sidebar.CTA>
-          <Button onClick={() => navigate('/vehicles/create')}>
+          <Button onClick={() => navigate('/os1-vehicle-reference-app/create')}>
             Create Vehicle
           </Button>
         </Sidebar.CTA>

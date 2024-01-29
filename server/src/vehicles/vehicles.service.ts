@@ -170,7 +170,7 @@ export class VehiclesService implements OnModuleInit {
 
   async addVehicle(vehicle: AddVehicleRequestDTO): Promise<void> {
     const callback = vehicle.callback
-    delete vehicle?.callback
+    //delete vehicle?.callback
     await this.httpService.axiosRef
       .post(this.getVehiclesUrl(), vehicle, {
         headers: await this.participantService.buildHeaders(),
@@ -187,22 +187,22 @@ export class VehiclesService implements OnModuleInit {
           errorData.status,
         );
       });
-      await this.httpService.axiosRef
-      .post(callback, vehicle, {
-        headers: await this.participantService.buildHeaders(),
-      })
-      .then(() => {
-        this.logger.log(`Vehicle ${vehicle.name} successfully added`);
-      })
-      .catch((error) => {
-        this.logger.error(error);
-        const errorData = handleErrorResponse(error);
-        this.logger.error(errorData);
-        throw new HttpException(
-          `Failed to create Vehicle ${vehicle.name}: ${errorData.description}`,
-          errorData.status,
-        );
-      });
+      // await this.httpService.axiosRef
+      // .post(callback, vehicle, {
+      //   headers: await this.participantService.buildHeaders(),
+      // })
+      // .then(() => {
+      //   this.logger.log(`Vehicle ${vehicle.name} successfully added`);
+      // })
+      // .catch((error) => {
+      //   this.logger.error(error);
+      //   const errorData = handleErrorResponse(error);
+      //   this.logger.error(errorData);
+      //   throw new HttpException(
+      //     `Failed to create Vehicle ${vehicle.name}: ${errorData.description}`,
+      //     errorData.status,
+      //   );
+      // });
   }
 
   async updateVehicle(

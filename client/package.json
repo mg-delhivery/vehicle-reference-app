@@ -6,7 +6,11 @@
     "@fortawesome/fontawesome-svg-core": "^6.2.1",
     "@fortawesome/free-solid-svg-icons": "^6.2.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
+<<<<<<< HEAD
     "@os1-platform/console-ui-react": "^0.8.1",
+=======
+    "@os1-platform/console-ui-react": "0.8.4",
+>>>>>>> 5bdf13dcdeaf66df22d63d256429e0d86b2539ff
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
     "@testing-library/user-event": "^13.2.1",
@@ -28,7 +32,10 @@
     "react-scripts": "5.0.1",
     "tailwindcss": "3.3.2",
     "typescript": "^4.4.2",
+<<<<<<< HEAD
     "uuid": "^9.0.1",
+=======
+>>>>>>> 5bdf13dcdeaf66df22d63d256429e0d86b2539ff
     "web-vitals": "^2.1.0"
   },
   "scripts": {
@@ -61,6 +68,8 @@
     "@types/luxon": "^3.1.0",
     "@types/uuid": "^9.0.7",
     "autoprefixer": "^10.4.13",
+    "eslint": "^8.56.0",
+    "eslint-config-react-app": "^7.0.1",
     "postcss": "^8.4.20",
     "prettier": "^2.8.1",
     "tailwind-scrollbar-hide": "^1.1.7",
